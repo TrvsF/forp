@@ -1,0 +1,72 @@
+root {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    color: white;
+    font-size: 24px;
+    pointer-events: all;
+}
+
+watermark {
+    padding-left: 24px;
+    color: white;
+    font-size: 18px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+top-bar {
+    position: absolute;
+    top: 0;
+    left: 30%;
+    width: 70%;
+    height: 8%;
+    background-color: #FFFFFFAA;
+}
+
+bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 16%;
+    background-color: #000000AA;
+}
+
+    bottom-bar selected-name {
+        font-size: 64px;
+        color: white;
+    }
+
+build-unit {
+    position: absolute;
+    bottom: 80%;
+    left: 80%;
+    width: 5%;
+    height: 5%;
+    border-radius: 50%;
+    background-color: #000000AA;
+    pointer-events: all;
+    color: white;
+}
+
+build-unit button:hover {
+    cursor: crosshair;
+    background-color: black;
+}
+
+next-turn-button {
+    position: absolute;
+    bottom: 20%;
+    left: 80%;
+    width: 5%;
+    height: 5%;
+    border-radius: 50%;
+    background-color: #000000AA;
+    pointer-events: all;
+    color: white;
+}
+
+    next-turn-button button:hover {
+        cursor: crosshair;
+        background-color: black;
+    }

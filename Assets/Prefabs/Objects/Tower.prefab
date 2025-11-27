@@ -1,0 +1,139 @@
+{
+  "RootObject": {
+    "__guid": "4fbfe539-6df4-47f7-ab87-a814b4a88b55",
+    "__version": 1,
+    "Flags": 0,
+    "Name": "tower",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "1,1,1",
+    "Tags": "",
+    "Enabled": true,
+    "NetworkMode": 2,
+    "NetworkInterpolation": true,
+    "NetworkOrphaned": 0,
+    "NetworkTransmit": true,
+    "OwnerTransfer": 1,
+    "Components": [
+      {
+        "__type": "Sandbox.SkinnedModelRenderer",
+        "__guid": "2736c5a6-6003-4e70-a7d8-8a5cb948a843",
+        "__enabled": true,
+        "AnimationGraph": null,
+        "BodyGroups": 18446744073709551615,
+        "BoneMergeTarget": null,
+        "CreateAttachments": false,
+        "CreateBoneObjects": false,
+        "LodOverride": null,
+        "MaterialGroup": null,
+        "MaterialOverride": null,
+        "Materials": null,
+        "Model": "models/props/trim_sheets/bookcase/bookcase_01.vmdl",
+        "Morphs": {},
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "Parameters": {
+          "bools": {},
+          "ints": {},
+          "floats": {},
+          "vectors": {},
+          "rotations": {}
+        },
+        "PlaybackRate": 1,
+        "RenderOptions": {
+          "GameLayer": true,
+          "OverlayLayer": false,
+          "BloomLayer": false,
+          "AfterUILayer": false
+        },
+        "RenderType": "On",
+        "Sequence": {
+          "Name": null,
+          "Looping": true,
+          "Blending": false
+        },
+        "Tint": "1,1,1,1",
+        "UseAnimGraph": true
+      },
+      {
+        "__type": "Sandbox.ModelCollider",
+        "__guid": "8037f219-d600-408b-8d27-a7aa2ff48bc2",
+        "__enabled": true,
+        "ColliderFlags": 0,
+        "Elasticity": null,
+        "Friction": null,
+        "IsTrigger": false,
+        "Model": "models/props/trim_sheets/bookcase/bookcase_01.vmdl",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OnObjectTriggerEnter": null,
+        "OnObjectTriggerExit": null,
+        "OnTriggerEnter": null,
+        "OnTriggerExit": null,
+        "RollingResistance": null,
+        "Static": false,
+        "Surface": null,
+        "SurfaceVelocity": "0,0,0"
+      },
+      {
+        "__type": "Forp.Object.Building.City",
+        "__guid": "ce6f4910-3ff3-4609-9814-9903a7caa6ca",
+        "__enabled": true,
+        "Buildings": [],
+        "DisplayName": "Tower",
+        "ObjectId": "building-tower",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "ProductionToBuild": 2,
+        "Units": [
+          {
+            "_type": "gameobject",
+            "prefab": "prefabs/objects/starterunit.prefab"
+          }
+        ],
+        "ViewRange": 3
+      }
+    ],
+    "Children": [],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": true,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": ""
+      }
+    },
+    "__variables": []
+  },
+  "ResourceVersion": 2,
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "__references": [
+    "facepunch.bookcase01#80037"
+  ],
+  "__version": 2
+}

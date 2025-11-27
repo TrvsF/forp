@@ -1,0 +1,99 @@
+{
+  "RootObject": {
+    "__guid": "4647e1f8-cfd8-4579-aac0-a4a1e08db488",
+    "__version": 1,
+    "Flags": 0,
+    "Name": "gamemanager",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "1,1,1",
+    "Tags": "",
+    "Enabled": true,
+    "NetworkMode": 1,
+    "NetworkInterpolation": false,
+    "NetworkOrphaned": 1,
+    "NetworkTransmit": true,
+    "OwnerTransfer": 0,
+    "Components": [],
+    "Children": [
+      {
+        "__guid": "8edb6cdd-b5b6-494f-92ca-4095047c1197",
+        "__version": 1,
+        "Flags": 0,
+        "Name": "GameManager",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 1,
+        "NetworkInterpolation": false,
+        "NetworkOrphaned": 1,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Forp.Game.GameManager",
+            "__guid": "dbbfe14f-ff65-4bb4-b301-c63ca99d9358",
+            "__enabled": true,
+            "HexObject": {
+              "_type": "gameobject",
+              "prefab": "prefabs/objects/hex.prefab"
+            },
+            "ObjectPrefabs": {
+              "unit-settler": {
+                "_type": "gameobject",
+                "prefab": "prefabs/objects/starterunit.prefab"
+              },
+              "building-city": {
+                "_type": "gameobject",
+                "prefab": "prefabs/objects/city.prefab"
+              },
+              "building-tower": {
+                "_type": "gameobject",
+                "prefab": "prefabs/objects/tower.prefab"
+              }
+            },
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "PlayerPrefab": {
+              "_type": "gameobject",
+              "prefab": "prefabs/player.prefab"
+            }
+          }
+        ],
+        "Children": []
+      }
+    ],
+    "__properties": {
+      "NetworkInterpolation": false,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": true,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": ""
+      }
+    },
+    "__variables": []
+  },
+  "ResourceVersion": 2,
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "__references": [],
+  "__version": 2
+}

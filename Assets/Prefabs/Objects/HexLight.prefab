@@ -1,0 +1,67 @@
+{
+  "RootObject": {
+    "__guid": "04d82a4f-d05b-47dd-b3fd-aa37c0fe7b67",
+    "__version": 1,
+    "Flags": 0,
+    "Name": "hexlight",
+    "Position": "0,0,100",
+    "Rotation": "0,0.7071067,0,0.7071068",
+    "Scale": "1,1,1",
+    "Tags": "light_spot,light",
+    "Enabled": true,
+    "NetworkMode": 2,
+    "NetworkInterpolation": true,
+    "NetworkOrphaned": 0,
+    "NetworkTransmit": true,
+    "OwnerTransfer": 1,
+    "Components": [
+      {
+        "__type": "Sandbox.SpotLight",
+        "__guid": "34fbc0a6-e102-4ae5-a5dc-48a9986d5858",
+        "__enabled": true,
+        "Attenuation": 5.0819674,
+        "ConeInner": 15,
+        "ConeOuter": 45,
+        "Cookie": null,
+        "FogMode": "Disabled",
+        "FogStrength": 1,
+        "LightColor": "0.3,1,0,1",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "Radius": 500,
+        "Shadows": true
+      }
+    ],
+    "Children": [],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": true,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": ""
+      }
+    },
+    "__variables": []
+  },
+  "ResourceVersion": 2,
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "__references": [],
+  "__version": 2
+}

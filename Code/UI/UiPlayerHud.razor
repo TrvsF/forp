@@ -1,0 +1,64 @@
+@using System;
+@using Forp.Game
+@inherits PanelComponent
+
+<root>
+	<watermark>Forward Operating: Repair the Planet Infdev @(Time.Delta)</watermark>
+	@if (ShowTopBar)
+	{
+		<top-bar>
+			@(UiInfo.Gold)
+		</top-bar>
+	}
+	@if (ShowBottomBar)
+	{
+		<bottom-bar>
+			<selected-name>@(UiInfo.SelectedName)</selected-name>
+		</bottom-bar>
+		@foreach (var (BuildString, Index) in UiInfo.Builds.Select((v, i) => (v, i)))
+		{
+			<build-unit>
+				<button onclick="@(() => OnUnitBuildClick(Index))">@BuildString</button>
+			</build-unit>
+		}
+	}
+
+	<next-turn-button>
+		<button onclick="@OnNextTurnClick">Next Turn @(GameManager.Instance.Turn)</button>
+	</next-turn-button>
+</root>
+
+@code
+{
+	protected override int BuildHash()
+	{
+		return HashCode.Combine(Time.Now);
+	}
+
+	private Forp.Game.FPlayerUiInfo UiInfo;
+	private bool ShowBottomBar = false;
+	private bool ShowTopBar = true;
+
+	protected override void OnUpdate()
+	{
+		base.OnUpdate();
+
+		if (!Forp.Game.GamePlayer.Local.IsValid())
+		{
+			return;
+		}
+
+		ShowBottomBar = Forp.Game.GamePlayer.Local.GetPlayerUiInfo(out UiInfo);
+	}
+
+	private void OnNextTurnClick()
+	{
+		GameManager.Instance.NextTurn();
+	}
+
+	private void OnUnitBuildClick(int Index)
+	{
+		Log.Info($"imma build {UiInfo.Builds[Index]} {UiInfo.OutHex}");
+		GameManager.Instance.Server_CreateHexUnitObject(UiInfo.Builds[Index], UiInfo.OutHex, Connection.Local.Id);
+	}
+}
