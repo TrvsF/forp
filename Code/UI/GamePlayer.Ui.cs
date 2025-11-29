@@ -42,13 +42,20 @@ public sealed partial class GamePlayer : Component
 		OutPlayerUiInfo = new();
 		OutPlayerUiInfo.Name = Local?.SteamName;
 		OutPlayerUiInfo.Gold = Gold;
-
 		OutPlayerUiInfo.SelectedName = BaseOutString;
 
 		if (SelectedHex.IsValid())
 		{
+			var OwnerName = "None";
+			var IsLocallyOwner = false;
+			if (GameManager.Instance.GetGamePlayer(SelectedHex.GetOwnerId()) is { } Owner)
+			{
+				OwnerName = Owner.SteamName;
+				IsLocallyOwner = Owner == Local;
+			}
+
 			OutPlayerUiInfo.OutHex = SelectedHex;
-			OutPlayerUiInfo.SelectedName += $"type {SelectedHex.Type} with {SelectedHex.Resources} resources\n";
+			OutPlayerUiInfo.SelectedName += $"type {SelectedHex.Type} with {SelectedHex.Resources} resources owned by {OwnerName}\n";
 
 			if (SelectedHex.UnitObject.IsValid())
 			{
@@ -59,7 +66,7 @@ public sealed partial class GamePlayer : Component
 			{
 				OutPlayerUiInfo.SelectedName += $"with building {SelectedHex.BuildingObject.DisplayName}\n";
 
-				if (SelectedHex.BuildingObject.Units.Count != 0)
+				if (SelectedHex.BuildingObject.Units.Count != 0 && IsLocallyOwner)
 				{
 					OutPlayerUiInfo.SelectedName += "you can build";
 					foreach (var BuildUnit in SelectedHex.BuildingObject.Units)

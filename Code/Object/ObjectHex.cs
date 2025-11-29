@@ -3,7 +3,6 @@ using Forp.Object.Unit;
 using Sandbox;
 using Sandbox.Diagnostics;
 using System;
-using static Forp.Game.GamePlayer;
 using Sandbox.UI;
 using Forp.Game;
 
@@ -33,21 +32,21 @@ public sealed class Hex : Object
 	[Sync(SyncFlags.FromHost), Property] public int Resources { get; set; } = 0;
 	[Sync, Property] public EHexType Type { get; set; } = EHexType.Grass;
 	[Sync, Property] public Color BaseColour { get; set; } = Color.Black;
-	[Sync, Change("RepOwnerChanged")] public FBuilding BuildingOwner { get; set; } = null;
+	[Sync, Change("RepOwnerChanged")] public NetList<FBuilding> BuildingOwners { get; set; } = new();
 
 	private void RepOwnerChanged()
 	{
-		if (BuildingOwner == null)
+		if (BuildingOwners.Count == 0)
 		{
 			Log.Info("removing owner!");
 			SetBaseColour(TypeColours[Type]);
 			return;
 		}
 
-		var GamePlayerOwner = GameManager.Instance.GetGamePlayer(BuildingOwner.OwnerGuid);
+		var GamePlayerOwner = GameManager.Instance.GetGamePlayer(BuildingOwners[0].OwnerGuid);
 		if (GamePlayerOwner == null)
 		{
-			Log.Warning($"unable to find owner of connection id {BuildingOwner.OwnerGuid}");
+			Log.Warning($"unable to find owner of connection id {BuildingOwners[0].OwnerGuid}");
 			return; 
 		}
 
@@ -56,7 +55,7 @@ public sealed class Hex : Object
 
 	private void SetOwner(FBuilding OwnerIn, bool DoBrothers = false)
 	{
-		BuildingOwner = OwnerIn;
+		BuildingOwners.Add(OwnerIn);
 
 		if (!DoBrothers)
 		{
@@ -65,8 +64,23 @@ public sealed class Hex : Object
 
 		foreach (var BrothermanHex in AllBrothers)
 		{
-			BrothermanHex?.BuildingOwner = OwnerIn;
+			BrothermanHex?.BuildingOwners.Add(OwnerIn);
 		}
+	}
+
+	public bool IsLocallyOwned()
+	{
+		return GetOwnerId() == GamePlayer.Local.Id;
+	}
+
+	public Guid GetOwnerId()
+	{
+		if (BuildingOwners.Count == 0)
+		{
+			return Guid.Empty;
+		}
+
+		return BuildingOwners[0].OwnerGuid;
 	}
 
 	public static void RevealHexesRecusrive(Hex Hex, bool Reveal, int Depth)
@@ -93,14 +107,6 @@ public sealed class Hex : Object
 			if (Brother == null) continue;
 			HighlightHexesRecusrive(Brother.GetComponent<Hex>(), Highlight, Depth - 1);
 		}
-	}
-
-	// TODO : changing a property on the data doesn't run the rep, needed 4 now
-	[Rpc.Broadcast]
-	public void Multicast_OnTurnEnd()
-	{
-		RepUnitDataChanged();
-		OnRep_BuildingData();
 	}
 
 	[Sync(SyncFlags.FromHost), Change("OnRep_BuildingData")] public FBuilding BuildingData { get; set; } = null;
@@ -165,6 +171,9 @@ public sealed class Hex : Object
 			var Clone = GameManager.Instance.ObjectPrefabs[UnitData.ObjectId].Clone();
 			Clone.WorldTransform = UnitData.Transform;
 			UnitObject = Clone.GetComponent<ObjectUnit>();
+
+			var OwnerPlayer = GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid);
+			UnitObject.ModelRenderer.Tint = OwnerPlayer.Colour;
 		}
 	}
 

@@ -55,6 +55,14 @@ public sealed partial class GamePlayer : Component
 		Hex.HighlightHexesRecusrive(UnitHex, false, SelectedUnit.MoveRange);
 	}
 
+	List<Color> PossibleColours = new()
+	{
+		Color.Magenta,
+		Color.Cyan,
+		Color.Green,
+		Color.Red,
+	};
+
 	protected override void OnStart()
 	{
 		base.OnStart();
@@ -62,7 +70,7 @@ public sealed partial class GamePlayer : Component
 		if (Networking.IsHost)
 		{
 			Gold = 100;
-			Colour = Color.Magenta;
+			Colour = Random.Shared.FromList(PossibleColours);
 		}
 
 		// TODO : should we make the camera seperate
@@ -226,15 +234,15 @@ public sealed partial class GamePlayer : Component
 
 			if (SelectedUnit.IsValid())
 			{
-				Log.Info($"requesting moving {SelectedUnit} to {FoundHex}");
 				var UnitHex = GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit);
 				Hex.HighlightHexesRecusrive(UnitHex, false, SelectedUnit.MoveRange + 1);
 				GameManager.Instance.Server_MoveUnitToHex(UnitHex, FoundHex, Local.Connection.Id);
-				SelectedUnit = null;
 			}
-
-			SelectedHex = FoundHex;
-			SelectedHex.OnClick();
+			else
+			{
+				SelectedHex = FoundHex;
+				SelectedHex.OnClick();
+			}
 		}
 		if (Input.Pressed("mouse3") || Input.Pressed("spacebar"))
 		{
@@ -308,15 +316,18 @@ public sealed partial class GamePlayer : Component
 			return;
 		}
 
-		List<GameObject> FoundBuildingObjects = new();
+		HashSet<GameObject> FoundBuildingObjects = new();
 
-		if (Hex.BuildingOwner != null)
+		if (Hex.BuildingOwners.Count != 0)
 		{
-			FoundBuildingObjects.AddRange(Hex.BuildingOwner.Hex.BuildingObject.Buildings);
+			foreach (var BuildingOwner in Hex.BuildingOwners)
+			{
+				FoundBuildingObjects.UnionWith(BuildingOwner.Hex.BuildingObject.Buildings);
+			}
 		}
 		if (Hex.UnitObject.IsValid())
 		{
-			FoundBuildingObjects.AddRange(Hex.UnitObject.Buildings);
+			FoundBuildingObjects.UnionWith(Hex.UnitObject.Buildings);
 		}
 
 		List<GameObject> ValidBuildingObjects = new();

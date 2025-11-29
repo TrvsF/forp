@@ -19,7 +19,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 	[Sync(SyncFlags.FromHost)] public NetList<GamePlayer> GamePlayers { get; private set; } = new();
 	[Sync(SyncFlags.FromHost)] public int Turn { get; set; } = 0;
-
+		 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	
 	private readonly List<Guid> WaitingConnections = new();
@@ -140,16 +140,26 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 			_ = GenerateBoardAsync(Hex);
 		}
+
+		// HACK clients spawn with an invalid unit object, remove this
+		// TODO : figure out where the unit comes from
+		foreach (var UnitObject in Scene.GetAll<ObjectUnit>())
+		{
+			if (HACK_GetHexFromUnit(UnitObject) == null)
+			{
+				Log.Warning($"FOUND AN INVALID UNIT {UnitObject}, DESTROYING");
+				UnitObject.Destroy();
+			}
+		}
 	}
 
 	private async Task GenerateBoardAsync(GameObject Hex)
 	{
+		// TODO : loading screen
 		var MainHex = Hex.GetComponent<Hex>();
 		MainHex.CreateSurroundBrothers();
 
 		await CreateSurroundAsync(MainHex, 7);
-
-		// clear loading
 	}
 
 	private async Task CreateSurroundAsync(Hex Hex, int Depth)
