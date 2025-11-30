@@ -30,28 +30,123 @@ public sealed class Hex : Object
 	[Property] Hex HexBR;
 
 	[Sync(SyncFlags.FromHost), Property] public int Resources { get; set; } = 0;
-	[Sync, Property] public EHexType Type { get; set; } = EHexType.Grass;
-	[Sync, Property] public Color BaseColour { get; set; } = Color.Black;
-	[Sync, Change("RepOwnerChanged")] public NetList<FBuilding> BuildingOwners { get; set; } = new();
+	[Sync(SyncFlags.FromHost), Property] public EHexType Type { get; set; } = EHexType.Grass;
 
-	private void RepOwnerChanged()
+	[Sync, Change, Property] public Color BaseColour { get; set; } = Color.Black;
+
+	private void OnBaseColourChanged(Color OldColour, Color NewColour)
 	{
-		if (BuildingOwners.Count == 0)
+		ModelRenderer.Tint = BaseColour.Darken(1f / Resources);
+	}
+
+	private void SetBaseColour(Color Colour)
+	{
+		BaseColour = Colour;
+		BaseColour = BaseColour.Darken(1f / Resources);
+	}
+
+	private readonly List<Vector3> BrotherOffsets = [new(170, 100), new(170, -100), new(0, -200), new(-170, -100), new(-170, 100), new(0, 200)];
+	private readonly Dictionary<EHexType, Color> TypeColours = new()
+	{
+		{ EHexType.Grass, Color.Green },
+		{ EHexType.Sand, Color.Yellow },
+		{ EHexType.Water, Color.Blue },
+	};
+
+	protected override void OnAwake()
+	{
+		base.OnAwake();
+
+		Assert.IsValid(FogPrefab);
+
+		if (!IsRevealed)
 		{
-			Log.Info("removing owner!");
-			SetBaseColour(TypeColours[Type]);
+			OnHide();
+		}
+	}
+
+	protected override void OnStart()
+	{
+		Assert.IsValid(FogPrefab);
+
+		base.OnStart();
+
+		if (!Networking.IsHost)
+		{
 			return;
 		}
 
-		var GamePlayerOwner = GameManager.Instance.GetGamePlayer(BuildingOwners[0].OwnerGuid);
-		if (GamePlayerOwner == null)
+		Resources = Random.Shared.Int(2, 7);
+		Type = Random.Shared.FromArray(Enum.GetValues<EHexType>());
+		SetBaseColour(TypeColours[Type]);
+	}
+
+	public override void OnClick()
+	{
+		base.OnClick();
+
+		IsSelected = !IsSelected;
+	}
+
+	private void OnHighlight()
+	{
+		CloneConfig HighlightConfig = new(WorldTransform);
+		LightObject = LightPrefab.Clone(HighlightConfig);
+	}
+
+	private void OnDeHighlight()
+	{
+		if (LightObject.IsValid())
 		{
-			Log.Warning($"unable to find owner of connection id {BuildingOwners[0].OwnerGuid}");
-			return; 
+			LightObject.Destroy();
+			LightObject = null;
+		}
+	}
+
+	private void OnReveal()
+	{
+		if (FogObject.IsValid())
+		{
+			FogObject.Destroy();
+			FogObject = null;
 		}
 
-		SetBaseColour(GamePlayerOwner.Colour);
+		RepUnitDataChanged();
+		OnRep_BuildingData();
 	}
+
+	private void OnHide()
+	{
+		CloneConfig FogConfig = new(WorldTransform);
+		FogObject = FogPrefab.Clone(FogConfig);
+
+		RepUnitDataChanged();
+		OnRep_BuildingData();
+	}
+
+	private void OnSelect()
+	{
+		ModelRenderer.Tint = BaseColour.Darken(0.66f);
+	}
+
+	private void OnDeselect()
+	{
+		ModelRenderer.Tint = BaseColour;
+	}
+
+	public void ClearBrothers()
+	{
+		HexTL = null;
+		HexTR = null;
+		HexML = null;
+		HexMR = null;
+		HexBL = null;
+		HexBR = null;
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+
+	[Sync] public NetList<FBuilding> BuildingOwners { get; set; } = new();
 
 	private void SetOwner(FBuilding OwnerIn, bool DoBrothers = false)
 	{
@@ -65,6 +160,15 @@ public sealed class Hex : Object
 		foreach (var BrothermanHex in AllBrothers)
 		{
 			BrothermanHex?.BuildingOwners.Add(OwnerIn);
+			if (GameManager.Instance.GetGamePlayer(OwnerIn.OwnerGuid) is { } OwnerPlayerNest)
+			{
+				BrothermanHex?.SetBaseColour(OwnerPlayerNest.Colour);
+			}
+		}
+
+		if (GameManager.Instance.GetGamePlayer(OwnerIn.OwnerGuid) is { } OwnerPlayer)
+		{
+			SetBaseColour(OwnerPlayer.Colour);
 		}
 	}
 
@@ -83,99 +187,7 @@ public sealed class Hex : Object
 		return BuildingOwners[0].OwnerGuid;
 	}
 
-	public static void RevealHexesRecusrive(Hex Hex, bool Reveal, int Depth)
-	{
-		if (Hex == null || Depth <= 0) return;
-
-		Hex.IsRevealed = Reveal;
-
-		foreach (var Brother in Hex.AllBrothers)
-		{
-			if (Brother == null) continue;
-			RevealHexesRecusrive(Brother.GetComponent<Hex>(), Reveal, Depth - 1);
-		}
-	}
-
-	public static void HighlightHexesRecusrive(Hex Hex, bool Highlight, int Depth)
-	{
-		if (Hex == null || Depth <= 0) return;
-
-		Hex.IsHighlighted = Highlight;
-
-		foreach (var Brother in Hex.AllBrothers)
-		{
-			if (Brother == null) continue;
-			HighlightHexesRecusrive(Brother.GetComponent<Hex>(), Highlight, Depth - 1);
-		}
-	}
-
-	[Sync(SyncFlags.FromHost), Change("OnRep_BuildingData")] public FBuilding BuildingData { get; set; } = null;
-	public ObjectBuilding BuildingObject { get; set; } = null;
-	private void OnRep_BuildingData()
-	{
-		if (BuildingData == null)
-		{
-			if (BuildingObject.IsValid())
-			{
-				BuildingObject.GameObject.Destroy();
-				BuildingObject = null;
-			}
-			return;
-		}
-
-		Log.Info($"{BuildingData.OwnerGuid} building id for {this}\nthese 2 should be the same {GamePlayer.Local?.Connection?.Id} vs {Connection.Local.Id}");
-
-		if (BuildingData.TurnsAlive < BuildingData.ProductionToBuild)
-		{
-			return;
-		}
-
-		if (BuildingData.OwnerGuid == Connection.Local.Id)
-		{
-			RevealHexesRecusrive(this, true, GameManager.Instance.ObjectPrefabs[BuildingData.ObjectId].GetComponent<ObjectBuilding>().ViewRange + 1);
-		}
-
-		if (IsRevealed)
-		{
-			var Clone = GameManager.Instance.ObjectPrefabs[BuildingData.ObjectId].Clone();
-			Clone.WorldTransform = BuildingData.Transform;
-			BuildingObject = Clone.GetComponent<ObjectBuilding>();
-
-			SetOwner(BuildingData, true);
-		}
-	}
-
-	[Sync(SyncFlags.FromHost), Change("RepUnitDataChanged")] public FUnit UnitData { get; set; } = null;
-	public ObjectUnit UnitObject { get; set; } = null;
-	private void RepUnitDataChanged()
-	{
-		if (UnitData == null)
-		{
-			if (UnitObject.IsValid())
-			{
-				UnitObject.GameObject.Destroy();
-				UnitObject = null;
-			}
-			return;
-		}
-
-		Log.Info($"{UnitData?.OwnerGuid} unit id for {this}\nthese 2 should be the same {GamePlayer.Local?.Connection?.Id} vs {Connection.Local.Id}");
-
-		if (UnitData.OwnerGuid == Connection.Local.Id)
-		{
-			RevealHexesRecusrive(this, true, GameManager.Instance.ObjectPrefabs[UnitData.ObjectId].GetComponent<ObjectUnit>().ViewRange + 1);
-		}
-
-		if (IsRevealed && !UnitObject.IsValid())
-		{
-			var Clone = GameManager.Instance.ObjectPrefabs[UnitData.ObjectId].Clone();
-			Clone.WorldTransform = UnitData.Transform;
-			UnitObject = Clone.GetComponent<ObjectUnit>();
-
-			var OwnerPlayer = GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid);
-			UnitObject.ModelRenderer.Tint = OwnerPlayer.Colour;
-		}
-	}
+	/////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public List<Hex> AllBrothers => [HexTL, HexTR, HexMR, HexBR, HexBL, HexML];
 
@@ -251,111 +263,103 @@ public sealed class Hex : Object
 		}
 	}
 
-	private readonly List<Vector3> BrotherOffsets = [new(170, 100), new(170, -100), new(0, -200), new(-170, -100), new(-170, 100), new(0, 200)];
-	private readonly Dictionary<EHexType, Color> TypeColours = new()
+	public static void RevealHexesRecusrive(Hex Hex, bool Reveal, int Depth)
 	{
-		{ EHexType.Grass, Color.Green },
-		{ EHexType.Sand, Color.Yellow },
-		{ EHexType.Water, Color.Blue },
-	};
+		if (Hex == null || Depth <= 0) return;
 
-	protected override void OnAwake()
-	{
-		base.OnAwake();
+		Hex.IsRevealed = Reveal;
 
-		Assert.IsValid(FogPrefab);
-
-		if (!IsRevealed)
+		foreach (var Brother in Hex.AllBrothers)
 		{
-			OnHide();
+			if (Brother == null) continue;
+			RevealHexesRecusrive(Brother.GetComponent<Hex>(), Reveal, Depth - 1);
 		}
 	}
 
-	protected override void OnStart()
+	public static void HighlightHexesRecusrive(Hex Hex, bool Highlight, int Depth)
 	{
-		Assert.IsValid(FogPrefab);
+		if (Hex == null || Depth <= 0) return;
 
-		base.OnStart();
+		Hex.IsHighlighted = Highlight;
 
-		if (!Networking.IsHost)
+		foreach (var Brother in Hex.AllBrothers)
+		{
+			if (Brother == null) continue;
+			HighlightHexesRecusrive(Brother.GetComponent<Hex>(), Highlight, Depth - 1);
+		}
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+
+	[Sync(SyncFlags.FromHost), Change("OnRep_BuildingData")] public FBuilding BuildingData { get; set; } = null;
+	public ObjectBuilding BuildingObject { get; set; } = null;
+	private void OnRep_BuildingData()
+	{
+		if (BuildingData == null)
+		{
+			if (BuildingObject.IsValid())
+			{
+				BuildingObject.GameObject.Destroy();
+				BuildingObject = null;
+			}
+			return;
+		}
+
+		Log.Info($"{BuildingData.OwnerGuid} building id for {this}\nthese 2 should be the same {GamePlayer.Local?.Connection?.Id} vs {Connection.Local.Id}");
+
+		if (BuildingData.TurnsAlive < BuildingData.ProductionToBuild)
 		{
 			return;
 		}
 
-		Resources = Random.Shared.Int(2, 7);
-		Type = Random.Shared.FromArray(Enum.GetValues<EHexType>());
-		SetBaseColour(TypeColours[Type]);
-	}
-
-	private void SetBaseColour(Color Colour)
-	{
-		BaseColour = Colour;
-		BaseColour = BaseColour.Darken(1f / Resources);
-		ModelRenderer.Tint = BaseColour.Darken(1f / Resources);
-	}
-
-	public override void OnClick()
-	{
-		base.OnClick();
-
-		IsSelected = !IsSelected;
-	}
-
-	private void OnHighlight()
-	{
-		CloneConfig HighlightConfig = new(WorldTransform);
-		LightObject = LightPrefab.Clone(HighlightConfig);
-	}
-
-	private void OnDeHighlight()
-	{
-		if (LightObject.IsValid())
+		if (BuildingData.OwnerGuid == Connection.Local.Id)
 		{
-			LightObject.Destroy();
-			LightObject = null;
+			RevealHexesRecusrive(this, true, GameManager.Instance.ObjectPrefabs[BuildingData.ObjectId].GetComponent<ObjectBuilding>().ViewRange + 1);
+		}
+
+		if (IsRevealed)
+		{
+			var Clone = GameManager.Instance.ObjectPrefabs[BuildingData.ObjectId].Clone();
+			Clone.WorldTransform = BuildingData.Transform;
+			BuildingObject = Clone.GetComponent<ObjectBuilding>();
+
+			SetOwner(BuildingData, true);
 		}
 	}
 
-	private void OnReveal()
+	[Sync(SyncFlags.FromHost), Change("RepUnitDataChanged")] public FUnit UnitData { get; set; } = null;
+	public ObjectUnit UnitObject { get; set; } = null;
+	private void RepUnitDataChanged()
 	{
-		if (FogObject.IsValid())
+		if (UnitData == null)
 		{
-			FogObject.Destroy();
-			FogObject = null;
+			if (UnitObject.IsValid())
+			{
+				UnitObject.GameObject.Destroy();
+				UnitObject = null;
+			}
+			return;
 		}
 
-		RepUnitDataChanged();
-		OnRep_BuildingData();
+		Log.Info($"{UnitData?.OwnerGuid} unit id for {this}\nthese 2 should be the same {GamePlayer.Local?.Connection?.Id} vs {Connection.Local.Id}");
+
+		if (UnitData.OwnerGuid == Connection.Local.Id)
+		{
+			RevealHexesRecusrive(this, true, GameManager.Instance.ObjectPrefabs[UnitData.ObjectId].GetComponent<ObjectUnit>().ViewRange + 1);
+		}
+
+		if (IsRevealed && !UnitObject.IsValid())
+		{
+			var Clone = GameManager.Instance.ObjectPrefabs[UnitData.ObjectId].Clone();
+			Clone.WorldTransform = UnitData.Transform;
+			UnitObject = Clone.GetComponent<ObjectUnit>();
+
+			var OwnerPlayer = GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid);
+			UnitObject.ModelRenderer.Tint = OwnerPlayer.Colour;
+		}
 	}
 
-	private void OnHide()
-	{
-		CloneConfig FogConfig = new(WorldTransform);
-		FogObject = FogPrefab.Clone(FogConfig);
-
-		RepUnitDataChanged();
-		OnRep_BuildingData();
-	}
-
-	private void OnSelect()
-	{
-		ModelRenderer.Tint = BaseColour.Darken(0.66f);
-	}
-
-	private void OnDeselect()
-	{
-		ModelRenderer.Tint = BaseColour;
-	}
-
-	public void ClearBrothers()
-	{
-		HexTL = null;
-		HexTR = null;
-		HexML = null;
-		HexMR = null;
-		HexBL = null;
-		HexBR = null;
-	}
+	/////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// TODO : remove below
 	public void CreateSurroundBrothers()

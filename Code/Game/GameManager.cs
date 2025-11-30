@@ -140,6 +140,11 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 			_ = GenerateBoardAsync(Hex);
 		}
+	}
+
+	protected override void OnFixedUpdate()
+	{
+		base.OnFixedUpdate();
 
 		// HACK clients spawn with an invalid unit object, remove this
 		// TODO : figure out where the unit comes from
