@@ -111,8 +111,9 @@ public sealed class Hex : Object
 			FogObject = null;
 		}
 
-		RepUnitDataChanged();
-		OnRep_BuildingData();
+		// TODO : revisist
+		OnUnitDataChanged(new(), new());
+		OnBuildingDataChanged(new(), new());
 	}
 
 	private void OnHide()
@@ -120,8 +121,9 @@ public sealed class Hex : Object
 		CloneConfig FogConfig = new(WorldTransform);
 		FogObject = FogPrefab.Clone(FogConfig);
 
-		RepUnitDataChanged();
-		OnRep_BuildingData();
+		// TODO : revisist
+		OnUnitDataChanged(new(), new());
+		OnBuildingDataChanged(new(), new());
 	}
 
 	private void OnSelect()
@@ -291,9 +293,9 @@ public sealed class Hex : Object
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
-	[Sync(SyncFlags.FromHost), Change("OnRep_BuildingData")] public FBuilding BuildingData { get; set; } = null;
+	[Sync(SyncFlags.FromHost), Change] public FBuilding BuildingData { get; set; } = null;
 	public ObjectBuilding BuildingObject { get; set; } = null;
-	private void OnRep_BuildingData()
+	private void OnBuildingDataChanged(FBuilding OldBuildingData, FBuilding NewBuildingData)
 	{
 		if (BuildingData == null)
 		{
@@ -327,9 +329,9 @@ public sealed class Hex : Object
 		}
 	}
 
-	[Sync(SyncFlags.FromHost), Change("RepUnitDataChanged")] public FUnit UnitData { get; set; } = null;
+	[Sync(SyncFlags.FromHost), Change] public FUnit UnitData { get; set; } = null;
 	public ObjectUnit UnitObject { get; set; } = null;
-	private void RepUnitDataChanged()
+	private void OnUnitDataChanged(FUnit OldUnitData, FUnit NewUnitData)
 	{
 		if (UnitData == null)
 		{
