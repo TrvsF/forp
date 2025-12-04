@@ -48,10 +48,11 @@ public sealed partial class GamePlayer : Component
 		{
 			var OwnerName = "None";
 			var IsLocallyOwner = false;
+
 			if (GameManager.Instance.GetGamePlayer(SelectedHex.GetOwnerId()) is { } Owner)
 			{
 				OwnerName = Owner.SteamName;
-				IsLocallyOwner = Owner == Local;
+				IsLocallyOwner = Owner.ConnectionId == Local.ConnectionId;
 			}
 
 			OutPlayerUiInfo.OutHex = SelectedHex;
@@ -85,6 +86,6 @@ public sealed partial class GamePlayer : Component
 			OutPlayerUiInfo.SelectedName += $"unit {SelectedUnit.DisplayName}\n";
 		}
 
-		return OutPlayerUiInfo.SelectedName != BaseOutString;
+		return true;
 	}
 }

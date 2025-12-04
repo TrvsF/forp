@@ -307,7 +307,7 @@ public sealed class Hex : Object
 			return;
 		}
 
-		Log.Info($"{BuildingData.OwnerGuid} building id for {this}\nthese 2 should be the same {GamePlayer.Local?.Connection?.Id} vs {Connection.Local.Id}");
+		Log.Info($"{BuildingData.OwnerGuid} building id for {this}\nthese 2 should be the same {GamePlayer.Local?.ConnectionId} vs {Connection.Local.Id}");
 
 		if (BuildingData.TurnsAlive < BuildingData.ProductionToBuild)
 		{
@@ -343,7 +343,7 @@ public sealed class Hex : Object
 			return;
 		}
 
-		Log.Info($"{UnitData?.OwnerGuid} unit id for {this}\nthese 2 should be the same {GamePlayer.Local?.Connection?.Id} vs {Connection.Local.Id}");
+		Log.Info($"{UnitData?.OwnerGuid} unit id for {this}\nthese 2 should be the same {GamePlayer.Local?.ConnectionId} vs {Connection.Local.Id}");
 
 		if (UnitData.OwnerGuid == Connection.Local.Id)
 		{

@@ -19,9 +19,9 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 	[Sync(SyncFlags.FromHost)] public NetList<GamePlayer> GamePlayers { get; private set; } = new();
 	[Sync(SyncFlags.FromHost)] public int Turn { get; set; } = 0;
-		 
+
 	/////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	private readonly List<Guid> WaitingConnections = new();
 
 	public void NextTurn()
@@ -63,7 +63,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 					FBuilding BuildingData = new();
 					BuildingData.SetData(Hex.BuildingData);
 					BuildingData.TurnsAlive += 1;
-					
+
 					Hex.BuildingData = BuildingData;
 				}
 			}
@@ -72,7 +72,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			++Turn;
 		}
 	}
-	
+
 	/////////////////////////////////////////////////////////////////////////////////////////
 
 	void INetworkListener.OnActive(Connection ConnectionChannel)
@@ -107,11 +107,11 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		}
 	}
 
-	protected override Task OnLoad()
+	protected override async Task OnLoad()
 	{
 		if (Scene.IsEditor)
 		{
-			return base.OnLoad();
+			return;
 		}
 
 		if (!Networking.IsActive)
@@ -119,16 +119,9 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			CreateLobby();
 		}
 
-		return base.OnLoad();
-	}
-
-	protected override void OnStart()
-	{
-		base.OnStart();
-
 		Assert.IsValid(HexObject);
 		Assert.IsValid(PlayerPrefab);
-		
+
 		// create board
 		if (Networking.IsHost)
 		{
@@ -206,7 +199,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 	[Rpc.Host]
 	public void Server_CreateHexUnitObject(string ObjectId, Hex Hex, Guid ConnectionId)
-	{ 
+	{
 		Assert.IsValid(Hex);
 		Assert.NotNull(ConnectionId);
 
@@ -303,13 +296,13 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 	public GamePlayer GetGamePlayer(Guid ConnectionId)
 	{
-		foreach (var GamePlayer in GamePlayers) 
+		foreach (var GamePlayer in GamePlayers)
 		{
-			if (GamePlayer.Connection.Id == ConnectionId)
+			if (GamePlayer.ConnectionId == ConnectionId)
 			{
-				return GamePlayer;	
+				return GamePlayer;
 			}
-		} 
+		}
 		return null;
 	}
 

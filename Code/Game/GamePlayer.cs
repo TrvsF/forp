@@ -12,6 +12,7 @@ public sealed partial class GamePlayer : Component
 
 	[Sync(SyncFlags.FromHost), Property] public ulong SteamId { get; private set; }
 	[Sync(SyncFlags.FromHost), Property] public string SteamName { get; private set; }
+	[Sync(SyncFlags.FromHost), Property] public Guid ConnectionId { get; private set; }
 
 	[Sync, Property] public int Gold { get; set; } = 0;
 	[Sync, Property] public Color Colour { get; set; } = Color.Black;
@@ -102,6 +103,7 @@ public sealed partial class GamePlayer : Component
 		Assert.NotNull(ConnectionIn);
 
 		Connection = ConnectionIn;
+		ConnectionId = ConnectionIn.Id;
 		SteamId = Connection.SteamId;
 		SteamName = Connection.DisplayName;
 
