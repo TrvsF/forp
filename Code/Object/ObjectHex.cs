@@ -148,49 +148,6 @@ public sealed class Hex : Object
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
-	[Sync] public NetList<FBuilding> BuildingOwners { get; set; } = new();
-
-	private void SetOwner(FBuilding OwnerIn, bool DoBrothers = false)
-	{
-		BuildingOwners.Add(OwnerIn);
-
-		if (!DoBrothers)
-		{
-			return;
-		}
-
-		foreach (var BrothermanHex in AllBrothers)
-		{
-			BrothermanHex?.BuildingOwners.Add(OwnerIn);
-			if (GameManager.Instance.GetGamePlayer(OwnerIn.OwnerGuid) is { } OwnerPlayerNest)
-			{
-				BrothermanHex?.SetBaseColour(OwnerPlayerNest.Colour);
-			}
-		}
-
-		if (GameManager.Instance.GetGamePlayer(OwnerIn.OwnerGuid) is { } OwnerPlayer)
-		{
-			SetBaseColour(OwnerPlayer.Colour);
-		}
-	}
-
-	public bool IsLocallyOwned()
-	{
-		return GetOwnerId() == GamePlayer.Local.Id;
-	}
-
-	public Guid GetOwnerId()
-	{
-		if (BuildingOwners.Count == 0)
-		{
-			return Guid.Empty;
-		}
-
-		return BuildingOwners[0].OwnerGuid;
-	}
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////
-
 	public List<Hex> AllBrothers => [HexTL, HexTR, HexMR, HexBR, HexBL, HexML];
 
 	private bool _isHighlighted = false;
@@ -291,6 +248,21 @@ public sealed class Hex : Object
 		}
 	}
 
+	public bool IsLocallyOwned()
+	{
+		return GetOwnerId() == GamePlayer.Local.Id;
+	}
+
+	public Guid GetOwnerId()
+	{
+		if (BuildingOwners.Count == 0)
+		{
+			return Guid.Empty;
+		}
+
+		return BuildingOwners[0].OwnerGuid;
+	}
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
 	[Sync(SyncFlags.FromHost), Change] public FBuilding BuildingData { get; set; } = null;
@@ -324,8 +296,6 @@ public sealed class Hex : Object
 			var Clone = GameManager.Instance.ObjectPrefabs[BuildingData.ObjectId].Clone();
 			Clone.WorldTransform = BuildingData.Transform;
 			BuildingObject = Clone.GetComponent<ObjectBuilding>();
-
-			SetOwner(BuildingData, true);
 		}
 	}
 
@@ -358,6 +328,29 @@ public sealed class Hex : Object
 
 			var OwnerPlayer = GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid);
 			UnitObject.ModelRenderer.Tint = OwnerPlayer.Colour;
+		}
+	}
+
+	[Sync(SyncFlags.FromHost)] public NetList<FBuilding> BuildingOwners { get; set; } = new();
+	public void SetOwner_ServerOnly(FBuilding OwnerIn, bool DoBrothers = false)
+	{
+		Assert.True(Networking.IsHost);
+
+		BuildingOwners.Add(OwnerIn);
+
+		if (GameManager.Instance.GetGamePlayer(OwnerIn.OwnerGuid) is { } OwnerPlayer)
+		{
+			SetBaseColour(OwnerPlayer.Colour);
+		}
+
+		if (!DoBrothers)
+		{
+			return;
+		}
+
+		foreach (var BrothermanHex in AllBrothers)
+		{
+			BrothermanHex?.SetOwner_ServerOnly(OwnerIn, false);
 		}
 	}
 

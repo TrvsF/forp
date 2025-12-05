@@ -86,6 +86,6 @@ public sealed partial class GamePlayer : Component
 			OutPlayerUiInfo.SelectedName += $"unit {SelectedUnit.DisplayName}\n";
 		}
 
-		return true;
+		return OutPlayerUiInfo.SelectedName != BaseOutString;
 	}
 }

@@ -241,6 +241,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		};
 
 		Hex.BuildingData = ObjectData;
+		Hex.SetOwner_ServerOnly(ObjectData, true);
 
 		if (FromUnit) // TODO : check building charge
 		{
