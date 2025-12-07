@@ -52,6 +52,10 @@
               "building-tower": {
                 "_type": "gameobject",
                 "prefab": "prefabs/objects/tower.prefab"
+              },
+              "unit-combat": {
+                "_type": "gameobject",
+                "prefab": "prefabs/objects/combatunit.prefab"
               }
             },
             "OnComponentDestroy": null,

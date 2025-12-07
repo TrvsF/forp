@@ -218,6 +218,16 @@ public sealed partial class GamePlayer : Component
 						return;
 					}
 
+					if (SelectedUnit != null)
+					{
+						Log.Info($"{SelectedUnit} vs {ObjectUnit}");
+						if (SelectedUnit.OwnerPlayer != ObjectUnit.OwnerPlayer)
+						{
+							// GameManager.Instance.Server_UnitAttack()
+							Log.Info("ATTACK");
+						}
+					}
+
 					SelectedUnit = ObjectUnit;
 					return;
 				}

@@ -194,7 +194,16 @@
       "__PrefabInstancePatch": {
         "AddedObjects": [],
         "RemovedObjects": [],
-        "PropertyOverrides": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "8edb6cdd-b5b6-494f-92ca-4095047c1197"
+            },
+            "Property": "Flags",
+            "Value": 0
+          }
+        ],
         "MovedObjects": []
       },
       "__PrefabIdToInstanceId": {

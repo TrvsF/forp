@@ -49,6 +49,8 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 					continue;
 				}
 
+				// we make a copy & reasign with these 2 call change 
+
 				if (Hex.UnitData != null)
 				{
 					FUnit UnitData = Hex.UnitData;
@@ -60,6 +62,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 				if (Hex.BuildingData != null)
 				{
+					// TODO : why isnt this the same as unit?
 					FBuilding BuildingData = new();
 					BuildingData.SetData(Hex.BuildingData);
 					BuildingData.TurnsAlive += 1;
@@ -198,6 +201,23 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	}
 
 	[Rpc.Host]
+	public void Server_UnitAttack(FUnit AttackerUnit, FUnit DefenderUnit)
+	{
+		Assert.NotNull(AttackerUnit);
+		Assert.NotNull(DefenderUnit);
+
+		if (!AttackerUnit.Hex.IsValid() || !DefenderUnit.Hex.IsValid())
+		{
+			Log.Warning($"{AttackerUnit} or {DefenderUnit} does not have a valid hex when calling attack");
+			return;
+		}
+
+		FUnit DU = DefenderUnit;
+		DU.Health -= AttackerUnit.Attack;
+		DU.Hex.UnitData = DU;
+	}
+
+	[Rpc.Host]
 	public void Server_CreateHexUnitObject(string ObjectId, Hex Hex, Guid ConnectionId)
 	{
 		Assert.IsValid(Hex);
@@ -214,6 +234,8 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			Name = TypedObject.DisplayName,
 			Transform = Hex.WorldTransform,
 			OwnerGuid = ConnectionId,
+			Health = TypedObject.Health,
+			Attack = TypedObject.Attack,
 			MoveRange = TypedObject.MoveRange,
 			Hex = Hex,
 		};
@@ -285,7 +307,11 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			Name = OldUnitData.Name,
 			Transform = NewHex.WorldTransform,
 			OwnerGuid = ConnectionId,
+
 			Hex = NewHex,
+
+			Health = OldUnitData.Health,
+			Attack = OldUnitData.Attack,
 
 			MoveRange = OldUnitData.MoveRange,
 			TurnMovementSpent = OldUnitData.TurnMovementSpent + HexesBetween,

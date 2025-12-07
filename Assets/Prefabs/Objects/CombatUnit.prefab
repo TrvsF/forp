@@ -1,9 +1,9 @@
 {
   "RootObject": {
-    "__guid": "4fbfe539-6df4-47f7-ab87-a814b4a88b55",
+    "__guid": "a0ea17bc-813a-41cf-afc4-796c3582076f",
     "__version": 1,
     "Flags": 0,
-    "Name": "tower",
+    "Name": "combatunit",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
     "Scale": "1,1,1",
@@ -16,8 +16,26 @@
     "OwnerTransfer": 1,
     "Components": [
       {
+        "__type": "Forp.Object.Unit.ObjectUnit",
+        "__guid": "43de9620-38cc-40c5-a1fb-3703290a1677",
+        "__enabled": true,
+        "Attack": 0,
+        "Buildings": [],
+        "DisplayName": "Combat",
+        "Health": 0,
+        "MoveRange": 2,
+        "ObjectId": "unit-combat",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "ViewRange": 3
+      },
+      {
         "__type": "Sandbox.SkinnedModelRenderer",
-        "__guid": "2736c5a6-6003-4e70-a7d8-8a5cb948a843",
+        "__guid": "61105fb5-abcd-45dc-bf9d-9ea2c1def99c",
         "__enabled": true,
         "AnimationGraph": null,
         "BodyGroups": 18446744073709551615,
@@ -28,7 +46,7 @@
         "MaterialGroup": null,
         "MaterialOverride": null,
         "Materials": null,
-        "Model": "models/props/trim_sheets/bookcase/bookcase_01.vmdl",
+        "Model": "models/characters/crackhead_01/master_rig/crackhead_samir.vmdl",
         "Morphs": {},
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -60,14 +78,39 @@
         "UseAnimGraph": true
       },
       {
+        "__type": "Sandbox.BoxCollider",
+        "__guid": "005ff6f6-c716-416e-84ab-0210e453ab72",
+        "__enabled": false,
+        "Center": "0.6336546,-0.9722166,34.70306",
+        "ColliderFlags": 0,
+        "Elasticity": null,
+        "Friction": null,
+        "IsTrigger": false,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OnObjectTriggerEnter": null,
+        "OnObjectTriggerExit": null,
+        "OnTriggerEnter": null,
+        "OnTriggerExit": null,
+        "RollingResistance": null,
+        "Scale": "21.82688,31.1014,70.07653",
+        "Static": false,
+        "Surface": null,
+        "SurfaceVelocity": "0,0,0"
+      },
+      {
         "__type": "Sandbox.ModelCollider",
-        "__guid": "8037f219-d600-408b-8d27-a7aa2ff48bc2",
+        "__guid": "32d2fbb6-38e9-4adb-8454-94c6d55a8606",
         "__enabled": true,
         "ColliderFlags": 0,
         "Elasticity": null,
         "Friction": null,
         "IsTrigger": false,
-        "Model": "models/props/trim_sheets/bookcase/bookcase_01.vmdl",
+        "Model": "models/characters/crackhead_01/master_rig/crackhead_samir.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -82,28 +125,6 @@
         "Static": false,
         "Surface": null,
         "SurfaceVelocity": "0,0,0"
-      },
-      {
-        "__type": "Forp.Object.Building.City",
-        "__guid": "ce6f4910-3ff3-4609-9814-9903a7caa6ca",
-        "__enabled": true,
-        "Buildings": [],
-        "DisplayName": "Tower",
-        "ObjectId": "building-tower",
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null,
-        "ProductionToBuild": 2,
-        "Units": [
-          {
-            "_type": "gameobject",
-            "prefab": "prefabs/objects/combatunit.prefab"
-          }
-        ],
-        "ViewRange": 3
       }
     ],
     "Children": [],
@@ -133,7 +154,7 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "facepunch.bookcase01#80037"
+    "fpopium.crackhead_03#123567"
   ],
   "__version": 2
 }

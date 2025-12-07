@@ -269,6 +269,8 @@ public sealed class Hex : Object
 	public ObjectBuilding BuildingObject { get; set; } = null;
 	private void OnBuildingDataChanged(FBuilding OldBuildingData, FBuilding NewBuildingData)
 	{
+		Log.Info("[bc]");
+
 		if (BuildingData == null)
 		{
 			if (BuildingObject.IsValid())
@@ -303,6 +305,8 @@ public sealed class Hex : Object
 	public ObjectUnit UnitObject { get; set; } = null;
 	private void OnUnitDataChanged(FUnit OldUnitData, FUnit NewUnitData)
 	{
+		Log.Info("[uc]");
+
 		if (UnitData == null)
 		{
 			if (UnitObject.IsValid())
@@ -325,6 +329,7 @@ public sealed class Hex : Object
 			var Clone = GameManager.Instance.ObjectPrefabs[UnitData.ObjectId].Clone();
 			Clone.WorldTransform = UnitData.Transform;
 			UnitObject = Clone.GetComponent<ObjectUnit>();
+			UnitObject.OwnerHex = this;
 
 			var OwnerPlayer = GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid);
 			UnitObject.ModelRenderer.Tint = OwnerPlayer.Colour;
