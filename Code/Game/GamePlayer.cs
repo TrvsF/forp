@@ -220,11 +220,12 @@ public sealed partial class GamePlayer : Component
 
 					if (SelectedUnit != null)
 					{
+						Log.Info($"{SelectedUnit.OwnerPlayer.ConnectionId} vs {ObjectUnit.OwnerPlayer.ConnectionId}");
 						Log.Info($"{SelectedUnit} vs {ObjectUnit}");
-						if (SelectedUnit.OwnerPlayer != ObjectUnit.OwnerPlayer)
+						// if (SelectedUnit.OwnerPlayer != ObjectUnit.OwnerPlayer)
 						{
-							// GameManager.Instance.Server_UnitAttack()
-							Log.Info("ATTACK");
+							GameManager.Instance.Server_UnitAttack(SelectedUnit.OwnerHex.UnitData, ObjectUnit.OwnerHex.UnitData);
+							Log.Info("ATTACK ");
 						}
 					}
 

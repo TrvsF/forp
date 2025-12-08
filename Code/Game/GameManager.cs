@@ -212,9 +212,13 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			return;
 		}
 
-		FUnit DU = DefenderUnit;
-		DU.Health -= AttackerUnit.Attack;
-		DU.Hex.UnitData = DU;
+		DefenderUnit.Hex.UnitData = DefenderUnit.Hex.UnitData with
+		{
+			Health = DefenderUnit.Hex.UnitData.Health - AttackerUnit.Attack
+		};
+
+		Log.Info($"{AttackerUnit} hit {DefenderUnit} down to {DefenderUnit.Hex.UnitData.Health}");
+		Log.Info($"{DefenderUnit.Hex.UnitData}");
 	}
 
 	[Rpc.Host]

@@ -83,7 +83,7 @@ public sealed partial class GamePlayer : Component
 		}
 		else if (SelectedUnit.IsValid())
 		{
-			OutPlayerUiInfo.SelectedName += $"unit {SelectedUnit.DisplayName}\n";
+			OutPlayerUiInfo.SelectedName += $"unit {SelectedUnit.DisplayName} {SelectedUnit.Attack}A {SelectedUnit.Health}HP\n";
 		}
 
 		return OutPlayerUiInfo.SelectedName != BaseOutString;

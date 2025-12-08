@@ -19,7 +19,7 @@
         "__type": "Forp.Object.Unit.ObjectUnit",
         "__guid": "43de9620-38cc-40c5-a1fb-3703290a1677",
         "__enabled": true,
-        "Attack": 0,
+        "Attack": 1,
         "Buildings": [
           {
             "_type": "gameobject",
@@ -27,7 +27,7 @@
           }
         ],
         "DisplayName": "Settler",
-        "Health": 0,
+        "Health": 5,
         "MoveRange": 2,
         "ObjectId": "unit-settler",
         "OnComponentDestroy": null,

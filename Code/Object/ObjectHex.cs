@@ -305,7 +305,7 @@ public sealed class Hex : Object
 	public ObjectUnit UnitObject { get; set; } = null;
 	private void OnUnitDataChanged(FUnit OldUnitData, FUnit NewUnitData)
 	{
-		Log.Info("[uc]");
+		Log.Info($"[uc]\n{OldUnitData}\n{NewUnitData}");
 
 		if (UnitData == null)
 		{
@@ -324,12 +324,25 @@ public sealed class Hex : Object
 			RevealHexesRecusrive(this, true, GameManager.Instance.ObjectPrefabs[UnitData.ObjectId].GetComponent<ObjectUnit>().ViewRange + 1);
 		}
 
+		if (UnitObject.IsValid())
+		{
+			UnitObject.Health = UnitData.Health;
+			UnitObject.Attack = UnitData.Attack;
+			if (UnitData.Health <= 0)
+			{
+				Log.Info($"you! yes you are DEAD");
+				UnitObject.Destroy();
+				return;
+			}
+		}
+
 		if (IsRevealed && !UnitObject.IsValid())
 		{
 			var Clone = GameManager.Instance.ObjectPrefabs[UnitData.ObjectId].Clone();
 			Clone.WorldTransform = UnitData.Transform;
 			UnitObject = Clone.GetComponent<ObjectUnit>();
 			UnitObject.OwnerHex = this;
+			UnitObject.OwnerPlayer = GamePlayer.Local;
 
 			var OwnerPlayer = GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid);
 			UnitObject.ModelRenderer.Tint = OwnerPlayer.Colour;
