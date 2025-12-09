@@ -269,8 +269,6 @@ public sealed class Hex : Object
 	public ObjectBuilding BuildingObject { get; set; } = null;
 	private void OnBuildingDataChanged(FBuilding OldBuildingData, FBuilding NewBuildingData)
 	{
-		Log.Info("[bc]");
-
 		if (BuildingData == null)
 		{
 			if (BuildingObject.IsValid())
@@ -280,8 +278,6 @@ public sealed class Hex : Object
 			}
 			return;
 		}
-
-		Log.Info($"{BuildingData.OwnerGuid} building id for {this}\nthese 2 should be the same {GamePlayer.Local?.ConnectionId} vs {Connection.Local.Id}");
 
 		if (BuildingData.TurnsAlive < BuildingData.ProductionToBuild)
 		{
@@ -293,6 +289,7 @@ public sealed class Hex : Object
 			RevealHexesRecusrive(this, true, GameManager.Instance.ObjectPrefabs[BuildingData.ObjectId].GetComponent<ObjectBuilding>().ViewRange + 1);
 		}
 
+		// we only build once
 		if (IsRevealed)
 		{
 			var Clone = GameManager.Instance.ObjectPrefabs[BuildingData.ObjectId].Clone();
@@ -305,8 +302,6 @@ public sealed class Hex : Object
 	public ObjectUnit UnitObject { get; set; } = null;
 	private void OnUnitDataChanged(FUnit OldUnitData, FUnit NewUnitData)
 	{
-		Log.Info($"[uc]\n{OldUnitData}\n{NewUnitData}");
-
 		if (UnitData == null)
 		{
 			if (UnitObject.IsValid())
@@ -317,23 +312,9 @@ public sealed class Hex : Object
 			return;
 		}
 
-		Log.Info($"{UnitData?.OwnerGuid} unit id for {this}\nthese 2 should be the same {GamePlayer.Local?.ConnectionId} vs {Connection.Local.Id}");
-
 		if (UnitData.OwnerGuid == Connection.Local.Id)
 		{
 			RevealHexesRecusrive(this, true, GameManager.Instance.ObjectPrefabs[UnitData.ObjectId].GetComponent<ObjectUnit>().ViewRange + 1);
-		}
-
-		if (UnitObject.IsValid())
-		{
-			UnitObject.Health = UnitData.Health;
-			UnitObject.Attack = UnitData.Attack;
-			if (UnitData.Health <= 0)
-			{
-				Log.Info($"you! yes you are DEAD");
-				UnitObject.Destroy();
-				return;
-			}
 		}
 
 		if (IsRevealed && !UnitObject.IsValid())
@@ -346,6 +327,19 @@ public sealed class Hex : Object
 
 			var OwnerPlayer = GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid);
 			UnitObject.ModelRenderer.Tint = OwnerPlayer.Colour;
+		}
+
+		if (UnitObject.IsValid())
+		{
+			Log.Info("updoot");
+			UnitObject.Health = UnitData.Health;
+			UnitObject.Attack = UnitData.Attack;
+			if (UnitData.Health <= 0)
+			{
+				Log.Info($"you! yes you are DEAD");
+				UnitObject.Destroy();
+				return;
+			}
 		}
 	}
 

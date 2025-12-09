@@ -191,12 +191,6 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		GamePlayers.Add(GamePlayer);
 
 		var SpawnHex = Random.Shared.FromList(Scene.GetAllComponents<Hex>().ToList());
-
-		Transform UnitTransform = new()
-		{
-			Position = SpawnHex.WorldPosition
-		};
-
 		Instance.Server_CreateHexUnitObject("unit-settler", SpawnHex, ConnectionChannel.Id);
 	}
 
@@ -212,13 +206,11 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			return;
 		}
 
+		Log.Info($"updating data...");
 		DefenderUnit.Hex.UnitData = DefenderUnit.Hex.UnitData with
 		{
 			Health = DefenderUnit.Hex.UnitData.Health - AttackerUnit.Attack
 		};
-
-		Log.Info($"{AttackerUnit} hit {DefenderUnit} down to {DefenderUnit.Hex.UnitData.Health}");
-		Log.Info($"{DefenderUnit.Hex.UnitData}");
 	}
 
 	[Rpc.Host]
@@ -305,20 +297,11 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			return;
 		}
 
-		FUnit NewUnitData = new()
+		FUnit NewUnitData = OldUnitData with
 		{
-			ObjectId = OldUnitData.ObjectId,
-			Name = OldUnitData.Name,
 			Transform = NewHex.WorldTransform,
 			OwnerGuid = ConnectionId,
-
 			Hex = NewHex,
-
-			Health = OldUnitData.Health,
-			Attack = OldUnitData.Attack,
-
-			MoveRange = OldUnitData.MoveRange,
-			TurnMovementSpent = OldUnitData.TurnMovementSpent + HexesBetween,
 		};
 
 		OldHex.UnitData = null;

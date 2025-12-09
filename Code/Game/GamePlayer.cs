@@ -218,11 +218,9 @@ public sealed partial class GamePlayer : Component
 						return;
 					}
 
-					if (SelectedUnit != null)
+					if (SelectedUnit.IsValid())
 					{
-						Log.Info($"{SelectedUnit.OwnerPlayer.ConnectionId} vs {ObjectUnit.OwnerPlayer.ConnectionId}");
-						Log.Info($"{SelectedUnit} vs {ObjectUnit}");
-						// if (SelectedUnit.OwnerPlayer != ObjectUnit.OwnerPlayer)
+						if (SelectedUnit != ObjectUnit)
 						{
 							GameManager.Instance.Server_UnitAttack(SelectedUnit.OwnerHex.UnitData, ObjectUnit.OwnerHex.UnitData);
 							Log.Info("ATTACK ");
