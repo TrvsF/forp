@@ -331,7 +331,6 @@ public sealed class Hex : Object
 
 		if (UnitObject.IsValid())
 		{
-			Log.Info("updoot");
 			UnitObject.Health = UnitData.Health;
 			UnitObject.Attack = UnitData.Attack;
 			if (UnitData.Health <= 0)

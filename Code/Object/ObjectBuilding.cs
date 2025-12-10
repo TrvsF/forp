@@ -7,17 +7,6 @@ namespace Forp.Object.Building;
 
 public record FBuilding : IObject
 {
-	public void SetData(FBuilding OldBuilding)
-	{
-		ObjectId = OldBuilding.ObjectId;
-		Name = OldBuilding.Name;
-		Transform = OldBuilding.Transform;
-		OwnerGuid = OldBuilding.OwnerGuid;
-		TurnsAlive = OldBuilding.TurnsAlive;
-		Hex = OldBuilding.Hex;
-		ProductionToBuild = OldBuilding.ProductionToBuild;
-	}
-
 	public string ObjectId { get; set; }
 
 	public string Name { get; set; }

@@ -49,25 +49,21 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 					continue;
 				}
 
-				// we make a copy & reasign with these 2 call change 
-
 				if (Hex.UnitData != null)
 				{
-					FUnit UnitData = Hex.UnitData;
-					UnitData.TurnsAlive += 1;
-					UnitData.TurnMovementSpent = 0;
-
-					Hex.UnitData = UnitData;
+					Hex.UnitData = Hex.UnitData with
+					{
+						TurnsAlive = Hex.UnitData.TurnsAlive + 1,
+						TurnMovementSpent = 0,
+					};
 				}
 
 				if (Hex.BuildingData != null)
 				{
-					// TODO : why isnt this the same as unit?
-					FBuilding BuildingData = new();
-					BuildingData.SetData(Hex.BuildingData);
-					BuildingData.TurnsAlive += 1;
-
-					Hex.BuildingData = BuildingData;
+					Hex.BuildingData = Hex.BuildingData with
+					{
+						TurnsAlive = Hex.BuildingData.TurnsAlive + 1,
+					};
 				}
 			}
 
@@ -206,7 +202,6 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			return;
 		}
 
-		Log.Info($"updating data...");
 		DefenderUnit.Hex.UnitData = DefenderUnit.Hex.UnitData with
 		{
 			Health = DefenderUnit.Hex.UnitData.Health - AttackerUnit.Attack
