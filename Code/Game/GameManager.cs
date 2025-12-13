@@ -297,6 +297,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			Transform = NewHex.WorldTransform,
 			OwnerGuid = ConnectionId,
 			Hex = NewHex,
+			TurnMovementSpent = OldUnitData.TurnMovementSpent + HexesBetween,
 		};
 
 		OldHex.UnitData = null;

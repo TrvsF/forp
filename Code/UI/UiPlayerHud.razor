@@ -6,9 +6,9 @@
 	<watermark>Forward Operating: Repair the Planet Infdev @(Time.Delta)</watermark>
 	@if (ShowTopBar)
 	{
-		<top-bar>
-			@(UiInfo.Gold)
-		</top-bar>
+		<static-bar>
+			@(UiInfo.GetTopBarString())
+		</static-bar>
 	}
 	@if (ShowBottomBar)
 	{

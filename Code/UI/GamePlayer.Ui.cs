@@ -22,9 +22,14 @@ public struct FPlayerUiInfo
 	public List<string> Builds = new();
 	public Hex OutHex = null;
 
-	public bool IsValid()
+	public string GetTopBarString()
 	{
-		return Name != "NONE";
+		return "";
+	}
+
+	public string GetBottomBarString()
+	{
+		return "";
 	}
 
 	public bool AnythingSelected()
@@ -84,6 +89,11 @@ public sealed partial class GamePlayer : Component
 		else if (SelectedUnit.IsValid())
 		{
 			OutPlayerUiInfo.SelectedName += $"unit {SelectedUnit.DisplayName} {SelectedUnit.Attack}A {SelectedUnit.Health}HP\n";
+
+			if (HoveredObject is ObjectUnit { } HoveredUnit && HoveredUnit != SelectedUnit)
+			{
+				OutPlayerUiInfo.SelectedName += $"attack {HoveredUnit.DisplayName}";
+			}
 		}
 		else if (HoveredObject.IsValid())
 		{
