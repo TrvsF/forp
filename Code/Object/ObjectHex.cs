@@ -286,13 +286,13 @@ public sealed class Hex : Object
 
 		if (BuildingData.OwnerGuid == Connection.Local.Id)
 		{
-			RevealHexesRecusrive(this, true, GameManager.Instance.ObjectPrefabs[BuildingData.ObjectId].GetComponent<ObjectBuilding>().ViewRange + 1);
+			RevealHexesRecusrive(this, true, UnitData.ViewRange + 1);
 		}
 
 		// we only build once
 		if (IsRevealed)
 		{
-			var Clone = GameManager.Instance.ObjectPrefabs[BuildingData.ObjectId].Clone();
+			var Clone = GameManager.Instance.GetObject(BuildingData.ObjectId).Clone();
 			Clone.WorldTransform = BuildingData.Transform;
 			BuildingObject = Clone.GetComponent<ObjectBuilding>();
 		}
@@ -314,19 +314,21 @@ public sealed class Hex : Object
 
 		if (UnitData.OwnerGuid == Connection.Local.Id)
 		{
-			RevealHexesRecusrive(this, true, GameManager.Instance.ObjectPrefabs[UnitData.ObjectId].GetComponent<ObjectUnit>().ViewRange + 1);
+			RevealHexesRecusrive(this, true, UnitData.ViewRange + 1);
 		}
 
 		if (IsRevealed && !UnitObject.IsValid())
 		{
-			var Clone = GameManager.Instance.ObjectPrefabs[UnitData.ObjectId].Clone();
+			var Clone = GameManager.Instance.GetObject(UnitData.ObjectId).Clone();
 			Clone.WorldTransform = UnitData.Transform;
 			UnitObject = Clone.GetComponent<ObjectUnit>();
 			UnitObject.OwnerHex = this;
 			UnitObject.OwnerPlayer = GamePlayer.Local;
 
-			var OwnerPlayer = GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid);
-			UnitObject.ModelRenderer.Tint = OwnerPlayer.Colour;
+			if (GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid) is { } OwnerPlayer)
+			{
+				UnitObject.ModelRenderer.Tint = OwnerPlayer.Colour;
+			}
 		}
 
 		if (UnitObject.IsValid())

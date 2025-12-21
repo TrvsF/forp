@@ -15,7 +15,18 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 {
 	[Property] public GameObject HexObject { get; set; }
 	[Property] public GameObject PlayerPrefab { get; set; }
-	[Property] public Dictionary<string, GameObject> ObjectPrefabs { get; set; }
+	[Property] private Dictionary<string, GameObject> ObjectPrefabs { get; set; }
+
+	public GameObject GetObject(string ObjectId)
+	{
+		ObjectPrefabs.TryGetValue(ObjectId, out GameObject Object);
+		if (!Object.IsValid())
+		{
+			Log.Warning($"cannot find object with id {ObjectId}!!!");
+		}
+
+		return Object;
+	}
 
 	[Sync(SyncFlags.FromHost)] public NetList<GamePlayer> GamePlayers { get; private set; } = new();
 	[Sync(SyncFlags.FromHost)] public int Turn { get; set; } = 0;
@@ -76,9 +87,10 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 	void INetworkListener.OnActive(Connection ConnectionChannel)
 	{
+		Assert.True(Networking.IsHost);
 		Log.Info($"Connection activating with name = {ConnectionChannel.DisplayName}:{ConnectionChannel.Ping} | is host = {ConnectionChannel.IsHost}");
 
-		StartClient_SeverOnly(ConnectionChannel);
+		StartClient_SeverOnly(ConnectionChannel.Id);
 	}
 
 	void INetworkListener.OnDisconnected(Connection ConnectionChannel)
@@ -108,14 +120,9 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 	protected override async Task OnLoad()
 	{
-		if (Scene.IsEditor)
+		if (Scene.IsEditor || Scene.IsLoading)
 		{
 			return;
-		}
-
-		if (!Networking.IsActive)
-		{
-			CreateLobby();
 		}
 
 		Assert.IsValid(HexObject);
@@ -131,6 +138,12 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			Hex.NetworkSpawn(Connection.Host);
 
 			_ = GenerateBoardAsync(Hex);
+			Log.Info("board loaded!");
+		}
+
+		if (!Networking.IsActive)
+		{
+			CreateLobby();
 		}
 	}
 
@@ -154,9 +167,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	{
 		// TODO : loading screen
 		var MainHex = Hex.GetComponent<Hex>();
-		MainHex.CreateSurroundBrothers();
-
-		await CreateSurroundAsync(MainHex, 7);
+		await CreateSurroundAsync(MainHex, 8);
 	}
 
 	private async Task CreateSurroundAsync(Hex Hex, int Depth)
@@ -172,22 +183,30 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		}
 	}
 
-	private void StartClient_SeverOnly(Connection ConnectionChannel)
+	private void StartClient_SeverOnly(Guid ConnectionGuid)
 	{
 		Assert.True(Networking.IsHost);
 
-		bool CreatedPlayerState = CreatePlayerObject_ServerOnly(ConnectionChannel, out var GamePlayer);
+		bool CreatedPlayerState = CreatePlayerObject_ServerOnly(ConnectionGuid, out var GamePlayer);
 
 		if (!CreatedPlayerState || GamePlayer == null)
 		{
 			Networking.Disconnect();
-			throw new Exception($"Something went wrong when trying to create PlayerState for {ConnectionChannel.DisplayName}");
+			throw new Exception($"Something went wrong when trying to create PlayerState for ");
 		}
 
 		GamePlayers.Add(GamePlayer);
 
+		Log.Info("spawning player!");
+		Log.Info(Scene.GetAllComponents<Hex>().ToList().Count);
 		var SpawnHex = Random.Shared.FromList(Scene.GetAllComponents<Hex>().ToList());
-		Instance.Server_CreateHexUnitObject("unit-settler", SpawnHex, ConnectionChannel.Id);
+		if (!SpawnHex.IsValid())
+		{
+			Log.Warning("ohno");
+			return;
+		}
+
+		Server_CreateHexUnitObject("unit-settler", SpawnHex, ConnectionGuid);
 	}
 
 	[Rpc.Host]
@@ -228,10 +247,13 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			Health = TypedObject.Health,
 			Attack = TypedObject.Attack,
 			MoveRange = TypedObject.MoveRange,
+			ViewRange = TypedObject.ViewRange,
 			Hex = Hex,
 		};
 
 		Hex.UnitData = ObjectData;
+
+		Log.Info($"created object {ObjectId} on {Hex} for {ConnectionId}");
 	}
 
 	[Rpc.Host]
@@ -250,6 +272,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			Transform = Hex.WorldTransform,
 			OwnerGuid = ConnectionId,
 			ProductionToBuild = TypedObject.ProductionToBuild,
+			ViewRange = TypedObject.ViewRange,
 			Hex = Hex,
 		};
 
@@ -336,7 +359,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		return null;
 	}
 
-	private bool CreatePlayerObject_ServerOnly(Connection ConnectionChannel, out GamePlayer OutGamePlayer)
+	private bool CreatePlayerObject_ServerOnly(Guid ConnectionGuid, out GamePlayer OutGamePlayer)
 	{
 		Assert.True(Networking.IsHost);
 		Assert.True(PlayerPrefab.IsValid(), "Could not spawn player as no PlayerPrefab assigned to network manager");
@@ -347,6 +370,8 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		};
 
 		CloneConfig PlayerSpawnConfig = new(PlayerTransform);
+
+		var ConnectionChannel = Connection.Find(ConnectionGuid);
 
 		var PlayerObject = PlayerPrefab.Clone(PlayerSpawnConfig);
 		PlayerObject.Name = $"PLAYER:{ConnectionChannel.DisplayName}";
@@ -370,7 +395,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		return false;
 	}
 
-	private static bool CreateLobby(string LobbyName = "awesomelobby", LobbyPrivacy Privacy = LobbyPrivacy.Public)
+	private static bool CreateLobby(string LobbyName = "awesomelobby", LobbyPrivacy Privacy = LobbyPrivacy.Private)
 	{
 		LobbyConfig Config = new();
 		Config.Name = LobbyName;

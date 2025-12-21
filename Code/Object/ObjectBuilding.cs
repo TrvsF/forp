@@ -13,6 +13,7 @@ public record FBuilding : IObject
 	public Transform Transform { get; set; }
 	public Guid OwnerGuid { get; set; }
 	public int TurnsAlive { get; set; }
+	public int ViewRange { get; set; }
 
 	public Hex Hex { get; set; }
 

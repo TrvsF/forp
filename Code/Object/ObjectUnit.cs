@@ -15,6 +15,7 @@ public record FUnit : IObject
 
 	public Hex Hex { get; set; }
 	public int TurnsAlive { get; set; }
+	public int ViewRange { get; set; }
 
 	public int Health { get; set; }
 	public int Attack { get; set; }

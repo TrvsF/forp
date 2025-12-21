@@ -20,6 +20,7 @@
         "__guid": "99461265-f323-4dd4-82c8-7de3c4d8528e",
         "__enabled": true,
         "Colour": "0,0,0,1",
+        "ConnectionId": "00000000-0000-0000-0000-000000000000",
         "Gold": 0,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -144,7 +145,7 @@
             "ZIndex": 100
           },
           {
-            "__type": "forp.UI.UiPlayerHud",
+            "__type": "Sandbox.UI.UiPlayerHud",
             "__guid": "0ad89999-dad9-403c-b0f8-971e2b4f8969",
             "__enabled": true,
             "OnComponentDestroy": null,
