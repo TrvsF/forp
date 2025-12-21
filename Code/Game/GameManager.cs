@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Forp.Game;
 
-public sealed class GameManager : SingletonComponent<GameManager>, Component.INetworkListener
+public sealed class GameManager : SingletonComponent<GameManager>, Component.INetworkListener, ISceneStartup
 {
 	[Property] public GameObject HexObject { get; set; }
 	[Property] public GameObject PlayerPrefab { get; set; }
@@ -118,28 +118,19 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		}
 	}
 
-	protected override async Task OnLoad()
+	void ISceneStartup.OnHostInitialize()
 	{
-		if (Scene.IsEditor || Scene.IsLoading)
-		{
-			return;
-		}
-
 		Assert.IsValid(HexObject);
 		Assert.IsValid(PlayerPrefab);
 
-		// create board
-		if (Networking.IsHost)
-		{
-			Transform HexTransform = new();
-			CloneConfig HexConfig = new(HexTransform);
-			var Hex = HexObject.Clone(HexConfig);
-			Hex.Network.SetOrphanedMode(NetworkOrphaned.Host);
-			Hex.NetworkSpawn(Connection.Host);
+		Transform HexTransform = new();
+		CloneConfig HexConfig = new(HexTransform);
+		var Hex = HexObject.Clone(HexConfig);
+		Hex.Network.SetOrphanedMode(NetworkOrphaned.Host);
+		Hex.NetworkSpawn(Connection.Host);
 
-			_ = GenerateBoardAsync(Hex);
-			Log.Info("board loaded!");
-		}
+		_ = GenerateBoardAsync(Hex);
+		Log.Info("board loaded!");
 
 		if (!Networking.IsActive)
 		{
