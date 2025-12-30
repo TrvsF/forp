@@ -22,7 +22,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		ObjectPrefabs.TryGetValue(ObjectId, out GameObject Object);
 		if (!Object.IsValid())
 		{
-			Log.Warning($"cannot find object with id {ObjectId}!!!");
+			Log.Error($"cannot find object with id {ObjectId}!!!");
 		}
 
 		return Object;
@@ -53,34 +53,44 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 		if (GamePlayers.Count == WaitingConnections.Count)
 		{
-			foreach (var Hex in Scene.GetComponentsInChildren<Hex>())
+			DoNextTurn();
+		}
+	}
+
+	private void DoNextTurn()
+	{
+		foreach (var Hex in Scene.GetComponentsInChildren<Hex>())
+		{
+			if (!Hex.IsValid())
 			{
-				if (!Hex.IsValid())
-				{
-					continue;
-				}
-
-				if (Hex.UnitData != null)
-				{
-					Hex.UnitData = Hex.UnitData with
-					{
-						TurnsAlive = Hex.UnitData.TurnsAlive + 1,
-						TurnMovementSpent = 0,
-					};
-				}
-
-				if (Hex.BuildingData != null)
-				{
-					Hex.BuildingData = Hex.BuildingData with
-					{
-						TurnsAlive = Hex.BuildingData.TurnsAlive + 1,
-					};
-				}
+				continue;
 			}
 
-			WaitingConnections.Clear();
-			++Turn;
+			if (Hex.UnitData != null)
+			{
+				Hex.UnitData = Hex.UnitData with
+				{
+					TurnsAlive = Hex.UnitData.TurnsAlive + 1,
+					TurnMovementSpent = 0,
+				};
+			}
+
+			if (Hex.BuildingData != null)
+			{
+				Hex.BuildingData = Hex.BuildingData with
+				{
+					TurnsAlive = Hex.BuildingData.TurnsAlive + 1,
+				};
+			}
 		}
+
+		foreach (var GamePlayer in GamePlayers)
+		{
+			GamePlayer.Gold += 25;
+		};
+
+		WaitingConnections.Clear();
+		++Turn;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -223,6 +233,12 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	{
 		Assert.IsValid(Hex);
 		Assert.NotNull(ConnectionId);
+
+		if (Hex.UnitData != null)
+		{
+			Log.Warning($"trying to build unit on already occupied hex {Hex}! ignoring");
+			return;
+		}
 
 		var HexObject = ObjectPrefabs[ObjectId];
 		Assert.NotNull(HexObject);

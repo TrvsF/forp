@@ -286,7 +286,7 @@ public sealed class Hex : Object
 
 		if (BuildingData.OwnerGuid == Connection.Local.Id)
 		{
-			RevealHexesRecusrive(this, true, UnitData.ViewRange + 1);
+			RevealHexesRecusrive(this, true, BuildingData.ViewRange + 1);
 		}
 
 		// we only build once
