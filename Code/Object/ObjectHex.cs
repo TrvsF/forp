@@ -266,6 +266,7 @@ public sealed class Hex : Object
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
 	[Sync(SyncFlags.FromHost), Change] public FBuilding BuildingData { get; set; } = null;
+	public TextRenderer ConstructionObject { get; set; } = null;
 	public ObjectBuilding BuildingObject { get; set; } = null;
 	private void OnBuildingDataChanged(FBuilding OldBuildingData, FBuilding NewBuildingData)
 	{
@@ -281,7 +282,21 @@ public sealed class Hex : Object
 
 		if (BuildingData.TurnsAlive < BuildingData.ProductionToBuild)
 		{
+			if (!ConstructionObject.IsValid())
+			{
+				var ConstructionClone = GameManager.Instance.GameTextPrefab.Clone();
+				ConstructionClone.WorldTransform = BuildingData.Transform;
+				ConstructionClone.WorldPosition += Vector3.Up * 100;
+				ConstructionObject = ConstructionClone.GetComponent<TextRenderer>();
+			}
+
+			ConstructionObject.Text = $"{BuildingData.TurnsAlive} / {BuildingData.ProductionToBuild}";
 			return;
+		}
+
+		if (ConstructionObject.IsValid())
+		{
+			ConstructionObject.GameObject.Destroy();
 		}
 
 		if (BuildingData.OwnerGuid == Connection.Local.Id)

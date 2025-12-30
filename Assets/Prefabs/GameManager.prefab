@@ -36,7 +36,11 @@
             "__type": "Forp.Game.GameManager",
             "__guid": "dbbfe14f-ff65-4bb4-b301-c63ca99d9358",
             "__enabled": true,
-            "HexObject": {
+            "GameTextPrefab": {
+              "_type": "gameobject",
+              "prefab": "prefabs/gametext.prefab"
+            },
+            "HexPrefab": {
               "_type": "gameobject",
               "prefab": "prefabs/objects/hex.prefab"
             },

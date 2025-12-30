@@ -13,8 +13,9 @@ namespace Forp.Game;
 
 public sealed class GameManager : SingletonComponent<GameManager>, Component.INetworkListener, ISceneStartup
 {
-	[Property] public GameObject HexObject { get; set; }
+	[Property] public GameObject HexPrefab { get; set; }
 	[Property] public GameObject PlayerPrefab { get; set; }
+	[Property] public GameObject GameTextPrefab { get; set; }
 	[Property] private Dictionary<string, GameObject> ObjectPrefabs { get; set; }
 
 	public GameObject GetObject(string ObjectId)
@@ -130,12 +131,12 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 	void ISceneStartup.OnHostInitialize()
 	{
-		Assert.IsValid(HexObject);
+		Assert.IsValid(HexPrefab);
 		Assert.IsValid(PlayerPrefab);
 
 		Transform HexTransform = new();
 		CloneConfig HexConfig = new(HexTransform);
-		var Hex = HexObject.Clone(HexConfig);
+		var Hex = HexPrefab.Clone(HexConfig);
 		Hex.Network.SetOrphanedMode(NetworkOrphaned.Host);
 		Hex.NetworkSpawn(Connection.Host);
 
@@ -268,6 +269,12 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	{
 		Assert.IsValid(Hex);
 		Assert.NotNull(ConnectionId);
+
+		if (Hex.BuildingData != null)
+		{
+			Log.Warning($"trying to build building on already occupied hex {Hex}! ignoring");
+			return;
+		}
 
 		var TypedObject = HexObject.GetComponent<ObjectBuilding>();
 		Assert.NotNull(TypedObject);

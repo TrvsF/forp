@@ -3,7 +3,7 @@
 @inherits PanelComponent
 
 <root>
-	<watermark>Forward Operating: Repair the Planet Infdev @(Time.Delta)</watermark>
+	<watermark>Forward Operating: Repair the Planet Infdev v1</watermark>
 		<static-bar>
 			@(UiInfo.GetTopBarString())
 		</static-bar>
@@ -21,8 +21,8 @@
 		}
 	}
 
-	<next-turn-button>
-		<button onclick="@OnNextTurnClick">Next Turn @(GameManager.Instance.Turn)</button>
+	<next-turn-button onclick="@OnNextTurnClick">
+		Next Turn. @(GameManager.Instance.Turn)
 	</next-turn-button>
 </root>
 

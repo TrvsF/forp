@@ -14,8 +14,9 @@ public sealed partial class GamePlayer : Component
 	[Sync(SyncFlags.FromHost), Property] public string SteamName { get; private set; }
 	[Sync(SyncFlags.FromHost), Property] public Guid ConnectionId { get; private set; }
 
-	[Sync, Property] public int Gold { get; set; } = 0;
 	[Sync, Property] public Color Colour { get; set; } = Color.Black;
+	[Sync, Property] public int Gold { get; set; } = 0;
+	[Sync, Property] public int Xperiance { get; set; } = 0;
 
 	public Connection Connection { get; private set; }
 	public bool IsConnected => Connection != null && Connection.IsActive;
@@ -348,13 +349,18 @@ public sealed partial class GamePlayer : Component
 
 		HashSet<GameObject> FoundBuildingObjects = new();
 
-		if (Hex.BuildingOwners.Count != 0)
+
+		foreach (var BuildingOwner in Hex.BuildingOwners)
 		{
-			foreach (var BuildingOwner in Hex.BuildingOwners)
+			var OwnerBuildingObject = BuildingOwner.Hex.BuildingObject;
+			if (!OwnerBuildingObject.IsValid())
 			{
-				FoundBuildingObjects.UnionWith(BuildingOwner.Hex.BuildingObject.Buildings);
+				continue;
 			}
+
+			FoundBuildingObjects.UnionWith(OwnerBuildingObject.Buildings);
 		}
+		
 		if (Hex.UnitObject.IsValid())
 		{
 			FoundBuildingObjects.UnionWith(Hex.UnitObject.Buildings);

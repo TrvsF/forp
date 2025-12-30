@@ -1,3 +1,7 @@
+* {
+    font-family: Verdana;
+}
+
 root {
     width: 100%;
     height: 100%;
@@ -8,18 +12,18 @@ root {
 }
 
 watermark {
-    padding-left: 24px;
+    padding-top: 8px;
+    padding-left: 12px;
     color: white;
     font-size: 18px;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 static-bar {
     position: absolute;
     top: 0;
-    left: 80%;
+    left: 82%;
     width: 70%;
-    height: 8%;
+    padding-left: 1em;
     background-color: #FFFFFFAA;
 }
 
@@ -56,17 +60,21 @@ build-unit button:hover {
 
 next-turn-button {
     position: absolute;
-    bottom: 20%;
-    left: 80%;
-    width: 5%;
-    height: 5%;
+    bottom: 2%;
+    left: 90%;
+    width: 10%;
+    height: 10%;
     border-radius: 50%;
     background-color: #000000AA;
     pointer-events: all;
     color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
-    next-turn-button button:hover {
+    next-turn-button:hover {
         cursor: crosshair;
         background-color: black;
     }

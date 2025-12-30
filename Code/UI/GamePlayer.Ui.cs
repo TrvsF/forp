@@ -17,22 +17,23 @@ public struct FPlayerUiInfo
 
 	public string Name = "NONE";
 	public int Gold = 0;
+	public int Xperiance = 0;
 
 	public Object.Object HoveredObject = null;
 	public ObjectUnit SelectedUnit = null;
 	public Hex SelectedHex = null;
 	public List<string> BuildObjects = new();
 
-	public string GetTopBarString()
+	public readonly string GetTopBarString()
 	{
-		return $"{Name} £{Gold}";
+		return $"{Name} \u00A3{Gold} {Xperiance}xp";
 	}
 
-	public string GetBottomBarString()
+	public readonly string GetBottomBarString()
 	{
 		var BottomString = String.Empty;
 
-		if (SelectedHex.IsValid())
+		if (SelectedHex.IsValid() && SelectedHex.IsRevealed)
 		{
 			var OwnerName = "None";
 			var IsLocallyOwner = false;
@@ -99,6 +100,7 @@ public sealed partial class GamePlayer : Component
 		OutPlayerUiInfo = new();
 		OutPlayerUiInfo.Name = Local?.SteamName;
 		OutPlayerUiInfo.Gold = Gold;
+		OutPlayerUiInfo.Xperiance = Xperiance;
 		OutPlayerUiInfo.SelectedHex = SelectedHex;
 		OutPlayerUiInfo.SelectedUnit = SelectedUnit;
 		OutPlayerUiInfo.HoveredObject = HoveredObject;
