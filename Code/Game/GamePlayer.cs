@@ -6,6 +6,12 @@ using System;
 
 namespace Forp.Game;
 
+public record FPlayerBoardStats
+{
+	public int Production { get; set; }
+	public int TerritoryCount { get; set; }
+}
+
 public sealed partial class GamePlayer : Component
 {
 	public static GamePlayer Local { get; private set; } = null;
@@ -14,9 +20,9 @@ public sealed partial class GamePlayer : Component
 	[Sync(SyncFlags.FromHost), Property] public string SteamName { get; private set; }
 	[Sync(SyncFlags.FromHost), Property] public Guid ConnectionId { get; private set; }
 
-	[Sync, Property] public Color Colour { get; set; } = Color.Black;
-	[Sync, Property] public int Gold { get; set; } = 0;
-	[Sync, Property] public int Xperiance { get; set; } = 0;
+	[Sync(SyncFlags.FromHost), Property] public Color Colour { get; set; } = Color.Black;
+	[Sync(SyncFlags.FromHost), Property] public int Gold { get; set; } = 0;
+	[Sync(SyncFlags.FromHost), Property] public int Xperiance { get; set; } = 0;
 
 	public Connection Connection { get; private set; }
 	public bool IsConnected => Connection != null && Connection.IsActive;
@@ -146,8 +152,7 @@ public sealed partial class GamePlayer : Component
 
 	private void DoMovement()
 	{
-		var MouseY = Input.MouseWheel.y;
-		Camera.FieldOfView -= (MouseY * 2f);
+		Camera.WorldPosition += Camera.WorldRotation.Forward * Input.MouseWheel.y * 50;
 
 		if (Input.Down("forward"))
 		{

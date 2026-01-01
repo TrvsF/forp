@@ -29,8 +29,41 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		return Object;
 	}
 
+	/////////////////////////////////////////////////////////////////////////////////////////
+
+	[Sync(SyncFlags.FromHost)] public NetList<Hex> BoardHexes { get; private set; } = new();
 	[Sync(SyncFlags.FromHost)] public NetList<GamePlayer> GamePlayers { get; private set; } = new();
 	[Sync(SyncFlags.FromHost)] public int Turn { get; set; } = 0;
+
+	public void GetPlayerBoardStats(out Dictionary<GamePlayer, FPlayerBoardStats> OutPlayerBoardStats)
+	{
+		OutPlayerBoardStats = new();
+
+		foreach (var Hex in BoardHexes)
+		{
+			var Player = GetGamePlayer(Hex.GetOwnerId());
+			if (!Player.IsValid())
+			{
+				continue;
+			}
+
+			if (!OutPlayerBoardStats.TryGetValue(Player, out var PlayerStats))
+			{
+				PlayerStats = new();
+				OutPlayerBoardStats[Player] = PlayerStats;
+			}
+
+
+			PlayerStats.Production += Hex.Production;
+			PlayerStats.TerritoryCount += 1;
+		}
+
+		//foreach (var Player in OutPlayerTerritory.Keys)
+		//{
+		//	OutPlayerTerritory[Player] /= BoardHexes.Count;
+		//}
+	}
+
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 
@@ -60,7 +93,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 	private void DoNextTurn()
 	{
-		foreach (var Hex in Scene.GetComponentsInChildren<Hex>())
+		foreach (var Hex in BoardHexes)
 		{
 			if (!Hex.IsValid())
 			{
@@ -88,7 +121,8 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		foreach (var GamePlayer in GamePlayers)
 		{
 			GamePlayer.Gold += 25;
-		};
+		}
+		;
 
 		WaitingConnections.Clear();
 		++Turn;
@@ -141,7 +175,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		Hex.NetworkSpawn(Connection.Host);
 
 		_ = GenerateBoardAsync(Hex);
-		Log.Info("board loaded!");
+		Log.Info($"created board with {BoardHexes.Count} hexes");
 
 		if (!Networking.IsActive)
 		{
@@ -174,8 +208,20 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 	private async Task CreateSurroundAsync(Hex Hex, int Depth)
 	{
-		if (Depth <= 0 || !Hex.IsValid())
+		if (!Hex.IsValid())
+		{
 			return;
+		}
+
+		if (!BoardHexes.Contains(Hex))
+		{ 
+			BoardHexes.Add(Hex);
+		}
+
+		if (Depth <= 0)
+		{
+			return;
+		}
 
 		Hex.CreateSurroundBrothers();
 
@@ -199,9 +245,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 		GamePlayers.Add(GamePlayer);
 
-		Log.Info("spawning player!");
-		Log.Info(Scene.GetAllComponents<Hex>().ToList().Count);
-		var SpawnHex = Random.Shared.FromList(Scene.GetAllComponents<Hex>().ToList());
+		var SpawnHex = Random.Shared.FromList(BoardHexes.ToList());
 		if (!SpawnHex.IsValid())
 		{
 			Log.Warning("ohno");
@@ -356,8 +400,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	// TODO : we need a better relationship
 	public Hex HACK_GetHexFromUnit(ObjectUnit Unit)
 	{
-		var Hexes = Scene.GetComponentsInChildren<Hex>();
-		foreach (var Hex in Hexes)
+		foreach (var Hex in BoardHexes)
 		{
 			if (!Hex.IsValid())
 			{

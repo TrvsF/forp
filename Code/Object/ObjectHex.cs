@@ -29,20 +29,20 @@ public sealed class Hex : Object
 	[Property] Hex HexBL;
 	[Property] Hex HexBR;
 
-	[Sync(SyncFlags.FromHost), Property] public int Resources { get; set; } = 0;
+	[Sync(SyncFlags.FromHost), Property] public int Production { get; set; } = 0;
 	[Sync(SyncFlags.FromHost), Property] public EHexType Type { get; set; } = EHexType.Grass;
 
 	[Sync, Change, Property] public Color BaseColour { get; set; } = Color.Black;
 
 	private void OnBaseColourChanged(Color OldColour, Color NewColour)
 	{
-		ModelRenderer.Tint = BaseColour.Darken(1f / Resources);
+		ModelRenderer.Tint = BaseColour.Darken(1f / Production);
 	}
 
 	private void SetBaseColour(Color Colour)
 	{
 		BaseColour = Colour;
-		BaseColour = BaseColour.Darken(1f / Resources);
+		BaseColour = BaseColour.Darken(1f / Production);
 	}
 
 	private readonly List<Vector3> BrotherOffsets = [new(170, 100), new(170, -100), new(0, -200), new(-170, -100), new(-170, 100), new(0, 200)];
@@ -76,7 +76,7 @@ public sealed class Hex : Object
 			return;
 		}
 
-		Resources = Random.Shared.Int(2, 7);
+		Production = Random.Shared.Int(2, 7);
 		Type = Random.Shared.FromArray(Enum.GetValues<EHexType>());
 		SetBaseColour(TypeColours[Type]);
 	}
@@ -353,7 +353,7 @@ public sealed class Hex : Object
 			if (UnitData.Health <= 0)
 			{
 				Log.Info($"you! yes you are DEAD");
-				UnitObject.Destroy();
+				UnitObject.Destroy(); // TODO : server needs to destroy data 2
 				return;
 			}
 		}
@@ -384,7 +384,7 @@ public sealed class Hex : Object
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// TODO : remove below
+	// TODO : remove
 	public void CreateSurroundBrothers()
 	{
 		// spawn all our brothers
@@ -477,18 +477,4 @@ public sealed class Hex : Object
 			}
 		}
 	}
-
-	public static void CreateSurroundBrothersRecursive(Hex Hex, int Depth)
-	{
-		if (Hex == null || Depth <= 0) return;
-
-		Hex.CreateSurroundBrothers();
-
-		foreach (var Brother in Hex.AllBrothers)
-		{
-			if (Brother == null) continue;
-			CreateSurroundBrothersRecursive(Brother.GetComponent<Hex>(), Depth - 1);
-		}
-	}
-	// ^^^^^^^^^^^^^^^^^^
 }

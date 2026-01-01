@@ -18,6 +18,8 @@ public struct FPlayerUiInfo
 	public string Name = "NONE";
 	public int Gold = 0;
 	public int Xperiance = 0;
+	public int Territory = 0;
+	public int Production = 0;
 
 	public Object.Object HoveredObject = null;
 	public ObjectUnit SelectedUnit = null;
@@ -26,7 +28,7 @@ public struct FPlayerUiInfo
 
 	public readonly string GetTopBarString()
 	{
-		return $"{Name} \u00A3{Gold} {Xperiance}xp";
+		return $"{Name} \u00A3{Gold} \u00A5{Production} {Xperiance}xp {Territory}%";
 	}
 
 	public readonly string GetBottomBarString()
@@ -44,7 +46,7 @@ public struct FPlayerUiInfo
 				IsLocallyOwner = SelectedHex.IsLocallyOwned();
 			}
 
-			BottomString += $"type {SelectedHex.Type} with {SelectedHex.Resources} resources owned by {OwnerName}\n";
+			BottomString += $"type {SelectedHex.Type} with {SelectedHex.Production} resources owned by {OwnerName}\n";
 
 			if (SelectedHex.UnitObject.IsValid())
 			{
@@ -93,14 +95,20 @@ public struct FPlayerUiInfo
 
 public sealed partial class GamePlayer : Component
 {
-	const string BaseOutString = "Hex ";
-
 	public void GetPlayerUiInfo(out FPlayerUiInfo OutPlayerUiInfo)
 	{
 		OutPlayerUiInfo = new();
 		OutPlayerUiInfo.Name = Local?.SteamName;
 		OutPlayerUiInfo.Gold = Gold;
 		OutPlayerUiInfo.Xperiance = Xperiance;
+
+		GameManager.Instance.GetPlayerBoardStats(out var PlayerBoardStats);
+		if (PlayerBoardStats.TryGetValue(Local, out var PlayerStats))
+		{
+			OutPlayerUiInfo.Territory = (int) (((float) PlayerStats.TerritoryCount / GameManager.Instance.BoardHexes.Count) * 100f);
+			OutPlayerUiInfo.Production = PlayerStats.Production;
+		}
+
 		OutPlayerUiInfo.SelectedHex = SelectedHex;
 		OutPlayerUiInfo.SelectedUnit = SelectedUnit;
 		OutPlayerUiInfo.HoveredObject = HoveredObject;

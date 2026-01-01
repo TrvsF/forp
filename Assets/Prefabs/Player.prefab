@@ -29,7 +29,8 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "SteamId": 0,
-        "SteamName": null
+        "SteamName": null,
+        "Xperiance": 0
       }
     ],
     "Children": [
@@ -56,7 +57,7 @@
             "BackgroundColor": "0.46047,0.42191,0.42191,1",
             "ClearFlags": "All",
             "EnablePostProcessing": true,
-            "FieldOfView": 60,
+            "FieldOfView": 80,
             "FovAxis": "Horizontal",
             "IsMainCamera": true,
             "OnComponentDestroy": null,
