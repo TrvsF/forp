@@ -17,7 +17,7 @@ public record FBuilding : IObject
 
 	public Hex Hex { get; set; }
 
-	public int ProductionToBuild { get; set; }
+	public int ProductionToBuild { get; set; } // TODO : remove me
 }
 
 public class ObjectBuilding : Object

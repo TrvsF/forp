@@ -15,6 +15,14 @@ public enum EHexType
 	Water,
 }
 
+public record FQueueObject
+{
+	public string ObjectName { get; init; }
+	public int ProductionToBuild { get; init; }
+	
+	public int Production { get; set; }
+}
+
 public sealed class Hex : Object
 {
 	[Property] GameObject FogPrefab { get; set; }
@@ -29,17 +37,17 @@ public sealed class Hex : Object
 	[Property] Hex HexBL;
 	[Property] Hex HexBR;
 
+	[Sync(SyncFlags.FromHost)] public NetList<FQueueObject> QueuedObjects { get; set; } = new();
 	[Sync(SyncFlags.FromHost), Property] public int Production { get; set; } = 0;
 	[Sync(SyncFlags.FromHost), Property] public EHexType Type { get; set; } = EHexType.Grass;
-
-	[Sync, Change, Property] public Color BaseColour { get; set; } = Color.Black;
+	[Sync(SyncFlags.FromHost), Change, Property] public Color BaseColour { get; set; } = Color.Black;
 
 	private void OnBaseColourChanged(Color OldColour, Color NewColour)
 	{
 		ModelRenderer.Tint = BaseColour.Darken(1f / Production);
 	}
 
-	private void SetBaseColour(Color Colour)
+	private void SetBaseColour_ServerOnly(Color Colour)
 	{
 		BaseColour = Colour;
 		BaseColour = BaseColour.Darken(1f / Production);
@@ -71,14 +79,12 @@ public sealed class Hex : Object
 
 		base.OnStart();
 
-		if (!Networking.IsHost)
+		if (Networking.IsHost)
 		{
-			return;
+			Production = Random.Shared.Int(2, 7);
+			Type = Random.Shared.FromArray(Enum.GetValues<EHexType>());
+			SetBaseColour_ServerOnly(TypeColours[Type]);
 		}
-
-		Production = Random.Shared.Int(2, 7);
-		Type = Random.Shared.FromArray(Enum.GetValues<EHexType>());
-		SetBaseColour(TypeColours[Type]);
 	}
 
 	public override void OnClick()
@@ -86,6 +92,34 @@ public sealed class Hex : Object
 		base.OnClick();
 
 		IsSelected = !IsSelected;
+	}
+
+	List<GameText> QueuedObjectTexts = new();
+	
+	public void OnNextTurn()
+	{
+		foreach (var QueuedObjectText in QueuedObjectTexts) 
+		{
+			QueuedObjectText.GameObject.Destroy();
+		}
+
+		int Count = 0;
+		foreach (var QueuedObject in QueuedObjects)
+		{
+			Count += 100;
+
+			// TODO : production logic & build
+			QueuedObject.Production += Production;
+			// if done build
+
+			var ConstructionClone = GameManager.Instance.GameTextPrefab.Clone();
+			ConstructionClone.WorldTransform = BuildingData.Transform;
+			ConstructionClone.WorldPosition += Vector3.Up * Count;
+			ConstructionObject = ConstructionClone.GetComponent<TextRenderer>();
+	
+			ConstructionObject.Text = $"{QueuedObject.ObjectName} {QueuedObject.Production} / {QueuedObject.ProductionToBuild}";
+			QueuedObjectTexts.Add(ConstructionClone.GetComponent<GameText>());
+		}
 	}
 
 	private void OnHighlight()
@@ -305,7 +339,7 @@ public sealed class Hex : Object
 		}
 
 		// we only build once
-		if (IsRevealed)
+		if (IsRevealed && !BuildingObject.IsValid())
 		{
 			var Clone = GameManager.Instance.GetObject(BuildingData.ObjectId).Clone();
 			Clone.WorldTransform = BuildingData.Transform;
@@ -368,7 +402,7 @@ public sealed class Hex : Object
 
 		if (GameManager.Instance.GetGamePlayer(OwnerIn.OwnerGuid) is { } OwnerPlayer)
 		{
-			SetBaseColour(OwnerPlayer.Colour);
+			SetBaseColour_ServerOnly(OwnerPlayer.Colour);
 		}
 
 		if (!DoBrothers)

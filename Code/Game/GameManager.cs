@@ -116,6 +116,8 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 					TurnsAlive = Hex.BuildingData.TurnsAlive + 1,
 				};
 			}
+
+			Hex.OnNextTurn();
 		}
 
 		foreach (var GamePlayer in GamePlayers)
@@ -271,6 +273,23 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		{
 			Health = DefenderUnit.Hex.UnitData.Health - AttackerUnit.Attack
 		};
+	}
+
+	[Rpc.Host]
+	public void Server_QueueHexObject(string ObjectId, Hex Hex)
+	{
+		Assert.IsValid(Hex);
+
+		var HexObject = ObjectPrefabs[ObjectId];
+		Assert.NotNull(HexObject);
+
+		FQueueObject QueueObject = new()
+		{
+			ObjectName = HexObject.Name,
+			ProductionToBuild = 10,
+		};
+
+		Hex.QueuedObjects.Add(QueueObject);
 	}
 
 	[Rpc.Host]

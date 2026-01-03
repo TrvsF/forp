@@ -10,9 +10,11 @@ namespace Forp.Object;
 public class TextBuilding : Object
 {
 	[Property] public GameObject ObjectToBuild { get; set; } 
+	[Property] public int ProductionToBuild { get; set; } 
 
 	public Hex BelongingHex { get; set; }
 	public bool FromUnit { get; set; }
+	public int TotalProduction { get; set; }
 
 	public virtual bool CanBeBuilt(Hex Hex)
 	{
