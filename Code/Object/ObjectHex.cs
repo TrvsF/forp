@@ -17,10 +17,15 @@ public enum EHexType
 
 public record FQueueObject
 {
+	public string ObjectId { get; init; }
 	public string ObjectName { get; init; }
 	public int ProductionToBuild { get; init; }
 	
 	public int Production { get; set; }
+	public bool IsReadyToBuild()
+	{
+		return Production >= ProductionToBuild;
+	}
 }
 
 public sealed class Hex : Object
@@ -102,22 +107,43 @@ public sealed class Hex : Object
 		{
 			QueuedObjectText.GameObject.Destroy();
 		}
+		QueuedObjectTexts.Clear();
 
 		int Count = 0;
-		foreach (var QueuedObject in QueuedObjects)
+		for (var ObjectIndex = QueuedObjects.Count - 1; ObjectIndex >= 0; --ObjectIndex)
 		{
+			var QueuedObject = QueuedObjects[ObjectIndex];
 			Count += 100;
 
-			// TODO : production logic & build
 			QueuedObject.Production += Production;
-			// if done build
+			if (QueuedObject.IsReadyToBuild())
+			{
+				// TODO : make recursive or some shit :)
+				foreach (var HexBrother in AllBrothers)
+				{
+					if (!HexBrother.IsValid())
+					{
+						continue;
+					}
+
+					if (HexBrother.UnitData == null)
+					{
+						GameManager.Instance.Server_CreateHexUnitObject(QueuedObject.ObjectId, HexBrother, Connection.Local.Id);
+						break;
+					}
+				}
+
+				QueuedObjects.RemoveAt(ObjectIndex);
+				continue;
+			}
 
 			var ConstructionClone = GameManager.Instance.GameTextPrefab.Clone();
 			ConstructionClone.WorldTransform = BuildingData.Transform;
 			ConstructionClone.WorldPosition += Vector3.Up * Count;
+
 			ConstructionObject = ConstructionClone.GetComponent<TextRenderer>();
-	
 			ConstructionObject.Text = $"{QueuedObject.ObjectName} {QueuedObject.Production} / {QueuedObject.ProductionToBuild}";
+
 			QueuedObjectTexts.Add(ConstructionClone.GetComponent<GameText>());
 		}
 	}
