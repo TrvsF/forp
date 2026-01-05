@@ -87,12 +87,28 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 		if (GamePlayers.Count == WaitingConnections.Count)
 		{
-			DoNextTurn();
+			DoNextTurn_ServerOnly();
 		}
 	}
 
-	private void DoNextTurn()
+	[Rpc.Broadcast]
+	private void Broadcast_OnNextTurn()
 	{
+		foreach (var Hex in BoardHexes)
+		{
+			if (!Hex.IsValid())
+			{
+				continue;
+			}
+
+			Hex.OnNextTurn();
+		}
+	}
+
+	private void DoNextTurn_ServerOnly()
+	{
+		Assert.True(Networking.IsHost);
+
 		foreach (var Hex in BoardHexes)
 		{
 			if (!Hex.IsValid())
@@ -117,17 +133,45 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 				};
 			}
 
-			Hex.OnNextTurn();
+			for (var ObjectIndex = Hex.QueuedObjects.Count - 1; ObjectIndex >= 0; --ObjectIndex)
+			{
+				Hex.QueuedObjects[ObjectIndex] = Hex.QueuedObjects[ObjectIndex] with
+				{
+					Production = Hex.QueuedObjects[ObjectIndex].Production + Hex.Production
+				};
+
+				var QueuedObject = Hex.QueuedObjects[ObjectIndex];
+				if (QueuedObject.IsReadyToBuild())
+				{
+					// TODO : make recursive or some shit :)
+					foreach (var HexBrother in Hex.AllBrothers)
+					{
+						if (!HexBrother.IsValid())
+						{
+							continue;
+						}
+
+						if (HexBrother.UnitData == null)
+						{
+							Server_CreateHexUnitObject(QueuedObject.ObjectId, HexBrother, Hex.GetOwnerId());
+							break;
+						}
+					}
+
+					Hex.QueuedObjects.RemoveAt(ObjectIndex);
+					continue;
+				}
+			}
 		}
 
 		foreach (var GamePlayer in GamePlayers)
 		{
 			GamePlayer.Gold += 25;
 		}
-		;
 
 		WaitingConnections.Clear();
 		++Turn;
+		Broadcast_OnNextTurn();
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -290,7 +334,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			ProductionToBuild = 10,
 		};
 
-		Hex.QueuedObjects.Add(QueueObject);
+		Hex.AddQueuedObject_ServerOnly(QueueObject);
 	}
 
 	[Rpc.Host]

@@ -13,6 +13,6 @@ public sealed partial class GameText : Component
 	{
 		base.OnStart();
 
-		TextRenderer.Scale = 1;
+		TextRenderer.Scale = 0.5f;
 	}
 }

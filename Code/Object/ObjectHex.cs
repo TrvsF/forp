@@ -20,7 +20,7 @@ public record FQueueObject
 	public string ObjectId { get; init; }
 	public string ObjectName { get; init; }
 	public int ProductionToBuild { get; init; }
-	
+
 	public int Production { get; set; }
 	public bool IsReadyToBuild()
 	{
@@ -46,6 +46,12 @@ public sealed class Hex : Object
 	[Sync(SyncFlags.FromHost), Property] public int Production { get; set; } = 0;
 	[Sync(SyncFlags.FromHost), Property] public EHexType Type { get; set; } = EHexType.Grass;
 	[Sync(SyncFlags.FromHost), Change, Property] public Color BaseColour { get; set; } = Color.Black;
+
+	public void AddQueuedObject_ServerOnly(FQueueObject QueueObject)
+	{
+		Assert.True(Networking.IsHost);
+		QueuedObjects.Add(QueueObject);
+	}
 
 	private void OnBaseColourChanged(Color OldColour, Color NewColour)
 	{
@@ -84,11 +90,21 @@ public sealed class Hex : Object
 
 		base.OnStart();
 
+		QueuedObjects.OnChanged += OnQueuedObjectsChanged; // TODO : unbind?
+
 		if (Networking.IsHost)
 		{
 			Production = Random.Shared.Int(2, 7);
 			Type = Random.Shared.FromArray(Enum.GetValues<EHexType>());
 			SetBaseColour_ServerOnly(TypeColours[Type]);
+		}
+	}
+
+	private void OnQueuedObjectsChanged(NetListChangeEvent<FQueueObject> QueueObjectChanged)
+	{
+		if (IsLocallyOwned())
+		{
+			DrawUnitQueue();
 		}
 	}
 
@@ -99,53 +115,36 @@ public sealed class Hex : Object
 		IsSelected = !IsSelected;
 	}
 
-	List<GameText> QueuedObjectTexts = new();
-	
-	public void OnNextTurn()
+	private readonly List<GameText> QueuedObjectTexts = new();
+
+	public void DrawUnitQueue()
 	{
-		foreach (var QueuedObjectText in QueuedObjectTexts) 
+		foreach (var QueuedObjectText in QueuedObjectTexts)
 		{
-			QueuedObjectText.GameObject.Destroy();
+			QueuedObjectText.DestroyGameObject();
 		}
 		QueuedObjectTexts.Clear();
 
-		int Count = 0;
+		int Count = 100;
 		for (var ObjectIndex = QueuedObjects.Count - 1; ObjectIndex >= 0; --ObjectIndex)
 		{
-			var QueuedObject = QueuedObjects[ObjectIndex];
-			Count += 100;
-
-			QueuedObject.Production += Production;
-			if (QueuedObject.IsReadyToBuild())
-			{
-				// TODO : make recursive or some shit :)
-				foreach (var HexBrother in AllBrothers)
-				{
-					if (!HexBrother.IsValid())
-					{
-						continue;
-					}
-
-					if (HexBrother.UnitData == null)
-					{
-						GameManager.Instance.Server_CreateHexUnitObject(QueuedObject.ObjectId, HexBrother, Connection.Local.Id);
-						break;
-					}
-				}
-
-				QueuedObjects.RemoveAt(ObjectIndex);
-				continue;
-			}
+			Count += 50;
 
 			var ConstructionClone = GameManager.Instance.GameTextPrefab.Clone();
 			ConstructionClone.WorldTransform = BuildingData.Transform;
 			ConstructionClone.WorldPosition += Vector3.Up * Count;
 
+			var QueuedObject = QueuedObjects[ObjectIndex];
 			ConstructionObject = ConstructionClone.GetComponent<TextRenderer>();
 			ConstructionObject.Text = $"{QueuedObject.ObjectName} {QueuedObject.Production} / {QueuedObject.ProductionToBuild}";
 
 			QueuedObjectTexts.Add(ConstructionClone.GetComponent<GameText>());
 		}
+	}
+
+	public void OnNextTurn()
+	{
+		// DrawUnitQueue();
 	}
 
 	private void OnHighlight()
@@ -310,7 +309,7 @@ public sealed class Hex : Object
 
 	public bool IsLocallyOwned()
 	{
-		return GetOwnerId() == GamePlayer.Local.Id;
+		return GetOwnerId() == GamePlayer.Local.ConnectionId;
 	}
 
 	public Guid GetOwnerId()

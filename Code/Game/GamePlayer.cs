@@ -221,7 +221,7 @@ public sealed partial class GamePlayer : Component
 						var BuildingToBuild = TextBuilding.ObjectToBuild;
 						BuildingToBuild.WorldTransform = BuildingTransform;
 
-						GameManager.Instance.Server_CreateHexBuildingObject(BuildingToBuild, HexToBuildOn, true, Connection.Id);
+						GameManager.Instance.Server_CreateHexBuildingObject(BuildingToBuild, HexToBuildOn, true, ConnectionId);
 						break;
 					}
 				}

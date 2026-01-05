@@ -54,7 +54,6 @@
 
 	private void OnUnitBuildClick(int Index)
 	{
-		// UiInfo.SelectedHex.QueuedObjects.Add(UiInfo.BuildObjects[Index]);
 		GameManager.Instance.Server_QueueHexObject(UiInfo.BuildObjects[Index], UiInfo.SelectedHex);
 	}
 }

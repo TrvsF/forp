@@ -55,19 +55,7 @@ public struct FPlayerUiInfo
 
 			if (SelectedHex.BuildingObject.IsValid())
 			{
-				BottomString += $"with building {SelectedHex.BuildingObject.DisplayName}\n";
-
-				if (SelectedHex.BuildingObject.Units.Count != 0 && IsLocallyOwner)
-				{
-					BottomString += "you can build";
-					foreach (var BuildUnit in SelectedHex.BuildingObject.Units)
-					{
-						if (BuildUnit.GetComponent<ObjectUnit>() is { } BuildObjectUnit)
-						{
-							BottomString += $" {BuildObjectUnit.ObjectId}";
-						}
-					}
-				}
+				BottomString += $"with building {SelectedHex.BuildingObject.DisplayName} {IsLocallyOwner}\n";
 			}
 		}
 		else if (SelectedUnit.IsValid())
