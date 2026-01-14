@@ -104,7 +104,7 @@ public sealed class Hex : Object
 	{
 		if (IsLocallyOwned())
 		{
-			DrawUnitQueue();
+			// DrawUnitQueue();
 		}
 	}
 
@@ -125,6 +125,8 @@ public sealed class Hex : Object
 		}
 		QueuedObjectTexts.Clear();
 
+		Log.Info($"b4 {QueuedObjects.Count}");
+
 		int Count = 100;
 		for (var ObjectIndex = QueuedObjects.Count - 1; ObjectIndex >= 0; --ObjectIndex)
 		{
@@ -140,6 +142,7 @@ public sealed class Hex : Object
 
 			QueuedObjectTexts.Add(ConstructionClone.GetComponent<GameText>());
 		}
+		Log.Info($"afta {QueuedObjects.Count}");
 	}
 
 	public void OnNextTurn()
