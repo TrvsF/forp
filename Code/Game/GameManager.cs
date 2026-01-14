@@ -329,6 +329,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 		FQueueObject QueueObject = new()
 		{
+			GameObjectId = Guid.NewGuid(),
 			ObjectId = ObjectId,
 			ObjectName = HexObject.Name,
 			ProductionToBuild = 10,

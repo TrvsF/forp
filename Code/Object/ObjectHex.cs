@@ -17,6 +17,8 @@ public enum EHexType
 
 public record FQueueObject
 {
+	public Guid GameObjectId { get; init; }
+
 	public string ObjectId { get; init; }
 	public string ObjectName { get; init; }
 	public int ProductionToBuild { get; init; }
@@ -104,7 +106,7 @@ public sealed class Hex : Object
 	{
 		if (IsLocallyOwned())
 		{
-			// DrawUnitQueue();
+			DrawUnitQueue();
 		}
 	}
 
@@ -115,34 +117,30 @@ public sealed class Hex : Object
 		IsSelected = !IsSelected;
 	}
 
-	private readonly List<GameText> QueuedObjectTexts = new();
+	private readonly Dictionary<Guid, GameText> QueuedObjectTexts = new();
 
 	public void DrawUnitQueue()
 	{
-		foreach (var QueuedObjectText in QueuedObjectTexts)
-		{
-			QueuedObjectText.DestroyGameObject();
-		}
-		QueuedObjectTexts.Clear();
-
-		Log.Info($"b4 {QueuedObjects.Count}");
-
 		int Count = 100;
-		for (var ObjectIndex = QueuedObjects.Count - 1; ObjectIndex >= 0; --ObjectIndex)
+		foreach (var QueuedObject in QueuedObjects)
 		{
 			Count += 50;
+
+			Log.Info(QueuedObject.GameObjectId);
+			if (QueuedObjectTexts.TryGetValue(QueuedObject.GameObjectId, out var FoundText))
+			{
+				FoundText.GetComponent<TextRenderer>().Text = $"{QueuedObject.ObjectName} {QueuedObject.Production} / {QueuedObject.ProductionToBuild}";
+				continue;
+			}
 
 			var ConstructionClone = GameManager.Instance.GameTextPrefab.Clone();
 			ConstructionClone.WorldTransform = BuildingData.Transform;
 			ConstructionClone.WorldPosition += Vector3.Up * Count;
 
-			var QueuedObject = QueuedObjects[ObjectIndex];
-			ConstructionObject = ConstructionClone.GetComponent<TextRenderer>();
+			var ConstructionObject = ConstructionClone.GetComponent<TextRenderer>();
 			ConstructionObject.Text = $"{QueuedObject.ObjectName} {QueuedObject.Production} / {QueuedObject.ProductionToBuild}";
-
-			QueuedObjectTexts.Add(ConstructionClone.GetComponent<GameText>());
+			QueuedObjectTexts.Add(QueuedObject.GameObjectId, ConstructionClone.GetComponent<GameText>());
 		}
-		Log.Info($"afta {QueuedObjects.Count}");
 	}
 
 	public void OnNextTurn()
