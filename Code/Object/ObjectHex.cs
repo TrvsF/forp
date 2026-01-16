@@ -121,31 +121,52 @@ public sealed class Hex : Object
 
 	public void DrawUnitQueue()
 	{
-		int Count = 100;
+		List<Guid> GuidsToRemove = new();
+
+		int TextYPadding = 100;
 		foreach (var QueuedObject in QueuedObjects)
 		{
-			Count += 50;
+			TextYPadding += 50;
 
 			Log.Info(QueuedObject.GameObjectId);
 			if (QueuedObjectTexts.TryGetValue(QueuedObject.GameObjectId, out var FoundText))
 			{
 				FoundText.GetComponent<TextRenderer>().Text = $"{QueuedObject.ObjectName} {QueuedObject.Production} / {QueuedObject.ProductionToBuild}";
+
+				if (QueuedObject.IsReadyToBuild())
+				{
+					GuidsToRemove.Add(QueuedObject.GameObjectId);
+				}
 				continue;
 			}
 
 			var ConstructionClone = GameManager.Instance.GameTextPrefab.Clone();
 			ConstructionClone.WorldTransform = BuildingData.Transform;
-			ConstructionClone.WorldPosition += Vector3.Up * Count;
+			ConstructionClone.WorldPosition += Vector3.Up * TextYPadding;
 
 			var ConstructionObject = ConstructionClone.GetComponent<TextRenderer>();
 			ConstructionObject.Text = $"{QueuedObject.ObjectName} {QueuedObject.Production} / {QueuedObject.ProductionToBuild}";
 			QueuedObjectTexts.Add(QueuedObject.GameObjectId, ConstructionClone.GetComponent<GameText>());
 		}
+
+		foreach (var Guid in GuidsToRemove)
+		{
+			RemoveQueuedObjectText(Guid);
+		}
+	}
+
+	public void RemoveQueuedObjectText(Guid GameObjectId)
+	{
+		if (QueuedObjectTexts.TryGetValue(GameObjectId, out var FoundText))
+		{
+			FoundText.DestroyGameObject();
+			QueuedObjectTexts.Remove(GameObjectId);
+		}
 	}
 
 	public void OnNextTurn()
 	{
-		// DrawUnitQueue();
+		
 	}
 
 	private void OnHighlight()

@@ -27,7 +27,7 @@ public sealed partial class GamePlayer : Component
 	public Connection Connection { get; private set; }
 	public bool IsConnected => Connection != null && Connection.IsActive;
 
-	private CameraComponent Camera { get => GameObject.GetComponentInChildren<CameraComponent>(); }
+	public CameraComponent Camera { get => GameObject.GetComponentInChildren<CameraComponent>(); }
 
 	private Object.Object HoveredObject { get; set; }
 	private Hex SelectedHex { get; set; } = null;

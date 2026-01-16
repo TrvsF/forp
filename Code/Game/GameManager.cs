@@ -298,6 +298,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			return;
 		}
 
+		GamePlayer.WorldPosition = SpawnHex.WorldPosition + (GamePlayer.Camera.WorldRotation.Backward * 1337);
 		Server_CreateHexUnitObject("unit-settler", SpawnHex, ConnectionGuid);
 	}
 
