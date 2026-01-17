@@ -13,12 +13,14 @@
 		<bottom-bar>
 			<selected-name>@(UiInfo.GetBottomBarString())</selected-name>
 		</bottom-bar>
+		<build-unit-container>
 		@foreach (var (BuildString, Index) in UiInfo.BuildObjects.Select((v, i) => (v, i)))
 		{
 			<build-unit>
 				<button onclick="@(() => OnUnitBuildClick(Index))">@BuildString</button>
 			</build-unit>
 		}
+		</build-unit-container>
 	}
 
 	<next-turn-button onclick="@OnNextTurnClick">

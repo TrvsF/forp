@@ -1,7 +1,7 @@
 {
   "RootObject": {
     "__guid": "a0ea17bc-813a-41cf-afc4-796c3582076f",
-    "__version": 1,
+    "__version": 2,
     "Flags": 0,
     "Name": "starterunit",
     "Position": "0,0,0",
@@ -10,7 +10,7 @@
     "Tags": "",
     "Enabled": true,
     "NetworkMode": 2,
-    "NetworkInterpolation": true,
+    "NetworkFlags": 0,
     "NetworkOrphaned": 0,
     "NetworkTransmit": true,
     "OwnerTransfer": 1,
@@ -19,6 +19,7 @@
         "__type": "Forp.Object.Unit.ObjectUnit",
         "__guid": "43de9620-38cc-40c5-a1fb-3703290a1677",
         "__enabled": true,
+        "Flags": 0,
         "Attack": 1,
         "Buildings": [
           {
@@ -42,6 +43,7 @@
         "__type": "Sandbox.SkinnedModelRenderer",
         "__guid": "61105fb5-abcd-45dc-bf9d-9ea2c1def99c",
         "__enabled": true,
+        "Flags": 0,
         "AnimationGraph": null,
         "BodyGroups": 18446744073709551615,
         "BoneMergeTarget": null,
@@ -86,6 +88,7 @@
         "__type": "Sandbox.BoxCollider",
         "__guid": "005ff6f6-c716-416e-84ab-0210e453ab72",
         "__enabled": false,
+        "Flags": 0,
         "Center": "0.6336546,-0.9722166,34.70306",
         "ColliderFlags": 0,
         "Elasticity": null,
@@ -111,6 +114,7 @@
         "__type": "Sandbox.ModelCollider",
         "__guid": "32d2fbb6-38e9-4adb-8454-94c6d55a8606",
         "__enabled": true,
+        "Flags": 0,
         "ColliderFlags": 0,
         "Elasticity": null,
         "Friction": null,

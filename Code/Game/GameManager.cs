@@ -360,7 +360,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		{
 			ObjectId = TypedObject.ObjectId,
 			Name = TypedObject.DisplayName,
-			Transform = Hex.WorldTransform,
+			Transform = Hex.GetObjectSpawnLocation(),
 			OwnerGuid = ConnectionId,
 			Health = TypedObject.Health,
 			Attack = TypedObject.Attack,
@@ -393,7 +393,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		{
 			ObjectId = TypedObject.ObjectId,
 			Name = TypedObject.DisplayName,
-			Transform = Hex.WorldTransform,
+			Transform = Hex.GetObjectSpawnLocation(),
 			OwnerGuid = ConnectionId,
 			ProductionToBuild = TypedObject.ProductionToBuild,
 			ViewRange = TypedObject.ViewRange,
@@ -441,7 +441,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 		FUnit NewUnitData = OldUnitData with
 		{
-			Transform = NewHex.WorldTransform,
+			Transform = NewHex.GetObjectSpawnLocation(),
 			OwnerGuid = ConnectionId,
 			Hex = NewHex,
 			TurnMovementSpent = OldUnitData.TurnMovementSpent + HexesBetween,

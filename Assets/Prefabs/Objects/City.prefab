@@ -1,16 +1,16 @@
 {
   "RootObject": {
     "__guid": "4fbfe539-6df4-47f7-ab87-a814b4a88b55",
-    "__version": 1,
+    "__version": 2,
     "Flags": 0,
     "Name": "city",
     "Position": "0,0,0",
-    "Rotation": "0,0,0,1",
+    "Rotation": "0,0,0.7071067,0.7071068",
     "Scale": "1,1,1",
     "Tags": "",
     "Enabled": true,
     "NetworkMode": 2,
-    "NetworkInterpolation": true,
+    "NetworkFlags": 0,
     "NetworkOrphaned": 0,
     "NetworkTransmit": true,
     "OwnerTransfer": 1,
@@ -19,6 +19,7 @@
         "__type": "Sandbox.SkinnedModelRenderer",
         "__guid": "2736c5a6-6003-4e70-a7d8-8a5cb948a843",
         "__enabled": true,
+        "Flags": 0,
         "AnimationGraph": null,
         "BodyGroups": 18446744073709551615,
         "BoneMergeTarget": null,
@@ -63,6 +64,7 @@
         "__type": "Sandbox.ModelCollider",
         "__guid": "8037f219-d600-408b-8d27-a7aa2ff48bc2",
         "__enabled": true,
+        "Flags": 0,
         "ColliderFlags": 0,
         "Elasticity": null,
         "Friction": null,
@@ -87,6 +89,7 @@
         "__type": "Forp.Object.Building.City",
         "__guid": "ce6f4910-3ff3-4609-9814-9903a7caa6ca",
         "__enabled": true,
+        "Flags": 0,
         "Buildings": [
           {
             "_type": "gameobject",
@@ -101,11 +104,15 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "Production": 0,
+        "ProductionToBuild": 0,
         "Units": [
           {
             "_type": "gameobject",
             "prefab": "prefabs/objects/starterunit.prefab"
+          },
+          {
+            "_type": "gameobject",
+            "prefab": "prefabs/objects/combatunit.prefab"
           }
         ],
         "ViewRange": 4

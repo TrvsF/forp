@@ -117,6 +117,13 @@ public sealed class Hex : Object
 		IsSelected = !IsSelected;
 	}
 
+	public Transform GetObjectSpawnLocation()
+	{
+		var BaseTransform = WorldTransform;
+		BaseTransform.Position += Vector3.Up * 40; // 40 = hex width
+		return BaseTransform;
+	}
+
 	private readonly Dictionary<Guid, GameText> QueuedObjectTexts = new();
 
 	public void DrawUnitQueue()
@@ -128,7 +135,6 @@ public sealed class Hex : Object
 		{
 			TextYPadding += 50;
 
-			Log.Info(QueuedObject.GameObjectId);
 			if (QueuedObjectTexts.TryGetValue(QueuedObject.GameObjectId, out var FoundText))
 			{
 				FoundText.GetComponent<TextRenderer>().Text = $"{QueuedObject.ObjectName} {QueuedObject.Production} / {QueuedObject.ProductionToBuild}";
@@ -434,7 +440,7 @@ public sealed class Hex : Object
 			if (UnitData.Health <= 0)
 			{
 				Log.Info($"you! yes you are DEAD");
-				UnitObject.Destroy(); // TODO : server needs to destroy data 2
+				UnitObject.DestroyGameObject(); // TODO : server needs to destroy data 2
 				return;
 			}
 		}

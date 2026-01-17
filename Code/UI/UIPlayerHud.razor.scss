@@ -41,22 +41,28 @@ bottom-bar {
         color: white;
     }
 
-build-unit {
+build-container {
     position: absolute;
-    bottom: 80%;
-    left: 80%;
-    width: 5%;
-    height: 5%;
+    display: flex;
+    flex-direction: column;
+}
+
+build-unit {
+    width: 180px;
+    height: 60px;
     border-radius: 50%;
     background-color: #000000AA;
     pointer-events: all;
     color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-build-unit button:hover {
-    cursor: crosshair;
-    background-color: black;
-}
+    build-unit button:hover {
+        cursor: crosshair;
+        background-color: black;
+    }
 
 next-turn-button {
     position: absolute;
