@@ -5,6 +5,7 @@ using Forp.Util;
 using Sandbox;
 using Sandbox.Diagnostics;
 using Sandbox.Network;
+using Sandbox.Razor;
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -249,31 +250,37 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	{
 		// TODO : loading screen
 		var MainHex = Hex.GetComponent<Hex>();
-		await CreateSurroundAsync(MainHex, 8);
+		await CreateBoard(MainHex, 50, 20);
 	}
 
-	private async Task CreateSurroundAsync(Hex Hex, int Depth)
+	private async Task CreateBoard(Hex Hex, int Width, int Height)
 	{
-		if (!Hex.IsValid())
+		bool HAlt = false;
+		for (int HeightIndex = 0; HeightIndex < Height; ++HeightIndex)
 		{
-			return;
-		}
+			Hex.CreateSurroundBrothers();
+			Hex = HAlt ? Hex.HexBL : Hex.HexBR;
+			HAlt = !HAlt;
 
-		if (!BoardHexes.Contains(Hex))
-		{ 
-			BoardHexes.Add(Hex);
-		}
+			// TODO : imp into net list?
+			if (!BoardHexes.Contains(Hex))
+			{
+				BoardHexes.Add(Hex);
+			}
 
-		if (Depth <= 0)
-		{
-			return;
-		}
+			bool VAlt = false;
+			var VHex = Hex.HexTR;
+			for (int WidthIndex = 0; WidthIndex < Width; ++WidthIndex)
+			{
+				VHex.CreateSurroundBrothers();
+				VHex = VAlt ? VHex.HexBR : VHex.HexTR;
+				VAlt = !VAlt;
 
-		Hex.CreateSurroundBrothers();
-
-		foreach (var Brother in Hex.AllBrothers)
-		{
-			await CreateSurroundAsync(Brother, Depth - 1);
+				if (!BoardHexes.Contains(VHex))
+				{
+					BoardHexes.Add(VHex);
+				}
+			}
 		}
 	}
 

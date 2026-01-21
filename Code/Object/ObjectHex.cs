@@ -37,12 +37,12 @@ public sealed class Hex : Object
 	[Property] GameObject LightPrefab { get; set; }
 	GameObject LightObject = null;
 
-	[Property] Hex HexTL;
-	[Property] Hex HexTR;
-	[Property] Hex HexML;
-	[Property] Hex HexMR;
-	[Property] Hex HexBL;
-	[Property] Hex HexBR;
+	[Property] public Hex HexTL { get; private set; }
+	[Property] public Hex HexTR { get; private set; }
+	[Property] public Hex HexML { get; private set; }
+	[Property] public Hex HexMR { get; private set; }
+	[Property] public Hex HexBL { get; private set; }
+	[Property] public Hex HexBR { get; private set; }
 
 	[Sync(SyncFlags.FromHost)] public NetList<FQueueObject> QueuedObjects { get; set; } = new();
 	[Sync(SyncFlags.FromHost), Property] public int Production { get; set; } = 0;
