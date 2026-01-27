@@ -5,7 +5,7 @@ using System;
 
 namespace Forp.Object.Unit;
 
-public record FUnit : IObject
+public record FUnit : IObj
 {
 	public string ObjectId { get; set; }
 
@@ -24,13 +24,14 @@ public record FUnit : IObject
 	public int TurnMovementSpent { get; set; }
 }
 
-public class ObjectUnit : Object
+public class ObjectUnit : Obj
 {
 	[Property] public List<GameObject> Buildings { get; set; }
 	[Property] public int Health { get; set; }
 	[Property] public int Attack { get; set; }
 	[Property] public int ViewRange { get; set; }
 	[Property] public int MoveRange { get; set; }
+	[Property] public int ProductionToBuild { get; set; }
 
 	protected override void OnStart()
 	{

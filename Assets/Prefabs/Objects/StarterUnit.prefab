@@ -37,6 +37,7 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
+        "ProductionToBuild": 99,
         "ViewRange": 3
       },
       {

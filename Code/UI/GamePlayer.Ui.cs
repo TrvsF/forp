@@ -21,7 +21,7 @@ public struct FPlayerUiInfo
 	public int Territory = 0;
 	public int Production = 0;
 
-	public Object.Object HoveredObject = null;
+	public Object.Obj HoveredObject = null;
 	public ObjectUnit SelectedUnit = null;
 	public Hex SelectedHex = null;
 	public List<string> BuildObjects = new();

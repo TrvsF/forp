@@ -5,7 +5,7 @@ using static Sandbox.VideoWriter;
 
 namespace Forp.Object;
 
-public interface IObject
+public interface IObj
 {
 	public string ObjectId { get; set; }
 
@@ -18,7 +18,20 @@ public interface IObject
 	public Hex Hex { get; set; }
 }
 
-public class Object : Component
+public record FObj : IObj
+{
+	public string ObjectId { get; set; }
+
+	public string Name { get; set; }
+	public Transform Transform { get; set; }
+	public Guid OwnerGuid { get; set; }
+	public int TurnsAlive { get; set; }
+	public int ViewRange { get; set; }
+
+	public Hex Hex { get; set; }
+}
+
+public class Obj : Component
 {
 	[Property] public string DisplayName { get; set; }
 	[Property] public string ObjectId { get; set; }

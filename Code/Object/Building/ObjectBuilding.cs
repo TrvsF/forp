@@ -5,7 +5,7 @@ using static Sandbox.VideoWriter;
 
 namespace Forp.Object.Building;
 
-public record FBuilding : IObject
+public record FBuilding : IObj
 {
 	public string ObjectId { get; set; }
 
@@ -20,7 +20,7 @@ public record FBuilding : IObject
 	public int ProductionToBuild { get; set; } // TODO : remove me
 }
 
-public class ObjectBuilding : Object
+public class ObjectBuilding : Obj
 {
 	[Property] public List<GameObject> Buildings { get; set; }
 	[Property] public List<GameObject> Units { get; set; }

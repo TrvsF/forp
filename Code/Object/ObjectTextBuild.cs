@@ -7,7 +7,7 @@ using static Sandbox.VideoWriter;
 
 namespace Forp.Object;
 
-public class TextBuilding : Object
+public class TextBuilding : Obj
 {
 	[Property] public GameObject ObjectToBuild { get; set; } 
 	[Property] public int ProductionToBuild { get; set; } 

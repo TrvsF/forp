@@ -1,10 +1,10 @@
-using Forp.Object.Building;
 using Forp.Object.Unit;
 using Sandbox;
 using Sandbox.Diagnostics;
 using System;
 using Sandbox.UI;
 using Forp.Game;
+using Forp.Object.Building;
 
 namespace Forp.Object;
 
@@ -30,7 +30,7 @@ public record FQueueObject
 	}
 }
 
-public sealed class Hex : Object
+public sealed class Hex : Obj
 {
 	[Property] GameObject FogPrefab { get; set; }
 	GameObject FogObject = null;
@@ -48,6 +48,157 @@ public sealed class Hex : Object
 	[Sync(SyncFlags.FromHost), Property] public int Production { get; set; } = 0;
 	[Sync(SyncFlags.FromHost), Property] public EHexType Type { get; set; } = EHexType.Grass;
 	[Sync(SyncFlags.FromHost), Change, Property] public Color BaseColour { get; set; } = Color.Black;
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+
+	[Sync(SyncFlags.FromHost), Change] public FBuilding BuildingData { get; set; } = null;
+	public TextRenderer ConstructionObject { get; set; } = null;
+	public ObjectBuilding BuildingObject { get; set; } = null;
+	private void OnBuildingDataChanged(FBuilding OldBuildingData, FBuilding NewBuildingData)
+	{
+		if (BuildingData == null)
+		{
+			if (BuildingObject.IsValid())
+			{
+				BuildingObject.GameObject.Destroy();
+				BuildingObject = null;
+			}
+			return;
+		}
+
+		if (BuildingData.TurnsAlive < BuildingData.ProductionToBuild)
+		{
+			if (!ConstructionObject.IsValid())
+			{
+				var ConstructionClone = GameManager.Instance.GameTextPrefab.Clone();
+				ConstructionClone.WorldTransform = BuildingData.Transform;
+				ConstructionClone.WorldPosition += Vector3.Up * 100;
+				ConstructionObject = ConstructionClone.GetComponent<TextRenderer>();
+			}
+
+			ConstructionObject.Text = $"{BuildingData.TurnsAlive} / {BuildingData.ProductionToBuild}";
+			return;
+		}
+
+		if (ConstructionObject.IsValid())
+		{
+			ConstructionObject.GameObject.Destroy();
+		}
+
+		if (BuildingData.OwnerGuid == Connection.Local.Id)
+		{
+			RevealHexesRecusrive(this, true, BuildingData.ViewRange + 1);
+		}
+
+		// we only build once
+		if (IsRevealed && !BuildingObject.IsValid())
+		{
+			var Clone = GameManager.Instance.GetObject(BuildingData.ObjectId).Clone();
+			Clone.WorldTransform = BuildingData.Transform;
+			BuildingObject = Clone.GetComponent<ObjectBuilding>();
+		}
+	}
+
+	[Sync(SyncFlags.FromHost), Change] public FUnit UnitData { get; set; } = null;
+	public ObjectUnit UnitObject { get; set; } = null;
+	private void OnUnitDataChanged(FUnit OldUnitData, FUnit NewUnitData)
+	{
+		if (UnitData == null)
+		{
+			if (UnitObject.IsValid())
+			{
+				UnitObject.GameObject.Destroy();
+				UnitObject = null;
+			}
+			return;
+		}
+
+		if (UnitData.OwnerGuid == Connection.Local.Id)
+		{
+			RevealHexesRecusrive(this, true, UnitData.ViewRange + 1);
+		}
+
+		if (IsRevealed && !UnitObject.IsValid())
+		{
+			var Clone = GameManager.Instance.GetObject(UnitData.ObjectId).Clone();
+			Clone.WorldTransform = UnitData.Transform;
+			UnitObject = Clone.GetComponent<ObjectUnit>();
+			UnitObject.OwnerHex = this;
+			UnitObject.OwnerPlayer = GamePlayer.Local;
+
+			if (GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid) is { } OwnerPlayer)
+			{
+				UnitObject.ModelRenderer.Tint = OwnerPlayer.Colour;
+			}
+		}
+
+		if (UnitObject.IsValid())
+		{
+			UnitObject.Health = UnitData.Health;
+			UnitObject.Attack = UnitData.Attack;
+			if (UnitData.Health <= 0)
+			{
+				Log.Info($"you! yes you are DEAD");
+				UnitObject.DestroyGameObject(); // TODO : server needs to destroy data 2
+				return;
+			}
+		}
+	}
+
+	[Sync(SyncFlags.FromHost), Change] public FObj ObjectData { get; set; } = null;
+	public Obj Obj { get; set; } = null;
+	private void OnObjectDataChanged(FObj OldObjectData, FObj NewObjectData)
+	{
+		if (ObjectData == null)
+		{
+			if (Obj.IsValid())
+			{
+				Obj.GameObject.Destroy();
+				Obj = null;
+			}
+			return;
+		}
+
+		if (ObjectData.OwnerGuid == Connection.Local.Id)
+		{
+			RevealHexesRecusrive(this, true, ObjectData.ViewRange + 1);
+		}
+
+		if (IsRevealed && !Obj.IsValid())
+		{
+			var Clone = GameManager.Instance.GetObject(ObjectData.ObjectId).Clone();
+			Clone.WorldTransform = ObjectData.Transform;
+			Obj = Clone.GetComponent<ObjectUnit>();
+
+			if (GameManager.Instance.GetGamePlayer(ObjectData.OwnerGuid) is { } OwnerPlayer)
+			{
+				Obj?.ModelRenderer.Tint = OwnerPlayer.Colour;
+			}
+		}
+	}
+
+	[Sync(SyncFlags.FromHost)] public NetList<FBuilding> BuildingOwners { get; set; } = new();
+	public void SetOwner_ServerOnly(FBuilding OwnerIn, bool DoBrothers = false)
+	{
+		Assert.True(Networking.IsHost);
+
+		BuildingOwners.Add(OwnerIn);
+
+		if (GameManager.Instance.GetGamePlayer(OwnerIn.OwnerGuid) is { } OwnerPlayer)
+		{
+			SetBaseColour_ServerOnly(OwnerPlayer.Colour);
+		}
+
+		if (!DoBrothers)
+		{
+			return;
+		}
+
+		foreach (var BrothermanHex in AllBrothers)
+		{
+			BrothermanHex?.SetOwner_ServerOnly(OwnerIn, false);
+		}
+	}
 
 	public void AddQueuedObject_ServerOnly(FQueueObject QueueObject)
 	{
@@ -348,125 +499,6 @@ public sealed class Hex : Object
 		}
 
 		return BuildingOwners[0].OwnerGuid;
-	}
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////
-
-	[Sync(SyncFlags.FromHost), Change] public FBuilding BuildingData { get; set; } = null;
-	public TextRenderer ConstructionObject { get; set; } = null;
-	public ObjectBuilding BuildingObject { get; set; } = null;
-	private void OnBuildingDataChanged(FBuilding OldBuildingData, FBuilding NewBuildingData)
-	{
-		if (BuildingData == null)
-		{
-			if (BuildingObject.IsValid())
-			{
-				BuildingObject.GameObject.Destroy();
-				BuildingObject = null;
-			}
-			return;
-		}
-
-		if (BuildingData.TurnsAlive < BuildingData.ProductionToBuild)
-		{
-			if (!ConstructionObject.IsValid())
-			{
-				var ConstructionClone = GameManager.Instance.GameTextPrefab.Clone();
-				ConstructionClone.WorldTransform = BuildingData.Transform;
-				ConstructionClone.WorldPosition += Vector3.Up * 100;
-				ConstructionObject = ConstructionClone.GetComponent<TextRenderer>();
-			}
-
-			ConstructionObject.Text = $"{BuildingData.TurnsAlive} / {BuildingData.ProductionToBuild}";
-			return;
-		}
-
-		if (ConstructionObject.IsValid())
-		{
-			ConstructionObject.GameObject.Destroy();
-		}
-
-		if (BuildingData.OwnerGuid == Connection.Local.Id)
-		{
-			RevealHexesRecusrive(this, true, BuildingData.ViewRange + 1);
-		}
-
-		// we only build once
-		if (IsRevealed && !BuildingObject.IsValid())
-		{
-			var Clone = GameManager.Instance.GetObject(BuildingData.ObjectId).Clone();
-			Clone.WorldTransform = BuildingData.Transform;
-			BuildingObject = Clone.GetComponent<ObjectBuilding>();
-		}
-	}
-
-	[Sync(SyncFlags.FromHost), Change] public FUnit UnitData { get; set; } = null;
-	public ObjectUnit UnitObject { get; set; } = null;
-	private void OnUnitDataChanged(FUnit OldUnitData, FUnit NewUnitData)
-	{
-		if (UnitData == null)
-		{
-			if (UnitObject.IsValid())
-			{
-				UnitObject.GameObject.Destroy();
-				UnitObject = null;
-			}
-			return;
-		}
-
-		if (UnitData.OwnerGuid == Connection.Local.Id)
-		{
-			RevealHexesRecusrive(this, true, UnitData.ViewRange + 1);
-		}
-
-		if (IsRevealed && !UnitObject.IsValid())
-		{
-			var Clone = GameManager.Instance.GetObject(UnitData.ObjectId).Clone();
-			Clone.WorldTransform = UnitData.Transform;
-			UnitObject = Clone.GetComponent<ObjectUnit>();
-			UnitObject.OwnerHex = this;
-			UnitObject.OwnerPlayer = GamePlayer.Local;
-
-			if (GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid) is { } OwnerPlayer)
-			{
-				UnitObject.ModelRenderer.Tint = OwnerPlayer.Colour;
-			}
-		}
-
-		if (UnitObject.IsValid())
-		{
-			UnitObject.Health = UnitData.Health;
-			UnitObject.Attack = UnitData.Attack;
-			if (UnitData.Health <= 0)
-			{
-				Log.Info($"you! yes you are DEAD");
-				UnitObject.DestroyGameObject(); // TODO : server needs to destroy data 2
-				return;
-			}
-		}
-	}
-
-	[Sync(SyncFlags.FromHost)] public NetList<FBuilding> BuildingOwners { get; set; } = new();
-	public void SetOwner_ServerOnly(FBuilding OwnerIn, bool DoBrothers = false)
-	{
-		Assert.True(Networking.IsHost);
-
-		BuildingOwners.Add(OwnerIn);
-
-		if (GameManager.Instance.GetGamePlayer(OwnerIn.OwnerGuid) is { } OwnerPlayer)
-		{
-			SetBaseColour_ServerOnly(OwnerPlayer.Colour);
-		}
-
-		if (!DoBrothers)
-		{
-			return;
-		}
-
-		foreach (var BrothermanHex in AllBrothers)
-		{
-			BrothermanHex?.SetOwner_ServerOnly(OwnerIn, false);
-		}
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////

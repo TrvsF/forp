@@ -1,7 +1,7 @@
 {
   "RootObject": {
     "__guid": "4647e1f8-cfd8-4579-aac0-a4a1e08db488",
-    "__version": 1,
+    "__version": 2,
     "Flags": 0,
     "Name": "gamemanager",
     "Position": "0,0,0",
@@ -10,7 +10,7 @@
     "Tags": "",
     "Enabled": true,
     "NetworkMode": 1,
-    "NetworkInterpolation": false,
+    "NetworkFlags": 0,
     "NetworkOrphaned": 1,
     "NetworkTransmit": true,
     "OwnerTransfer": 0,
@@ -18,7 +18,7 @@
     "Children": [
       {
         "__guid": "8edb6cdd-b5b6-494f-92ca-4095047c1197",
-        "__version": 1,
+        "__version": 2,
         "Flags": 0,
         "Name": "GameManager",
         "Position": "0,0,0",
@@ -27,7 +27,7 @@
         "Tags": "",
         "Enabled": true,
         "NetworkMode": 1,
-        "NetworkInterpolation": false,
+        "NetworkFlags": 1,
         "NetworkOrphaned": 1,
         "NetworkTransmit": true,
         "OwnerTransfer": 1,
@@ -36,6 +36,7 @@
             "__type": "Forp.Game.GameManager",
             "__guid": "dbbfe14f-ff65-4bb4-b301-c63ca99d9358",
             "__enabled": true,
+            "Flags": 0,
             "GameTextPrefab": {
               "_type": "gameobject",
               "prefab": "prefabs/gametext.prefab"
@@ -44,24 +45,28 @@
               "_type": "gameobject",
               "prefab": "prefabs/objects/hex.prefab"
             },
-            "ObjectPrefabs": {
-              "unit-settler": {
-                "_type": "gameobject",
-                "prefab": "prefabs/objects/starterunit.prefab"
-              },
-              "building-city": {
+            "ObjectPrefabs": [
+              {
                 "_type": "gameobject",
                 "prefab": "prefabs/objects/city.prefab"
               },
-              "building-tower": {
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/objects/combatunit.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/objects/starterunit.prefab"
+              },
+              {
                 "_type": "gameobject",
                 "prefab": "prefabs/objects/tower.prefab"
               },
-              "unit-combat": {
+              {
                 "_type": "gameobject",
-                "prefab": "prefabs/objects/combatunit.prefab"
+                "prefab": "prefabs/objects/tree.prefab"
               }
-            },
+            ],
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,
@@ -78,7 +83,7 @@
       }
     ],
     "__properties": {
-      "NetworkInterpolation": false,
+      "NetworkInterpolation": true,
       "TimeScale": 1,
       "WantsSystemScene": true,
       "Metadata": {},

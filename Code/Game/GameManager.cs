@@ -1,10 +1,10 @@
 using Forp.Object;
-using Forp.Object.Building;
 using Forp.Object.Unit;
 using Forp.Util;
 using Sandbox;
 using Sandbox.Diagnostics;
 using Sandbox.Network;
+using Forp.Object.Building;
 using Sandbox.Razor;
 using System;
 using System.Runtime.CompilerServices;
@@ -17,11 +17,20 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	[Property] public GameObject HexPrefab { get; set; }
 	[Property] public GameObject PlayerPrefab { get; set; }
 	[Property] public GameObject GameTextPrefab { get; set; }
-	[Property] private Dictionary<string, GameObject> ObjectPrefabs { get; set; }
+	[Property] private HashSet<GameObject> ObjectPrefabs { get; set; } // TODO : turn into dict at startup
 
 	public GameObject GetObject(string ObjectId)
 	{
-		ObjectPrefabs.TryGetValue(ObjectId, out GameObject Object);
+		GameObject Object = null;
+		foreach (var ObjectPrefab in ObjectPrefabs)
+		{
+			if (ObjectPrefab.GetComponent<Obj>().ObjectId == ObjectId)
+			{
+				Object = ObjectPrefab; 
+				break; 
+			}
+		}
+
 		if (!Object.IsValid())
 		{
 			Log.Error($"cannot find object with id {ObjectId}!!!");
@@ -307,6 +316,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 		GamePlayer.WorldPosition = SpawnHex.WorldPosition + (GamePlayer.Camera.WorldRotation.Backward * 1337);
 		Server_CreateHexUnitObject("unit-settler", SpawnHex, ConnectionGuid);
+		Server_CreateHexObject("tree", SpawnHex.HexBR, ConnectionGuid);
 	}
 
 	[Rpc.Host]
@@ -332,15 +342,17 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	{
 		Assert.IsValid(Hex);
 
-		var HexObject = ObjectPrefabs[ObjectId];
+		var HexObject = GetObject(ObjectId);
 		Assert.NotNull(HexObject);
+		var ObjectUnit = HexObject.GetComponent<ObjectUnit>();
+		Assert.NotNull(ObjectUnit);
 
 		FQueueObject QueueObject = new()
 		{
 			GameObjectId = Guid.NewGuid(),
 			ObjectId = ObjectId,
 			ObjectName = HexObject.Name,
-			ProductionToBuild = 10,
+			ProductionToBuild = ObjectUnit.ProductionToBuild,
 		};
 
 		Hex.AddQueuedObject_ServerOnly(QueueObject);
@@ -358,7 +370,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			return;
 		}
 
-		var HexObject = ObjectPrefabs[ObjectId];
+		var HexObject = GetObject(ObjectId);
 		Assert.NotNull(HexObject);
 		var TypedObject = HexObject.GetComponent<ObjectUnit>();
 		Assert.NotNull(TypedObject);
@@ -414,6 +426,37 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		{
 			Hex.UnitData = null;
 		}
+	}
+
+	[Rpc.Host]
+	public void Server_CreateHexObject(string ObjectId, Hex Hex, Guid ConnectionId)
+	{
+		Assert.IsValid(Hex);
+		Assert.NotNull(ConnectionId);
+
+		if (Hex.UnitData != null)
+		{
+			Log.Warning($"trying to build unit on already occupied hex {Hex}! ignoring");
+			return;
+		}
+
+		var HexObject = GetObject(ObjectId);
+		Assert.NotNull(HexObject);
+		var TypedObject = HexObject.GetComponent<Obj>();
+		Assert.NotNull(TypedObject);
+
+		FObj ObjectData = new()
+		{
+			ObjectId = TypedObject.ObjectId,
+			Name = TypedObject.DisplayName,
+			Transform = Hex.GetObjectSpawnLocation(),
+			OwnerGuid = ConnectionId,
+			Hex = Hex,
+		};
+
+		Hex.ObjectData = ObjectData;
+
+		Log.Info($"created object {ObjectId} on {Hex} for {ConnectionId}");
 	}
 
 	[Rpc.Host]

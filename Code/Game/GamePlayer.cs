@@ -29,7 +29,7 @@ public sealed partial class GamePlayer : Component
 
 	public CameraComponent Camera { get => GameObject.GetComponentInChildren<CameraComponent>(); }
 
-	private Object.Object HoveredObject { get; set; }
+	private Object.Obj HoveredObject { get; set; }
 	private Hex SelectedHex { get; set; } = null;
 
 	private ObjectUnit _SelectedUnit = null;
@@ -104,7 +104,7 @@ public sealed partial class GamePlayer : Component
 		DoMovement();
 		DoAction();
 
-		List<Object.Object> HoveredObjects = new();
+		List<Object.Obj> HoveredObjects = new();
 		var ClickRay = Camera.ScreenPixelToRay(Mouse.Position);
 		var ClickTraces = Scene.Trace.Ray(ClickRay.Position, ClickRay.Position + ClickRay.Forward * 10000f).RunAll();
 
@@ -115,7 +115,7 @@ public sealed partial class GamePlayer : Component
 				continue;
 			}
 
-			if (ClickTrace.GameObject.GetComponent<Object.Object>() is { } HitObject)
+			if (ClickTrace.GameObject.GetComponent<Object.Obj>() is { } HitObject)
 			{
 				HoveredObject = HitObject;
 				return;
@@ -183,7 +183,7 @@ public sealed partial class GamePlayer : Component
 		{
 			Mouse.CursorType = "crosshair";
 
-			List<Object.Object> ClickedObjects = new();
+			List<Object.Obj> ClickedObjects = new();
 			var ClickRay = Camera.ScreenPixelToRay(Mouse.Position);
 			var ClickTraces = Scene.Trace.Ray(ClickRay.Position, ClickRay.Position + ClickRay.Forward * 10000f).RunAll();
 
@@ -194,7 +194,7 @@ public sealed partial class GamePlayer : Component
 					continue;
 				}
 
-				if (ClickTrace.GameObject.GetComponent<Object.Object>() is { } HitObject)
+				if (ClickTrace.GameObject.GetComponent<Object.Obj>() is { } HitObject)
 				{
 					ClickedObjects.Add(HitObject);
 				}
