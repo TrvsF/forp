@@ -44,7 +44,7 @@ public sealed class Hex : Obj
 	[Property] public Hex HexBL { get; private set; }
 	[Property] public Hex HexBR { get; private set; }
 
-	[Sync(SyncFlags.FromHost)] public NetList<FQueueObject> QueuedObjects { get; set; } = new();
+	[Sync(SyncFlags.FromHost)] public NetList<FQueueObject> QueuedUnits { get; set; } = new();
 	[Sync(SyncFlags.FromHost), Property] public int Production { get; set; } = 0;
 	[Sync(SyncFlags.FromHost), Property] public EHexType Type { get; set; } = EHexType.Grass;
 	[Sync(SyncFlags.FromHost), Change, Property] public Color BaseColour { get; set; } = Color.Black;
@@ -159,11 +159,6 @@ public sealed class Hex : Obj
 			return;
 		}
 
-		if (ObjectData.OwnerGuid == Connection.Local.Id)
-		{
-			RevealHexesRecusrive(this, true, ObjectData.ViewRange + 1);
-		}
-
 		if (IsRevealed && !Obj.IsValid())
 		{
 			var Clone = GameManager.Instance.GetObject(ObjectData.ObjectId).Clone();
@@ -203,7 +198,7 @@ public sealed class Hex : Obj
 	public void AddQueuedObject_ServerOnly(FQueueObject QueueObject)
 	{
 		Assert.True(Networking.IsHost);
-		QueuedObjects.Add(QueueObject);
+		QueuedUnits.Add(QueueObject);
 	}
 
 	private void OnBaseColourChanged(Color OldColour, Color NewColour)
@@ -243,7 +238,7 @@ public sealed class Hex : Obj
 
 		base.OnStart();
 
-		QueuedObjects.OnChanged += OnQueuedObjectsChanged; // TODO : unbind?
+		QueuedUnits.OnChanged += OnQueuedObjectsChanged; // TODO : unbind?
 
 		if (Networking.IsHost)
 		{
@@ -282,7 +277,7 @@ public sealed class Hex : Obj
 		List<Guid> GuidsToRemove = new();
 
 		int TextYPadding = 100;
-		foreach (var QueuedObject in QueuedObjects)
+		foreach (var QueuedObject in QueuedUnits)
 		{
 			TextYPadding += 50;
 
@@ -352,6 +347,7 @@ public sealed class Hex : Obj
 		// TODO : revisist
 		OnUnitDataChanged(new(), new());
 		OnBuildingDataChanged(new(), new());
+		OnObjectDataChanged(new(), new());
 	}
 
 	private void OnHide()
@@ -362,6 +358,7 @@ public sealed class Hex : Obj
 		// TODO : revisist
 		OnUnitDataChanged(new(), new());
 		OnBuildingDataChanged(new(), new());
+		OnObjectDataChanged(new(), new());
 	}
 
 	private void OnSelect()
@@ -486,6 +483,11 @@ public sealed class Hex : Obj
 		}
 	}
 
+	public bool HasOwner()
+	{
+		return BuildingOwners.Count > 0;
+	}
+
 	public bool IsLocallyOwned()
 	{
 		return GetOwnerId() == GamePlayer.Local.ConnectionId;
@@ -503,7 +505,7 @@ public sealed class Hex : Obj
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// TODO : remove
+	// TODO : revisit
 	public void CreateSurroundBrothers()
 	{
 		// spawn all our brothers

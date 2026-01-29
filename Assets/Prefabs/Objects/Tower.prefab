@@ -90,7 +90,12 @@
         "__guid": "ce6f4910-3ff3-4609-9814-9903a7caa6ca",
         "__enabled": true,
         "Flags": 0,
-        "Buildings": [],
+        "Buildings": [
+          {
+            "_type": "gameobject",
+            "prefab": "prefabs/objects/city.prefab"
+          }
+        ],
         "DisplayName": "Tower",
         "ObjectId": "building-tower",
         "OnComponentDestroy": null,

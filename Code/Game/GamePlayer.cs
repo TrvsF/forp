@@ -354,7 +354,6 @@ public sealed partial class GamePlayer : Component
 
 		HashSet<GameObject> FoundBuildingObjects = new();
 
-
 		foreach (var BuildingOwner in Hex.BuildingOwners)
 		{
 			var OwnerBuildingObject = BuildingOwner.Hex.BuildingObject;

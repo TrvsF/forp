@@ -69,7 +69,7 @@
           "GameLayer": true,
           "OverlayLayer": false,
           "BloomLayer": false,
-          "AfterUILayer": false
+          "AfterUILayer": true
         },
         "RenderType": "On",
         "Sequence": {

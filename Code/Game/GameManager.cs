@@ -26,8 +26,8 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		{
 			if (ObjectPrefab.GetComponent<Obj>().ObjectId == ObjectId)
 			{
-				Object = ObjectPrefab; 
-				break; 
+				Object = ObjectPrefab;
+				break;
 			}
 		}
 
@@ -115,9 +115,18 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		}
 	}
 
+	class HexUnitProduction
+	{
+		public HashSet<Hex> Hexes { get; } = new();
+		public int Production { get; set; } = 0;
+		public int Units { get; set; } = 0;
+	}
+
 	private void DoNextTurn_ServerOnly()
 	{
 		Assert.True(Networking.IsHost);
+
+		List<HexUnitProduction> SharedProductionHexes = new();
 
 		foreach (var Hex in BoardHexes)
 		{
@@ -126,6 +135,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 				continue;
 			}
 
+			// tick our hex's objects ///////////////////////////
 			if (Hex.UnitData != null)
 			{
 				Hex.UnitData = Hex.UnitData with
@@ -143,33 +153,91 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 				};
 			}
 
-			for (var ObjectIndex = Hex.QueuedObjects.Count - 1; ObjectIndex >= 0; --ObjectIndex)
+			if (Hex.ObjectData != null)
 			{
-				Hex.QueuedObjects[ObjectIndex] = Hex.QueuedObjects[ObjectIndex] with
+				Hex.ObjectData = Hex.ObjectData with
 				{
-					Production = Hex.QueuedObjects[ObjectIndex].Production + Hex.Production
+					TurnsAlive = Hex.ObjectData.TurnsAlive + 1,
 				};
+			}
+			////////////////////////////////////////////////////
 
-				var QueuedObject = Hex.QueuedObjects[ObjectIndex];
-				if (QueuedObject.IsReadyToBuild())
+			bool DoThing = true;
+			foreach (var ProductionHexes in SharedProductionHexes)
+			{
+				if (!Hex.HasOwner() || ProductionHexes.Hexes.Contains(Hex))
 				{
-					// TODO : make recursive or some shit :)
-					foreach (var HexBrother in Hex.AllBrothers)
-					{
-						if (!HexBrother.IsValid())
-						{
-							continue;
-						}
+					DoThing = false;
+					break;
+				}
+			}
 
-						if (HexBrother.UnitData == null)
+			if (DoThing)
+			{
+				HexUnitProduction HexProductionSet = new();
+
+				void AddNeighbourBrothers(Hex Hex)
+				{
+					if (!HexProductionSet.Hexes.Add(Hex) || !Hex.HasOwner())
+					{
+						return;
+					}
+					HexProductionSet.Production += Hex.Production;
+					HexProductionSet.Units += Hex.QueuedUnits.Count;
+
+					foreach (var Brother in Hex.AllBrothers)
+					{
+						if (Brother.IsValid() && Brother.GetOwnerId() == Hex.GetOwnerId())
 						{
-							Server_CreateHexUnitObject(QueuedObject.ObjectId, HexBrother, Hex.GetOwnerId());
-							break;
+							AddNeighbourBrothers(Brother);
 						}
 					}
+				}
 
-					Hex.QueuedObjects.RemoveAt(ObjectIndex);
-					continue;
+				AddNeighbourBrothers(Hex);
+				SharedProductionHexes.Add(HexProductionSet);
+			}
+		}
+
+		foreach (var ProductionHexes in SharedProductionHexes)
+		{
+			if (ProductionHexes.Hexes.Count == 0 || ProductionHexes.Units == 0)
+			{
+				continue;
+			}
+
+			int Production = (int)Math.Ceiling((double) ProductionHexes.Production / ProductionHexes.Units);
+
+			foreach (var Hex in ProductionHexes.Hexes)
+			{
+				for (var ObjectIndex = Hex.QueuedUnits.Count - 1; ObjectIndex >= 0; --ObjectIndex)
+				{
+					Hex.QueuedUnits[ObjectIndex] = Hex.QueuedUnits[ObjectIndex] with
+					{
+						Production = Hex.QueuedUnits[ObjectIndex].Production + Production
+					};
+
+					var QueuedObject = Hex.QueuedUnits[ObjectIndex];
+					if (QueuedObject.IsReadyToBuild())
+					{
+						// TODO : make recursive or some shit :)
+						foreach (var HexBrother in Hex.AllBrothers)
+						{
+							if (!HexBrother.IsValid())
+							{
+								continue;
+							}
+
+							if (HexBrother.UnitData == null)
+							{
+								Server_CreateHexUnitObject(QueuedObject.ObjectId, HexBrother, Hex.GetOwnerId());
+								break;
+							}
+						}
+
+						Hex.QueuedUnits.RemoveAt(ObjectIndex);
+						continue;
+					}
 				}
 			}
 		}
@@ -259,7 +327,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	{
 		// TODO : loading screen
 		var MainHex = Hex.GetComponent<Hex>();
-		await CreateBoard(MainHex, 50, 20);
+		await CreateBoard(MainHex, 50, 50);
 	}
 
 	private async Task CreateBoard(Hex Hex, int Width, int Height)
@@ -277,17 +345,20 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 				BoardHexes.Add(Hex);
 			}
 
-			bool VAlt = false;
 			var VHex = Hex.HexTR;
 			for (int WidthIndex = 0; WidthIndex < Width; ++WidthIndex)
 			{
 				VHex.CreateSurroundBrothers();
-				VHex = VAlt ? VHex.HexBR : VHex.HexTR;
-				VAlt = !VAlt;
+				VHex = VHex.HexMR;
 
 				if (!BoardHexes.Contains(VHex))
 				{
 					BoardHexes.Add(VHex);
+					if (Random.Shared.Next(7) == 1)
+					{
+						Log.Info("ytrr");
+						Server_CreateHexObject("tree", VHex, Connection.Host.Id);
+					}
 				}
 			}
 		}
@@ -434,7 +505,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		Assert.IsValid(Hex);
 		Assert.NotNull(ConnectionId);
 
-		if (Hex.UnitData != null)
+		if (Hex.ObjectData != null)
 		{
 			Log.Warning($"trying to build unit on already occupied hex {Hex}! ignoring");
 			return;

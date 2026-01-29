@@ -1,16 +1,16 @@
 {
   "RootObject": {
     "__guid": "3ff0d308-8120-4b0f-8751-721068c20707",
-    "__version": 1,
+    "__version": 2,
     "Flags": 0,
     "Name": "citytext",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
-    "Scale": "0.05,0.05,0.05",
+    "Scale": "0.1,0.1,0.1",
     "Tags": "",
     "Enabled": true,
     "NetworkMode": 2,
-    "NetworkInterpolation": true,
+    "NetworkFlags": 0,
     "NetworkOrphaned": 0,
     "NetworkTransmit": true,
     "OwnerTransfer": 1,
@@ -19,6 +19,7 @@
         "__type": "Forp.Object.TextBuilding",
         "__guid": "388b6f8d-b0b2-4369-bac2-2d75e3721480",
         "__enabled": true,
+        "Flags": 0,
         "DisplayName": "City Text",
         "ObjectId": "building-city",
         "ObjectToBuild": {
@@ -30,12 +31,14 @@
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
-        "OnComponentUpdate": null
+        "OnComponentUpdate": null,
+        "ProductionToBuild": 0
       },
       {
         "__type": "Sandbox.SkinnedModelRenderer",
         "__guid": "fe43828d-8e4f-4176-ad62-dfb3cee96e95",
         "__enabled": true,
+        "Flags": 0,
         "AnimationGraph": null,
         "BodyGroups": 18446744073709551615,
         "BoneMergeTarget": null,
@@ -65,7 +68,7 @@
           "GameLayer": true,
           "OverlayLayer": false,
           "BloomLayer": false,
-          "AfterUILayer": false
+          "AfterUILayer": true
         },
         "RenderType": "On",
         "Sequence": {
@@ -80,6 +83,7 @@
         "__type": "Sandbox.ModelCollider",
         "__guid": "105711c9-3420-4667-9ff5-498db66f6a07",
         "__enabled": true,
+        "Flags": 0,
         "ColliderFlags": 0,
         "Elasticity": null,
         "Friction": null,
