@@ -1,7 +1,7 @@
 {
   "RootObject": {
     "__guid": "04d82a4f-d05b-47dd-b3fd-aa37c0fe7b67",
-    "__version": 1,
+    "__version": 2,
     "Flags": 0,
     "Name": "hexlight",
     "Position": "0,0,100",
@@ -9,8 +9,8 @@
     "Scale": "1,1,1",
     "Tags": "light_spot,light",
     "Enabled": true,
-    "NetworkMode": 2,
-    "NetworkInterpolation": true,
+    "NetworkMode": 0,
+    "NetworkFlags": 0,
     "NetworkOrphaned": 0,
     "NetworkTransmit": true,
     "OwnerTransfer": 1,
@@ -19,6 +19,7 @@
         "__type": "Sandbox.SpotLight",
         "__guid": "34fbc0a6-e102-4ae5-a5dc-48a9986d5858",
         "__enabled": true,
+        "Flags": 0,
         "Attenuation": 5.0819674,
         "ConeInner": 15,
         "ConeOuter": 45,

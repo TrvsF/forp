@@ -1,7 +1,7 @@
 {
   "RootObject": {
     "__guid": "dd3b7d57-0a20-4581-978c-7733d7bd3122",
-    "__version": 1,
+    "__version": 2,
     "Flags": 0,
     "Name": "hexfog",
     "Position": "0,0,0",
@@ -9,15 +9,17 @@
     "Scale": "1,1,5",
     "Tags": "",
     "Enabled": true,
-    "NetworkMode": 1,
-    "NetworkInterpolation": false,
+    "NetworkMode": 0,
+    "NetworkFlags": 0,
     "NetworkOrphaned": 1,
+    "NetworkTransmit": true,
     "OwnerTransfer": 0,
     "Components": [
       {
         "__type": "Sandbox.SkinnedModelRenderer",
         "__guid": "34bed954-428f-4643-b815-dbe8f9fb600a",
         "__enabled": true,
+        "Flags": 0,
         "AnimationGraph": null,
         "BodyGroups": 18446744073709551615,
         "BoneMergeTarget": null,
@@ -61,7 +63,7 @@
     ],
     "Children": [],
     "__properties": {
-      "NetworkInterpolation": false,
+      "NetworkInterpolation": true,
       "TimeScale": 1,
       "WantsSystemScene": true,
       "Metadata": {},

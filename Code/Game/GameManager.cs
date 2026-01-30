@@ -356,7 +356,6 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 					BoardHexes.Add(VHex);
 					if (Random.Shared.Next(7) == 1)
 					{
-						Log.Info("ytrr");
 						Server_CreateHexObject("tree", VHex, Connection.Host.Id);
 					}
 				}
@@ -526,8 +525,6 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		};
 
 		Hex.ObjectData = ObjectData;
-
-		Log.Info($"created object {ObjectId} on {Hex} for {ConnectionId}");
 	}
 
 	[Rpc.Host]

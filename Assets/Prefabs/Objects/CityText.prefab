@@ -9,7 +9,7 @@
     "Scale": "0.1,0.1,0.1",
     "Tags": "",
     "Enabled": true,
-    "NetworkMode": 2,
+    "NetworkMode": 0,
     "NetworkFlags": 0,
     "NetworkOrphaned": 0,
     "NetworkTransmit": true,
@@ -66,9 +66,9 @@
         "PlaybackRate": 1,
         "RenderOptions": {
           "GameLayer": true,
-          "OverlayLayer": false,
+          "OverlayLayer": true,
           "BloomLayer": false,
-          "AfterUILayer": true
+          "AfterUILayer": false
         },
         "RenderType": "On",
         "Sequence": {
@@ -105,7 +105,242 @@
         "SurfaceVelocity": "0,0,0"
       }
     ],
-    "Children": [],
+    "Children": [
+      {
+        "__guid": "1544cca2-d568-4212-a12f-915c1bfedfcd",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Pin",
+        "Position": "0,169.1147,492.42",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.TextRenderer",
+            "__guid": "5b4beca8-9ecf-44db-b29e-be3eac1ae317",
+            "__enabled": true,
+            "Flags": 0,
+            "__version": 2,
+            "BlendMode": "Normal",
+            "FogStrength": 1,
+            "HorizontalAlignment": "Center",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": true
+            },
+            "Scale": 1,
+            "TextScope": {
+              "Text": "P",
+              "TextColor": "1,1,1,1",
+              "FontName": "Poppins",
+              "FontSize": 256,
+              "FontWeight": 800,
+              "FontItalic": false,
+              "LineHeight": 1.8461539,
+              "LetterSpacing": 0,
+              "WordSpacing": 0,
+              "FilterMode": "Bilinear",
+              "FontSmooth": "Auto",
+              "Outline": {
+                "Enabled": false,
+                "Size": 4,
+                "Color": "0,0,1,1"
+              },
+              "Shadow": {
+                "Enabled": false,
+                "Size": 4,
+                "Color": "0,0,0,1",
+                "Offset": "4,4"
+              },
+              "OutlineUnder": {
+                "Enabled": false,
+                "Size": 4,
+                "Color": "0,1,0,1"
+              },
+              "ShadowUnder": {
+                "Enabled": false,
+                "Size": 4,
+                "Color": "0,0,0,1",
+                "Offset": "4,4"
+              }
+            },
+            "VerticalAlignment": "Center"
+          }
+        ],
+        "Children": []
+      },
+      {
+        "__guid": "a9be440c-1cc3-4230-bba0-cc58b0c8080c",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Close",
+        "Position": "0,-210.4863,493.4799",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.TextRenderer",
+            "__guid": "3ceb1130-36a7-409c-aa4e-3ee432a8dc33",
+            "__enabled": true,
+            "Flags": 0,
+            "__version": 2,
+            "BlendMode": "Normal",
+            "FogStrength": 1,
+            "HorizontalAlignment": "Center",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": true
+            },
+            "Scale": 1,
+            "TextScope": {
+              "Text": "X",
+              "TextColor": "1,1,1,1",
+              "FontName": "Poppins",
+              "FontSize": 209.84616,
+              "FontWeight": 695,
+              "FontItalic": false,
+              "LineHeight": 1,
+              "LetterSpacing": 0,
+              "WordSpacing": 0,
+              "FilterMode": "Bilinear",
+              "FontSmooth": "Auto",
+              "Outline": {
+                "Enabled": false,
+                "Size": 4,
+                "Color": "0,0,1,1"
+              },
+              "Shadow": {
+                "Enabled": false,
+                "Size": 4,
+                "Color": "0,0,0,1",
+                "Offset": "4,4"
+              },
+              "OutlineUnder": {
+                "Enabled": false,
+                "Size": 4,
+                "Color": "0,1,0,1"
+              },
+              "ShadowUnder": {
+                "Enabled": false,
+                "Size": 4,
+                "Color": "0,0,0,1",
+                "Offset": "4,4"
+              }
+            },
+            "VerticalAlignment": "Center"
+          }
+        ],
+        "Children": []
+      },
+      {
+        "__guid": "c8fb42a0-e2f4-4660-9b99-59466fe74efe",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Tooltip",
+        "Position": "-32.07358,-41.75169,476.8049",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.TextRenderer",
+            "__guid": "9756d90e-f4b0-4033-a8ea-10c5a2eae50a",
+            "__enabled": true,
+            "Flags": 0,
+            "__version": 2,
+            "BlendMode": "Normal",
+            "FogStrength": 1,
+            "HorizontalAlignment": "Center",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": true
+            },
+            "Scale": 1,
+            "TextScope": {
+              "Text": "Hello! ❤",
+              "TextColor": "1,1,1,1",
+              "FontName": "Poppins",
+              "FontSize": 32,
+              "FontWeight": 400,
+              "FontItalic": false,
+              "LineHeight": 1,
+              "LetterSpacing": 0,
+              "WordSpacing": 0,
+              "FilterMode": "Bilinear",
+              "FontSmooth": "Auto",
+              "Outline": {
+                "Enabled": false,
+                "Size": 4,
+                "Color": "0,0,1,1"
+              },
+              "Shadow": {
+                "Enabled": false,
+                "Size": 4,
+                "Color": "0,0,0,1",
+                "Offset": "4,4"
+              },
+              "OutlineUnder": {
+                "Enabled": false,
+                "Size": 4,
+                "Color": "0,1,0,1"
+              },
+              "ShadowUnder": {
+                "Enabled": false,
+                "Size": 4,
+                "Color": "0,0,0,1",
+                "Offset": "4,4"
+              }
+            },
+            "VerticalAlignment": "Center"
+          }
+        ],
+        "Children": []
+      }
+    ],
     "__properties": {
       "NetworkInterpolation": true,
       "TimeScale": 1,
