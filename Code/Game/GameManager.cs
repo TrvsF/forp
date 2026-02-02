@@ -533,6 +533,11 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		Assert.IsValid(OldHex);
 		Assert.IsValid(NewHex);
 
+		if (OldHex == NewHex)
+		{
+			return;
+		}
+
 		var OldUnitData = OldHex.UnitData;
 		if (OldUnitData == null)
 		{

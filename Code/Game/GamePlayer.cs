@@ -196,6 +196,7 @@ public sealed partial class GamePlayer : Component
 
 				if (ClickTrace.GameObject.GetComponent<Object.Obj>() is { } HitObject)
 				{
+					HitObject.OnClick();
 					ClickedObjects.Add(HitObject);
 				}
 			}
@@ -213,15 +214,7 @@ public sealed partial class GamePlayer : Component
 						Assert.IsValid(HexToBuildOn);
 						Assert.True(HexToBuildOn.BuildingObject == null);
 
-						Transform BuildingTransform = new()
-						{
-							Position = HexToBuildOn.WorldPosition + new Vector3(0, 0, 40)
-						};
-
-						var BuildingToBuild = TextBuilding.ObjectToBuild;
-						BuildingToBuild.WorldTransform = BuildingTransform;
-
-						GameManager.Instance.Server_CreateHexBuildingObject(BuildingToBuild, HexToBuildOn, true, ConnectionId);
+						GameManager.Instance.Server_CreateHexBuildingObject(TextBuilding.ObjectToBuild, HexToBuildOn, true, ConnectionId);
 						break;
 					}
 				}
@@ -364,10 +357,11 @@ public sealed partial class GamePlayer : Component
 
 			FoundBuildingObjects.UnionWith(OwnerBuildingObject.Buildings);
 		}
-		
+
 		if (Hex.UnitObject.IsValid())
 		{
-			FoundBuildingObjects.UnionWith(Hex.UnitObject.Buildings);
+			Hex.UnitObject.ShowBuildings = !Hex.UnitObject.ShowBuildings;
+			// FoundBuildingObjects.UnionWith(Hex.UnitObject.Buildings);
 		}
 
 		List<GameObject> ValidBuildingObjects = new();
@@ -427,15 +421,31 @@ public sealed partial class GamePlayer : Component
 
 	//////////////////////////////////////////////////////////////////////////////
 
-	public static T SpawnObject<T>(GameObject SpawnObject, Transform SpawnTransform, Connection Connection, bool NetworkSpawn = false) where T : new()
+	// TODO : move me
+	// & clean this shi up
+
+	public static T SpawnObject<T>(GameObject SpawnGameObject, Transform SpawnTransform, Connection Connection, GameObject Parent = null, bool NetworkSpawn = false) where T : new()
+	{
+		var SpawnedGameObject = SpawnObject(SpawnGameObject, SpawnTransform, Connection, Parent, NetworkSpawn);
+
+		var SpawnedComponent = SpawnedGameObject.GetComponent<T>();
+		Assert.NotNull(SpawnedComponent, $"FAILED TO SPAWN OBJECT {SpawnObject} FOR CONNECTION {Connection}");
+
+		return SpawnedComponent;
+	}
+
+	public static GameObject SpawnObject(GameObject SpawnObject, Transform SpawnTransform, Connection Connection, GameObject Parent = null, bool NetworkSpawn = false)
 	{
 		Assert.NotNull(Connection, $"SPAWN CONNECTION NULL");
 		Assert.NotNull(SpawnObject, $"SPAWN OBJECT NULL");
 
+		SpawnObject.NetworkMode = NetworkSpawn ? NetworkMode.Object : NetworkMode.Never;
+
 		CloneConfig SpawningConfig = new(SpawnTransform);
+		SpawningConfig.Parent = Parent;
+
 		var SpawnedObject = SpawnObject.Clone(SpawningConfig);
-		var SpawnedComponent = SpawnedObject.GetComponent<T>();
-		Assert.NotNull(SpawnedComponent, $"FAILED TO SPAWN OBJECT {SpawnObject} FOR CONNECTION {Connection}");
+		Assert.NotNull(SpawnedObject, $"FAILED TO SPAWN OBJECT {SpawnObject} FOR CONNECTION {Connection}");
 
 		if (NetworkSpawn)
 		{
@@ -444,6 +454,6 @@ public sealed partial class GamePlayer : Component
 			SpawnedObject.NetworkSpawn();
 		}
 
-		return SpawnedComponent;
+		return SpawnedObject;
 	}
 }

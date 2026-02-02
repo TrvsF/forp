@@ -5,7 +5,7 @@
     "Flags": 0,
     "Name": "combatunit",
     "Position": "0,0,0",
-    "Rotation": "0,0,1,-0.00000004371139",
+    "Rotation": "0,-0,-0.9999705,0.007678151",
     "Scale": "1,1,1",
     "Tags": "",
     "Enabled": true,
@@ -21,7 +21,12 @@
         "__enabled": true,
         "Flags": 0,
         "Attack": 10,
-        "Buildings": [],
+        "Buildings": [
+          {
+            "_type": "gameobject",
+            "prefab": "prefabs/objects/towertext.prefab"
+          }
+        ],
         "DisplayName": "Figher",
         "Health": 10,
         "MoveRange": 2,

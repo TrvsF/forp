@@ -1,4 +1,6 @@
+using Forp.Game;
 using Forp.Object.Building;
+using Forp.Object.Unit;
 using Sandbox;
 using Sandbox.Diagnostics;
 using System;
@@ -24,5 +26,8 @@ public class TextBuilding : Obj
 	public override void OnClick()
 	{
 		base.OnClick();
+
+		var BelongingUnit = GameObject.Parent.GetComponent<ObjectUnit>();
+		GameManager.Instance.Server_CreateHexBuildingObject(ObjectToBuild, BelongingUnit.OwnerHex, true, Connection.Local.Id);
 	}
 }

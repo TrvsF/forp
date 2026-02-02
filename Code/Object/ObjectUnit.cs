@@ -39,8 +39,56 @@ public class ObjectUnit : Obj
 
 		// TODO : relationship with FUint 4 attacking without knowing the hex
 		// (or just a relation ship with a hex :D
+		ShowBuildings = true;
 	}
 
 	public GamePlayer OwnerPlayer { get; set; }
 	public Hex OwnerHex { get; set; }
+
+	protected override void OnDestroy()
+	{
+		ShowBuildings = false;
+
+		base.OnDestroy();
+	}
+
+	private bool _showBuildings = false;
+	public bool ShowBuildings
+	{
+		get => _showBuildings;
+		set
+		{
+			if (_showBuildings == value)
+			{
+				return;
+			}
+
+			_showBuildings = value;
+			ToggleBuidlings(_showBuildings);
+		}
+	}
+
+	private List<GameObject> TextBuildings = new();
+	private void ToggleBuidlings(bool Build)
+	{
+		if (!Build)
+		{
+			foreach (var TextBuilding in TextBuildings)
+			{
+				TextBuilding.Destroy();
+			}
+			TextBuildings.Clear();
+			return;
+		}
+
+		foreach (var TextBuilding in Buildings)
+		{
+			Transform Transform = new();
+			Transform.Position += Vector3.Up * 150;
+			var BuildingComponent = GamePlayer.SpawnObject<TextBuilding>(TextBuilding, Transform, Connection.Local, GameObject);
+
+			BuildingComponent.BelongingHex = OwnerHex;
+			TextBuildings.Add(BuildingComponent.GameObject);
+		}
+	}
 }
