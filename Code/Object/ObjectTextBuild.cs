@@ -12,7 +12,8 @@ namespace Forp.Object;
 public class TextBuilding : Obj
 {
 	[Property] public GameObject ObjectToBuild { get; set; } 
-	[Property] public int ProductionToBuild { get; set; } 
+	[Property] public int ProductionToBuild { get; set; }
+	[Property] public List<EHexType> HexTypesToBuild { get; set; }
 
 	public Hex BelongingHex { get; set; }
 	public bool FromUnit { get; set; }
@@ -20,14 +21,16 @@ public class TextBuilding : Obj
 
 	public virtual bool CanBeBuilt(Hex Hex)
 	{
-		return true;
+		return Hex.IsValid() && HexTypesToBuild.Contains(Hex.Type);
 	}
 
 	public override void OnClick()
 	{
 		base.OnClick();
 
-		var BelongingUnit = GameObject.Parent.GetComponent<ObjectUnit>();
-		GameManager.Instance.Server_CreateHexBuildingObject(ObjectToBuild, BelongingUnit.OwnerHex, true, Connection.Local.Id);
+		if (GameObject.Parent.GetComponent<ObjectUnit>() is { } BelongingUnit)
+		{
+			GameManager.Instance.Server_CreateHexBuildingObject(ObjectToBuild, BelongingUnit.OwnerHex, true, Connection.Local.Id);
+		}
 	}
 }

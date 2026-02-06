@@ -242,9 +242,19 @@ public sealed class Hex : Obj
 
 		if (Networking.IsHost)
 		{
-			Production = Random.Shared.Int(2, 7);
-			Type = Random.Shared.FromArray(Enum.GetValues<EHexType>());
-			SetBaseColour_ServerOnly(TypeColours[Type]);
+			InitHex_ServerOnly();
+		}
+	}
+
+	public void InitHex_ServerOnly()
+	{
+		Assert.True(Networking.IsHost);
+		Production = Random.Shared.Int(2, 7);
+		Type = Random.Shared.FromArray(Enum.GetValues<EHexType>());
+		SetBaseColour_ServerOnly(TypeColours[Type]);
+		if (Random.Shared.Next(7) == 1 && Type == EHexType.Grass)
+		{
+			GameManager.Instance.Server_CreateHexObject("tree", this, Connection.Host.Id);
 		}
 	}
 

@@ -21,6 +21,9 @@
         "__enabled": true,
         "Flags": 0,
         "DisplayName": "Tower Text",
+        "HexTypesToBuild": [
+          "Grass"
+        ],
         "ObjectId": "building-tower",
         "ObjectToBuild": {
           "_type": "gameobject",

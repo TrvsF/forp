@@ -354,10 +354,6 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 				if (!BoardHexes.Contains(VHex))
 				{
 					BoardHexes.Add(VHex);
-					if (Random.Shared.Next(7) == 1)
-					{
-						Server_CreateHexObject("tree", VHex, Connection.Host.Id);
-					}
 				}
 			}
 		}

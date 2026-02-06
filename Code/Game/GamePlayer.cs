@@ -276,6 +276,7 @@ public sealed partial class GamePlayer : Component
 		if (Input.Pressed("mouse3") || Input.Pressed("spacebar"))
 		{
 			ToggleBuildMenu(GetHexFromMousePos(Mouse.Position));
+			UnitBuildMenuActive = !UnitBuildMenuActive;
 		}
 	}
 
@@ -312,6 +313,33 @@ public sealed partial class GamePlayer : Component
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
+
+	private bool _unitBuildMenuActive = false;
+	public bool UnitBuildMenuActive
+	{
+		get => _unitBuildMenuActive;
+		set
+		{
+			if (_unitBuildMenuActive == value)
+			{
+				return;
+			}
+
+			_unitBuildMenuActive = value;
+			ToggleUnitBuildings(_unitBuildMenuActive);
+		}
+	}
+
+	private void ToggleUnitBuildings(bool IsShown)
+	{
+		foreach (var Hexogon in GameManager.Instance.BoardHexes)
+		{
+			if (Hexogon.UnitObject.IsValid())
+			{
+				Hexogon.UnitObject.ShowBuildings = IsShown;
+			}
+		}
+	}
 
 	private bool IsBuildMenuActive = false;
 	private readonly List<GameObject> ActiveMenuObjects = new();
@@ -358,12 +386,6 @@ public sealed partial class GamePlayer : Component
 			FoundBuildingObjects.UnionWith(OwnerBuildingObject.Buildings);
 		}
 
-		if (Hex.UnitObject.IsValid())
-		{
-			Hex.UnitObject.ShowBuildings = !Hex.UnitObject.ShowBuildings;
-			// FoundBuildingObjects.UnionWith(Hex.UnitObject.Buildings);
-		}
-
 		List<GameObject> ValidBuildingObjects = new();
 
 		foreach (var BuildingObject in FoundBuildingObjects)
@@ -383,7 +405,6 @@ public sealed partial class GamePlayer : Component
 				Log.Warning($"found invalid building on hex {Hex}!");
 			}
 		}
-
 
 		if (ValidBuildingObjects.Count == 0)
 		{
