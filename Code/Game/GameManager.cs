@@ -307,22 +307,6 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		}
 	}
 
-	protected override void OnFixedUpdate()
-	{
-		base.OnFixedUpdate();
-
-		// HACK clients spawn with an invalid unit object, remove this
-		// TODO : figure out where the unit comes from
-		foreach (var UnitObject in Scene.GetAll<ObjectUnit>())
-		{
-			if (HACK_GetHexFromUnit(UnitObject) == null)
-			{
-				Log.Warning($"FOUND AN INVALID UNIT {UnitObject}, DESTROYING");
-				UnitObject.Destroy();
-			}
-		}
-	}
-
 	private async Task GenerateBoardAsync(GameObject Hex)
 	{
 		// TODO : loading screen
@@ -363,26 +347,24 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	{
 		Assert.True(Networking.IsHost);
 
-		bool CreatedPlayerState = CreatePlayerObject_ServerOnly(ConnectionGuid, out var GamePlayer);
+		var SpawnHex = Random.Shared.FromList(BoardHexes.ToList());
+		if (!SpawnHex.IsValid())
+		{
+			Networking.Disconnect();
+			throw new Exception($"cannot find a valid spawn hex for {ConnectionGuid}. This is very bad.");
+		}
+
+		bool CreatedPlayerState = CreatePlayerObject_ServerOnly(ConnectionGuid, SpawnHex.WorldPosition, out var GamePlayer);
 
 		if (!CreatedPlayerState || GamePlayer == null)
 		{
 			Networking.Disconnect();
-			throw new Exception($"Something went wrong when trying to create PlayerState for ");
+			throw new Exception($"Something went wrong when trying to create PlayerState for {ConnectionGuid}");
 		}
 
 		GamePlayers.Add(GamePlayer);
 
-		var SpawnHex = Random.Shared.FromList(BoardHexes.ToList());
-		if (!SpawnHex.IsValid())
-		{
-			Log.Warning("ohno");
-			return;
-		}
-
-		GamePlayer.WorldPosition = SpawnHex.WorldPosition + (GamePlayer.Camera.WorldRotation.Backward * 1337);
 		Server_CreateHexUnitObject("unit-settler", SpawnHex, ConnectionGuid);
-		Server_CreateHexObject("tree", SpawnHex.HexBR, ConnectionGuid);
 	}
 
 	[Rpc.Host]
@@ -601,14 +583,22 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		return null;
 	}
 
-	private bool CreatePlayerObject_ServerOnly(Guid ConnectionGuid, out GamePlayer OutGamePlayer)
+	private readonly Stack<Color> PlayerColours = new(
+	[
+		Color.Red,
+		Color.Blue,
+		Color.Green,
+		Color.Yellow,
+	]);
+
+	private bool CreatePlayerObject_ServerOnly(Guid ConnectionGuid, Vector3 StartLocation, out GamePlayer OutGamePlayer)
 	{
 		Assert.True(Networking.IsHost);
 		Assert.True(PlayerPrefab.IsValid(), "Could not spawn player as no PlayerPrefab assigned to network manager");
 
 		Transform PlayerTransform = new()
 		{
-			Position = new(-500, 0, 500)
+			Position = StartLocation
 		};
 
 		CloneConfig PlayerSpawnConfig = new(PlayerTransform);
@@ -628,13 +618,17 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			throw new Exception($"Could not spawn player as no PlayerStatePrefab assigned to network manager for {ConnectionChannel.DisplayName}");
 		}
 
-		if (OutGamePlayer.Initilize_ServerOnly(ConnectionChannel))
+		if (!OutGamePlayer.Initilize_ServerOnly(ConnectionChannel))
 		{
-			return true;
+			OutGamePlayer.GameObject.DestroyImmediate();
+			return false;
 		}
 
-		OutGamePlayer.GameObject.DestroyImmediate();
-		return false;
+		OutGamePlayer.Colour = PlayerColours.Pop();
+		OutGamePlayer.Gold = 100;
+		OutGamePlayer.WorldPosition = StartLocation + (OutGamePlayer.Camera.WorldRotation.Backward * 1337);
+
+		return true;
 	}
 
 	private static bool CreateLobby(string LobbyName = "awesomelobby", LobbyPrivacy Privacy = LobbyPrivacy.Private)

@@ -163,12 +163,6 @@ public sealed class Hex : Obj
 		{
 			var Clone = GameManager.Instance.GetObject(ObjectData.ObjectId).Clone();
 			Clone.WorldTransform = ObjectData.Transform;
-			Obj = Clone.GetComponent<ObjectUnit>();
-
-			if (GameManager.Instance.GetGamePlayer(ObjectData.OwnerGuid) is { } OwnerPlayer)
-			{
-				Obj?.ModelRenderer.Tint = OwnerPlayer.Colour;
-			}
 		}
 	}
 

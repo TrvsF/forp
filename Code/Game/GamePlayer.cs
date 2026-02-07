@@ -64,23 +64,9 @@ public sealed partial class GamePlayer : Component
 		Hex.HighlightHexesRecusrive(UnitHex, false, SelectedUnit.MoveRange);
 	}
 
-	List<Color> PossibleColours = new()
-	{
-		Color.Magenta,
-		Color.Cyan,
-		Color.Green,
-		Color.Red,
-	};
-
 	protected override void OnStart()
 	{
 		base.OnStart();
-
-		if (Networking.IsHost)
-		{
-			Gold = 100;
-			Colour = Random.Shared.FromList(PossibleColours);
-		}
 
 		// TODO : should we make the camera seperate
 		// so we don't have to destroy it 4 clients?
@@ -104,7 +90,7 @@ public sealed partial class GamePlayer : Component
 		DoMovement();
 		DoAction();
 
-		List<Object.Obj> HoveredObjects = new();
+		List<Obj> HoveredObjects = new();
 		var ClickRay = Camera.ScreenPixelToRay(Mouse.Position);
 		var ClickTraces = Scene.Trace.Ray(ClickRay.Position, ClickRay.Position + ClickRay.Forward * 10000f).RunAll();
 
@@ -115,7 +101,7 @@ public sealed partial class GamePlayer : Component
 				continue;
 			}
 
-			if (ClickTrace.GameObject.GetComponent<Object.Obj>() is { } HitObject)
+			if (ClickTrace.GameObject.GetComponent<Obj>() is { } HitObject)
 			{
 				HoveredObject = HitObject;
 				return;
@@ -144,7 +130,7 @@ public sealed partial class GamePlayer : Component
 	[Rpc.Broadcast]
 	public void Initilize_Client()
 	{
-		Connection = Connection.Local; // TODO : is Connection.Local ok?
+		Connection = Connection.Local; // TODO : this is only set on server & local client per player... 
 		Local = this;
 	}
 
