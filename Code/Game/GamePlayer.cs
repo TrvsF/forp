@@ -6,6 +6,13 @@ using System;
 
 namespace Forp.Game;
 
+public enum ECameraMode
+{
+	Normal,
+	Build,
+	Combat,
+}
+
 public record FPlayerBoardStats
 {
 	public int Production { get; set; }
@@ -28,6 +35,21 @@ public sealed partial class GamePlayer : Component
 	public bool IsConnected => Connection != null && Connection.IsActive;
 
 	public CameraComponent Camera { get => GameObject.GetComponentInChildren<CameraComponent>(); }
+	private ECameraMode _CameraMode = ECameraMode.Normal;
+	public ECameraMode CameraMode
+	{
+		get => _CameraMode;
+		set
+		{
+			if (_CameraMode == value)
+			{
+				return;
+			}
+
+			_CameraMode = value;
+			OnCameraModeChange();
+		}
+	}
 
 	private Object.Obj HoveredObject { get; set; }
 	private Hex SelectedHex { get; set; } = null;
@@ -49,6 +71,22 @@ public sealed partial class GamePlayer : Component
 				_SelectedUnit = value;
 			}
 		}
+	}
+
+	private void OnCameraModeChange()
+	{
+		// NORMAL ////////////////////
+
+		// BUILD /////////////////////
+		foreach (var Hexogon in GameManager.Instance.BoardHexes)
+		{
+			if (Hexogon.UnitObject.IsValid())
+			{
+				Hexogon.UnitObject.ShowBuildings = CameraMode == ECameraMode.Build;
+			}
+		}
+
+		// COMBAT ////////////////////
 	}
 
 	private void SelectUnit()
@@ -190,25 +228,6 @@ public sealed partial class GamePlayer : Component
 			///////////////////////////////
 			// TODO : sort these & use virt
 
-			if (IsBuildMenuActive)
-			{
-				foreach (var ClickedObject in ClickedObjects)
-				{
-					if (ClickedObject is TextBuilding TextBuilding)
-					{
-						var HexToBuildOn = TextBuilding.BelongingHex;
-						Assert.IsValid(HexToBuildOn);
-						Assert.True(HexToBuildOn.BuildingObject == null);
-
-						GameManager.Instance.Server_CreateHexBuildingObject(TextBuilding.ObjectToBuild, HexToBuildOn, true, ConnectionId);
-						break;
-					}
-				}
-
-				ToggleBuildMenu(null); // we know menu is active so ok to pass null here
-				return;
-			}
-
 			foreach (var ClickedObject in ClickedObjects)
 			{
 				if (ClickedObject is ObjectUnit ObjectUnit)
@@ -247,7 +266,7 @@ public sealed partial class GamePlayer : Component
 				return;
 			}
 
-			if (SelectedUnit.IsValid())
+			if (SelectedUnit.IsValid() && SelectedUnit.GetComponent<AiUnit>() == null)
 			{
 				var UnitHex = GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit);
 				Hex.HighlightHexesRecusrive(UnitHex, false, SelectedUnit.MoveRange + 1);
@@ -259,10 +278,20 @@ public sealed partial class GamePlayer : Component
 				SelectedHex.OnClick();
 			}
 		}
-		if (Input.Pressed("mouse3") || Input.Pressed("spacebar"))
+
+		if (Input.Pressed("camera_combat"))
 		{
-			ToggleBuildMenu(GetHexFromMousePos(Mouse.Position));
-			UnitBuildMenuActive = !UnitBuildMenuActive;
+			CameraMode = ECameraMode.Combat;
+		}
+
+		if (Input.Pressed("camera_normal"))
+		{
+			CameraMode = ECameraMode.Normal;
+		}
+
+		if (Input.Pressed("camera_build"))
+		{
+			CameraMode = ECameraMode.Build;
 		}
 	}
 
@@ -296,134 +325,6 @@ public sealed partial class GamePlayer : Component
 		}
 
 		return null;
-	}
-
-	//////////////////////////////////////////////////////////////////////////////
-
-	private bool _unitBuildMenuActive = false;
-	public bool UnitBuildMenuActive
-	{
-		get => _unitBuildMenuActive;
-		set
-		{
-			if (_unitBuildMenuActive == value)
-			{
-				return;
-			}
-
-			_unitBuildMenuActive = value;
-			ToggleUnitBuildings(_unitBuildMenuActive);
-		}
-	}
-
-	private void ToggleUnitBuildings(bool IsShown)
-	{
-		foreach (var Hexogon in GameManager.Instance.BoardHexes)
-		{
-			if (Hexogon.UnitObject.IsValid())
-			{
-				Hexogon.UnitObject.ShowBuildings = IsShown;
-			}
-		}
-	}
-
-	private bool IsBuildMenuActive = false;
-	private readonly List<GameObject> ActiveMenuObjects = new();
-
-	private void ToggleBuildMenu(Hex Hex)
-	{
-		if (IsBuildMenuActive)
-		{
-			foreach (var BuildingObject in ActiveMenuObjects)
-			{
-				BuildingObject.Destroy();
-			}
-			ActiveMenuObjects.Clear();
-			IsBuildMenuActive = false; // !
-
-			return;
-		}
-
-		if (!Hex.IsValid())
-		{
-			Log.Info($"cannot build on nothing!");
-			return;
-		}
-
-		DeselectHex();
-
-		if (Hex.BuildingObject.IsValid())
-		{
-			// TODO : DESTROY MENU!
-			Log.Info("cannot build on a building");
-			return;
-		}
-
-		HashSet<GameObject> FoundBuildingObjects = new();
-
-		foreach (var BuildingOwner in Hex.BuildingOwners)
-		{
-			var OwnerBuildingObject = BuildingOwner.Hex.BuildingObject;
-			if (!OwnerBuildingObject.IsValid())
-			{
-				continue;
-			}
-
-			FoundBuildingObjects.UnionWith(OwnerBuildingObject.Buildings);
-		}
-
-		List<GameObject> ValidBuildingObjects = new();
-
-		foreach (var BuildingObject in FoundBuildingObjects)
-		{
-			if (BuildingObject.GetComponent<TextBuilding>() is { } Building)
-			{
-				if (!Building.CanBeBuilt(Hex))
-				{
-					continue;
-				}
-
-				ValidBuildingObjects.Add(BuildingObject);
-				Building.FromUnit = true; // TODO : remove
-			}
-			else
-			{
-				Log.Warning($"found invalid building on hex {Hex}!");
-			}
-		}
-
-		if (ValidBuildingObjects.Count == 0)
-		{
-			Log.Info($"no valid buildings to build here!");
-			return;
-		}
-
-		IsBuildMenuActive = true; // !
-
-		const int Padding = 30;
-		var OffsetX = Padding * (ValidBuildingObjects.Count - 1);
-		var OffsetY = ValidBuildingObjects.Count * Padding;
-
-		for (int BuildingIndex = 0; BuildingIndex < ValidBuildingObjects.Count; ++BuildingIndex)
-		{
-			Vector3 SpawnOffset = new(-5, -OffsetX + (Padding * BuildingIndex), 250);
-
-			Transform BuildingTransform = new()
-			{
-				Position = Hex.GameObject.WorldPosition + SpawnOffset
-			};
-
-			if (!ValidBuildingObjects[BuildingIndex].IsValid())
-			{
-				Log.Warning("invalid building in ValidBuildingObjects!");
-				continue;
-			}
-
-			var BuildingComponent = SpawnObject<TextBuilding>(ValidBuildingObjects[BuildingIndex], BuildingTransform, Connection);
-
-			BuildingComponent.BelongingHex = Hex;
-			ActiveMenuObjects.Add(BuildingComponent.GameObject);
-		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////////

@@ -124,11 +124,16 @@ public sealed class Hex : Obj
 			Clone.WorldTransform = UnitData.Transform;
 			UnitObject = Clone.GetComponent<ObjectUnit>();
 			UnitObject.OwnerHex = this;
-			UnitObject.OwnerPlayer = GamePlayer.Local;
 
 			if (GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid) is { } OwnerPlayer)
 			{
 				UnitObject.ModelRenderer.Tint = OwnerPlayer.Colour;
+				UnitObject.OwnerPlayer = OwnerPlayer;
+			}
+
+			if (UnitData.IsAi)
+			{
+				UnitObject.AddComponent<AiUnit>();
 			}
 		}
 
@@ -249,6 +254,7 @@ public sealed class Hex : Obj
 		if (Random.Shared.Next(7) == 1 && Type == EHexType.Grass)
 		{
 			GameManager.Instance.Server_CreateHexObject("tree", this, Connection.Host.Id);
+			GameManager.Instance.Server_CreateHexUnitObject("unit-settler", this, Connection.Host.Id, true);
 		}
 	}
 

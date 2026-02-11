@@ -50,7 +50,8 @@ public struct FPlayerUiInfo
 
 			if (SelectedHex.UnitObject.IsValid())
 			{
-				BottomString += $"occupied by {SelectedHex.UnitObject.DisplayName}\n";
+				bool IsAi = SelectedHex.UnitObject.GetComponent<AiUnit>() != null;
+				BottomString += $"occupied by {SelectedHex.UnitObject.DisplayName} ai={IsAi}\n";
 			}
 
 			if (SelectedHex.BuildingObject.IsValid())

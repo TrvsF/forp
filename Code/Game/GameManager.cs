@@ -126,6 +126,11 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	{
 		Assert.True(Networking.IsHost);
 
+		foreach (var AiBody in Scene.GetAllComponents<AiUnit>())
+		{
+			AiBody.MoveRandomly_ServerOnly();
+		}
+
 		List<HexUnitProduction> SharedProductionHexes = new();
 
 		foreach (var Hex in BoardHexes)
@@ -407,7 +412,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	}
 
 	[Rpc.Host]
-	public void Server_CreateHexUnitObject(string ObjectId, Hex Hex, Guid ConnectionId)
+	public void Server_CreateHexUnitObject(string ObjectId, Hex Hex, Guid ConnectionId, bool IsAi = false)
 	{
 		Assert.IsValid(Hex);
 		Assert.NotNull(ConnectionId);
@@ -416,6 +421,12 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		{
 			Log.Warning($"trying to build unit on already occupied hex {Hex}! ignoring");
 			return;
+		}
+
+		// if we're spawning an AI give it an empty guid
+		if (IsAi)
+		{
+			ConnectionId = Guid.Empty;
 		}
 
 		var HexObject = GetObject(ObjectId);
@@ -434,6 +445,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			MoveRange = TypedObject.MoveRange,
 			ViewRange = TypedObject.ViewRange,
 			Hex = Hex,
+			IsAi = IsAi,
 		};
 
 		Hex.UnitData = ObjectData;
@@ -516,6 +528,12 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			return;
 		}
 
+		if (NewHex.UnitData != null)
+		{
+			Log.Warning("Cannot move to hex with valid unit");
+			return;
+		}
+
 		var OldUnitData = OldHex.UnitData;
 		if (OldUnitData == null)
 		{
@@ -523,7 +541,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			return;
 		}
 
-		if (OldUnitData.OwnerGuid != ConnectionId)
+		if (OldUnitData.OwnerGuid != ConnectionId && !OldUnitData.IsAi)
 		{
 			Log.Warning($"{ConnectionId} trying to make an object which is not theirs");
 			return;
@@ -543,7 +561,6 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		FUnit NewUnitData = OldUnitData with
 		{
 			Transform = NewHex.GetObjectSpawnLocation(),
-			OwnerGuid = ConnectionId,
 			Hex = NewHex,
 			TurnMovementSpent = OldUnitData.TurnMovementSpent + HexesBetween,
 		};
@@ -552,6 +569,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		NewHex.UnitData = NewUnitData;
 	}
 
+	// NOTE : this only works on the local player or if you're the host
 	public GamePlayer GetGamePlayer(Guid ConnectionId)
 	{
 		foreach (var GamePlayer in GamePlayers)
@@ -586,9 +604,8 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	private readonly Stack<Color> PlayerColours = new(
 	[
 		Color.Red,
-		Color.Blue,
-		Color.Green,
-		Color.Yellow,
+		Color.Gray,
+		Color.Orange,
 	]);
 
 	private bool CreatePlayerObject_ServerOnly(Guid ConnectionGuid, Vector3 StartLocation, out GamePlayer OutGamePlayer)
@@ -596,16 +613,9 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		Assert.True(Networking.IsHost);
 		Assert.True(PlayerPrefab.IsValid(), "Could not spawn player as no PlayerPrefab assigned to network manager");
 
-		Transform PlayerTransform = new()
-		{
-			Position = StartLocation
-		};
-
-		CloneConfig PlayerSpawnConfig = new(PlayerTransform);
-
 		var ConnectionChannel = Connection.Find(ConnectionGuid);
 
-		var PlayerObject = PlayerPrefab.Clone(PlayerSpawnConfig);
+		var PlayerObject = PlayerPrefab.Clone();
 		PlayerObject.Name = $"PLAYER:{ConnectionChannel.DisplayName}";
 		PlayerObject.Network.SetOrphanedMode(NetworkOrphaned.Destroy);
 		PlayerObject.NetworkSpawn(ConnectionChannel);

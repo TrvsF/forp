@@ -1,9 +1,25 @@
 using Forp.Game;
 using Sandbox;
+using Sandbox.Diagnostics;
 using Sandbox.Resources;
 using System;
 
 namespace Forp.Object.Unit;
+
+public class AiUnit : Component
+{
+	private ObjectUnit ObjectUnit { get => GetComponent<ObjectUnit>(); }
+
+	public void MoveRandomly_ServerOnly()
+	{
+		Assert.True(Networking.IsHost);
+
+		if (Random.Shared.FromList(ObjectUnit.OwnerHex.AllBrothers) is { } MoveHex)
+		{
+			GameManager.Instance.Server_MoveUnitToHex(ObjectUnit.OwnerHex, MoveHex, Connection.Local.Id);
+		}
+	}
+}
 
 public record FUnit : IObj
 {
@@ -22,6 +38,8 @@ public record FUnit : IObj
 
 	public int MoveRange { get; set; }
 	public int TurnMovementSpent { get; set; }
+
+	public bool IsAi { get; set; }
 }
 
 public class ObjectUnit : Obj
@@ -32,15 +50,6 @@ public class ObjectUnit : Obj
 	[Property] public int ViewRange { get; set; }
 	[Property] public int MoveRange { get; set; }
 	[Property] public int ProductionToBuild { get; set; }
-
-	protected override void OnStart()
-	{
-		base.OnStart();
-
-		// TODO : relationship with FUint 4 attacking without knowing the hex
-		// (or just a relation ship with a hex :D
-		ShowBuildings = GamePlayer.Local.UnitBuildMenuActive;
-	}
 
 	public GamePlayer OwnerPlayer { get; set; }
 	public Hex OwnerHex { get; set; }
@@ -58,6 +67,11 @@ public class ObjectUnit : Obj
 		get => _showBuildings;
 		set
 		{
+			if (GamePlayer.Local != OwnerPlayer)
+			{
+				return;
+			}
+
 			if (_showBuildings == value)
 			{
 				return;

@@ -3,59 +3,60 @@
 @inherits PanelComponent
 
 <root>
-	<watermark>Forward Operating: Repair the Planet Infdev @(DateTime.Now.ToShortDateString())</watermark>
-		<static-bar>
-			@(UiInfo.GetTopBarString())
-		</static-bar>
-	
-	@if (UiInfo.AnythingSelected())
-	{
-		<bottom-bar>
-			<selected-name>@(UiInfo.GetBottomBarString())</selected-name>
-		</bottom-bar>
-		<build-unit-container>
-		@foreach (var (BuildString, Index) in UiInfo.BuildObjects.Select((v, i) => (v, i)))
-		{
-			<build-unit>
-				<button onclick="@(() => OnUnitBuildClick(Index))">@BuildString</button>
-			</build-unit>
-		}
-		</build-unit-container>
-	}
+    <watermark>Forward Operating: Repair the Planet Infdev @(DateTime.Now.ToShortDateString())</watermark>
+    @(GamePlayer.Local.CameraMode.ToString())
+    <static-bar>
+        @(UiInfo.GetTopBarString())
+    </static-bar>
 
-	<next-turn-button onclick="@OnNextTurnClick">
-		Next Turn. @(GameManager.Instance.Turn)
-	</next-turn-button>
+    @if (UiInfo.AnythingSelected())
+    {
+        <bottom-bar>
+            <selected-name>@(UiInfo.GetBottomBarString())</selected-name>
+        </bottom-bar>
+        <build-unit-container>
+            @foreach (var (BuildString, Index) in UiInfo.BuildObjects.Select((v, i) => (v, i)))
+            {
+                <build-unit>
+                    <button onclick="@(() => OnUnitBuildClick(Index))">@BuildString</button>
+                </build-unit>
+            }
+        </build-unit-container>
+    }
+
+    <next-turn-button onclick="@OnNextTurnClick">
+        Next Turn. @(GameManager.Instance.Turn)
+    </next-turn-button>
 </root>
 
 @code
 {
-	protected override int BuildHash()
-	{
-		return HashCode.Combine(Time.Now);
-	}
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(Time.Now);
+    }
 
-	private Forp.Game.FPlayerUiInfo UiInfo;
+    private Forp.Game.FPlayerUiInfo UiInfo;
 
-	protected override void OnUpdate()
-	{
-		base.OnUpdate();
+    protected override void OnUpdate()
+    {
+        base.OnUpdate();
 
-		if (!Forp.Game.GamePlayer.Local.IsValid())
-		{
-			return;
-		}
+        if (!Forp.Game.GamePlayer.Local.IsValid())
+        {
+            return;
+        }
 
-		Forp.Game.GamePlayer.Local.GetPlayerUiInfo(out UiInfo);
-	}
+        Forp.Game.GamePlayer.Local.GetPlayerUiInfo(out UiInfo);
+    }
 
-	private void OnNextTurnClick()
-	{
-		GameManager.Instance.NextTurn();
-	}
+    private void OnNextTurnClick()
+    {
+        GameManager.Instance.NextTurn();
+    }
 
-	private void OnUnitBuildClick(int Index)
-	{
-		GameManager.Instance.Server_QueueHexObject(UiInfo.BuildObjects[Index], UiInfo.SelectedHex);
-	}
+    private void OnUnitBuildClick(int Index)
+    {
+        GameManager.Instance.Server_QueueHexObject(UiInfo.BuildObjects[Index], UiInfo.SelectedHex);
+    }
 }
