@@ -75,6 +75,9 @@ public sealed partial class GamePlayer : Component
 
 	private void OnCameraModeChange()
 	{
+		bool ShowUnitBuildings = CameraMode == ECameraMode.Build;
+		bool ShowUnitHealth = CameraMode == ECameraMode.Combat;
+
 		// NORMAL ////////////////////
 
 		// BUILD /////////////////////
@@ -82,7 +85,8 @@ public sealed partial class GamePlayer : Component
 		{
 			if (Hexogon.UnitObject.IsValid())
 			{
-				Hexogon.UnitObject.ShowBuildings = CameraMode == ECameraMode.Build;
+				Hexogon.UnitObject.ShowBuildings = ShowUnitBuildings;
+				Hexogon.UnitObject.ShowHealth = ShowUnitHealth;
 			}
 		}
 

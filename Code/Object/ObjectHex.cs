@@ -28,6 +28,11 @@ public record FQueueObject
 	{
 		return Production >= ProductionToBuild;
 	}
+
+	public string GetBuildString()
+	{
+		return $"{ObjectName} {Production} / {ProductionToBuild}";
+	}
 }
 
 public sealed class Hex : Obj
@@ -293,7 +298,7 @@ public sealed class Hex : Obj
 
 			if (QueuedObjectTexts.TryGetValue(QueuedObject.GameObjectId, out var FoundText))
 			{
-				FoundText.GetComponent<TextRenderer>().Text = $"{QueuedObject.ObjectName} {QueuedObject.Production} / {QueuedObject.ProductionToBuild}";
+				FoundText.SetText($"{QueuedObject.GetBuildString()}");
 
 				if (QueuedObject.IsReadyToBuild())
 				{
@@ -302,13 +307,11 @@ public sealed class Hex : Obj
 				continue;
 			}
 
-			var ConstructionClone = GameManager.Instance.GameTextPrefab.Clone();
-			ConstructionClone.WorldTransform = BuildingData.Transform;
-			ConstructionClone.WorldPosition += Vector3.Up * TextYPadding;
+			var TextTransform = BuildingData.Transform;
+			TextTransform.Position += Vector3.Up * TextYPadding;
 
-			var ConstructionObject = ConstructionClone.GetComponent<TextRenderer>();
-			ConstructionObject.Text = $"{QueuedObject.ObjectName} {QueuedObject.Production} / {QueuedObject.ProductionToBuild}";
-			QueuedObjectTexts.Add(QueuedObject.GameObjectId, ConstructionClone.GetComponent<GameText>());
+			var TextObject = GameText.CreateTextObject(TextTransform, $"{QueuedObject.GetBuildString()}");
+			QueuedObjectTexts.Add(QueuedObject.GameObjectId, TextObject);
 		}
 
 		foreach (var Guid in GuidsToRemove)
@@ -324,11 +327,6 @@ public sealed class Hex : Obj
 			FoundText.DestroyGameObject();
 			QueuedObjectTexts.Remove(GameObjectId);
 		}
-	}
-
-	public void OnNextTurn()
-	{
-		
 	}
 
 	private void OnHighlight()

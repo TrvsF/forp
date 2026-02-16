@@ -56,9 +56,42 @@ public class ObjectUnit : Obj
 
 	protected override void OnDestroy()
 	{
+		ShowHealth = false;
 		ShowBuildings = false;
 
 		base.OnDestroy();
+	}
+
+	private bool _showHealth = false;
+	public bool ShowHealth
+	{
+		get => _showHealth;
+		set
+		{
+			if (_showHealth == value)
+			{
+				return;
+			}
+
+			_showHealth = value;
+			ToggleHealth(_showHealth);
+		}
+	}
+
+	private GameText HealthText = null;
+	private void ToggleHealth(bool Show)
+	{
+		if (!Show && HealthText.IsValid())
+		{
+			HealthText.DestroyGameObject();
+			HealthText = null;
+			return;
+		}
+
+		var TextTransform = WorldTransform;
+		TextTransform.Position += Vector3.Up * 200;
+
+		HealthText = GameText.CreateTextObject(TextTransform, $"{Health}hp");
 	}
 
 	private bool _showBuildings = false;

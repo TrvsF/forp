@@ -101,18 +101,12 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		}
 	}
 
+	public event Action OnNextTurn;
+
 	[Rpc.Broadcast]
 	private void Broadcast_OnNextTurn()
 	{
-		foreach (var Hex in BoardHexes)
-		{
-			if (!Hex.IsValid())
-			{
-				continue;
-			}
-
-			Hex.OnNextTurn();
-		}
+		OnNextTurn?.Invoke();
 	}
 
 	class HexUnitProduction
