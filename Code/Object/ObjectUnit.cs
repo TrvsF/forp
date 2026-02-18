@@ -54,12 +54,25 @@ public class ObjectUnit : Obj
 	public GamePlayer OwnerPlayer { get; set; }
 	public Hex OwnerHex { get; set; }
 
+	protected override void OnStart()
+	{
+		base.OnStart();
+
+		SetCameraMode(GamePlayer.Local.CameraMode);
+	}
+
 	protected override void OnDestroy()
 	{
 		ShowHealth = false;
 		ShowBuildings = false;
 
 		base.OnDestroy();
+	}
+
+	public void SetCameraMode(ECameraMode CameraMode)
+	{
+		ShowHealth = CameraMode == ECameraMode.Combat;
+		ShowBuildings = CameraMode == ECameraMode.Build;
 	}
 
 	private bool _showHealth = false;
