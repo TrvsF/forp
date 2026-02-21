@@ -104,7 +104,8 @@ public class ObjectUnit : Obj
 		var TextTransform = WorldTransform;
 		TextTransform.Position += Vector3.Up * 200;
 
-		HealthText = GameText.CreateTextObject(TextTransform, $"{Health}hp");
+		var OwnerString = OwnerPlayer == null ? "AI" : OwnerPlayer.SteamName;
+		HealthText = GameText.CreateTextObject(TextTransform, $"{DisplayName} : {OwnerString}\n{Health}hp");
 	}
 
 	private bool _showBuildings = false;
