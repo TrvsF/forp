@@ -37,9 +37,13 @@
             "__guid": "dbbfe14f-ff65-4bb4-b301-c63ca99d9358",
             "__enabled": true,
             "Flags": 0,
+            "DamageTextPrefab": {
+              "_type": "gameobject",
+              "prefab": "prefabs/textdmg.prefab"
+            },
             "GameTextPrefab": {
               "_type": "gameobject",
-              "prefab": "prefabs/gametext.prefab"
+              "prefab": "prefabs/textgame.prefab"
             },
             "HexPrefab": {
               "_type": "gameobject",
@@ -91,7 +95,7 @@
         "Enabled": false,
         "IncludeStaticBodies": true,
         "IncludeKeyframedBodies": true,
-        "EditorAutoUpdate": true,
+        "EditorAutoUpdate": false,
         "AgentHeight": 64,
         "AgentRadius": 16,
         "AgentStepSize": 18,

@@ -1,0 +1,118 @@
+{
+  "RootObject": {
+    "__guid": "d867263e-d642-4e34-8cf7-81f06e1908dc",
+    "__version": 2,
+    "Flags": 0,
+    "Name": "textgame",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "1,1,1",
+    "Tags": "",
+    "Enabled": true,
+    "NetworkMode": 0,
+    "NetworkFlags": 0,
+    "NetworkOrphaned": 0,
+    "NetworkTransmit": true,
+    "OwnerTransfer": 1,
+    "Components": [
+      {
+        "__type": "Forp.Game.GameText",
+        "__guid": "e2c55082-f75c-4e96-9e04-32fe2749a979",
+        "__enabled": true,
+        "Flags": 0,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null
+      },
+      {
+        "__type": "Sandbox.TextRenderer",
+        "__guid": "623f31c0-bde8-4074-927b-a03f0a655884",
+        "__enabled": true,
+        "Flags": 0,
+        "__version": 2,
+        "BlendMode": "Normal",
+        "FogStrength": 1,
+        "HorizontalAlignment": "Center",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "RenderOptions": {
+          "GameLayer": true,
+          "OverlayLayer": false,
+          "BloomLayer": false,
+          "AfterUILayer": false
+        },
+        "Scale": 1,
+        "TextScope": {
+          "Text": "Hello! ❤",
+          "TextColor": "1,1,1,1",
+          "FontName": "Poppins",
+          "FontSize": 32,
+          "FontWeight": 400,
+          "FontItalic": false,
+          "LineHeight": 1,
+          "LetterSpacing": 0,
+          "WordSpacing": 0,
+          "FilterMode": "Bilinear",
+          "FontSmooth": "Auto",
+          "Outline": {
+            "Enabled": false,
+            "Size": 4,
+            "Color": "0,0,1,1"
+          },
+          "Shadow": {
+            "Enabled": false,
+            "Size": 4,
+            "Color": "0,0,0,1",
+            "Offset": "4,4"
+          },
+          "OutlineUnder": {
+            "Enabled": false,
+            "Size": 4,
+            "Color": "0,1,0,1"
+          },
+          "ShadowUnder": {
+            "Enabled": false,
+            "Size": 4,
+            "Color": "0,0,0,1",
+            "Offset": "4,4"
+          }
+        },
+        "VerticalAlignment": "Center"
+      }
+    ],
+    "Children": [],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": false,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": ""
+      }
+    },
+    "__variables": []
+  },
+  "ResourceVersion": 2,
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "__references": [],
+  "__version": 2
+}

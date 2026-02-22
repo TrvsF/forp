@@ -23,6 +23,8 @@ public sealed partial class GamePlayer : Component
 {
 	public static GamePlayer Local { get; private set; } = null;
 
+	[Property] public GameObject CameraObject { get; private set; }
+
 	[Sync(SyncFlags.FromHost), Property] public ulong SteamId { get; private set; }
 	[Sync(SyncFlags.FromHost), Property] public string SteamName { get; private set; }
 	[Sync(SyncFlags.FromHost), Property] public Guid ConnectionId { get; private set; }
@@ -51,7 +53,7 @@ public sealed partial class GamePlayer : Component
 		}
 	}
 
-	private Object.Obj HoveredObject { get; set; }
+	private Obj HoveredObject { get; set; }
 	private Hex SelectedHex { get; set; } = null;
 
 	private ObjectUnit _SelectedUnit = null;
@@ -86,15 +88,19 @@ public sealed partial class GamePlayer : Component
 
 	private void SelectUnit()
 	{
-		var UnitHex = GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit);
-		var MoveRange = UnitHex.UnitData.MoveRange - UnitHex.UnitData.TurnMovementSpent + 1;
-		Hex.HighlightHexesRecusrive(UnitHex, true, MoveRange);
+		if (GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit) is { } UnitHex)
+		{
+			var MoveRange = UnitHex.UnitData.MoveRange - UnitHex.UnitData.TurnMovementSpent + 1;
+			Hex.HighlightHexesRecusrive(UnitHex, true, MoveRange);
+		}
 	}
 
 	private void DeselectUnit()
 	{
-		var UnitHex = GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit);
-		Hex.HighlightHexesRecusrive(UnitHex, false, SelectedUnit.MoveRange);
+		if (GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit) is { } UnitHex)
+		{
+			Hex.HighlightHexesRecusrive(UnitHex, false, SelectedUnit.MoveRange);
+		}
 	}
 
 	protected override void OnStart()
@@ -123,7 +129,6 @@ public sealed partial class GamePlayer : Component
 		DoMovement();
 		DoAction();
 
-		List<Obj> HoveredObjects = new();
 		var ClickRay = Camera.ScreenPixelToRay(Mouse.Position);
 		var ClickTraces = Scene.Trace.Ray(ClickRay.Position, ClickRay.Position + ClickRay.Forward * 10000f).RunAll();
 
@@ -202,7 +207,7 @@ public sealed partial class GamePlayer : Component
 		{
 			Mouse.CursorType = "crosshair";
 
-			List<Object.Obj> ClickedObjects = new();
+			List<Obj> ClickedObjects = new();
 			var ClickRay = Camera.ScreenPixelToRay(Mouse.Position);
 			var ClickTraces = Scene.Trace.Ray(ClickRay.Position, ClickRay.Position + ClickRay.Forward * 10000f).RunAll();
 
@@ -213,7 +218,7 @@ public sealed partial class GamePlayer : Component
 					continue;
 				}
 
-				if (ClickTrace.GameObject.GetComponent<Object.Obj>() is { } HitObject)
+				if (ClickTrace.GameObject.GetComponent<Obj>() is { } HitObject)
 				{
 					HitObject.OnClick();
 					ClickedObjects.Add(HitObject);
@@ -241,7 +246,8 @@ public sealed partial class GamePlayer : Component
 						if (SelectedUnit != ObjectUnit)
 						{
 							GameManager.Instance.Server_UnitAttack(SelectedUnit.OwnerHex.UnitData, ObjectUnit.OwnerHex.UnitData);
-							Log.Info("ATTACK ");
+							SelectedUnit = null;
+							return;
 						}
 					}
 
@@ -272,6 +278,8 @@ public sealed partial class GamePlayer : Component
 				SelectedHex = FoundHex;
 				SelectedHex.OnClick();
 			}
+
+			SelectedUnit = null;
 		}
 
 		if (Input.Pressed("camera_combat"))

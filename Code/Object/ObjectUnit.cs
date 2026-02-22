@@ -69,6 +69,14 @@ public class ObjectUnit : Obj
 		base.OnDestroy();
 	}
 
+	[Rpc.Broadcast]
+	public void OnDamageTaken(float Damage)
+	{
+		var TextTransform = WorldTransform;
+		TextTransform.Position += Vector3.Up * 50;
+		GameText.CreateTextObject<DamageText>(TextTransform, $"-{Damage}");
+	}
+
 	public void SetCameraMode(ECameraMode CameraMode)
 	{
 		ShowHealth = CameraMode == ECameraMode.Combat;
@@ -105,7 +113,7 @@ public class ObjectUnit : Obj
 		TextTransform.Position += Vector3.Up * 200;
 
 		var OwnerString = OwnerPlayer == null ? "AI" : OwnerPlayer.SteamName;
-		HealthText = GameText.CreateTextObject(TextTransform, $"{DisplayName} : {OwnerString}\n{Health}hp");
+		HealthText = GameText.CreateTextObject<GameText>(TextTransform, $"{DisplayName} : {OwnerString}\n{Health}hp");
 	}
 
 	private bool _showBuildings = false;

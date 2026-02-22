@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Forp.Game;
 
-public sealed partial class GameText : Component
+public class GameText : Component
 {
-	[RequireComponent] TextRenderer TextRenderer { get; set; }
+	[RequireComponent] protected TextRenderer TextRenderer { get; set; }
 
 	public void SetText(string Text)
 	{
@@ -23,17 +23,34 @@ public sealed partial class GameText : Component
 		TextRenderer.Scale = 0.5f;
 	}
 
-	public static GameText CreateTextObject(Transform Transform, string Text = "")
+	public static T CreateTextObject<T>(Transform Transform, string Text = "") where T : GameText
 	{
-		var TextPrefab = GameManager.Instance.GameTextPrefab;
+		var TextPrefab = GameManager.Instance.GetTextPrefab<T>();
 		Assert.IsValid(TextPrefab);
 
-		var ConstructionClone = GameManager.Instance.GameTextPrefab.Clone();
+		var ConstructionClone = TextPrefab.Clone();
 		ConstructionClone.WorldTransform = Transform;
 
-		var TextObject = ConstructionClone.GetComponent<GameText>();
+		var TextObject = ConstructionClone.GetComponent<T>();
 		TextObject.SetText($"{Text}");
 
 		return TextObject;
+	}
+}
+
+public sealed class DamageText : GameText
+{
+	protected override void OnStart()
+	{
+		base.OnStart();
+
+		TextRenderer.Color = Color.Red;
+	}
+
+	protected override void OnFixedUpdate()
+	{
+		base.OnFixedUpdate();
+
+		WorldPosition += Vector3.Up * 20;
 	}
 }

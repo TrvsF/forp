@@ -310,7 +310,7 @@ public sealed class Hex : Obj
 			var TextTransform = BuildingData.Transform;
 			TextTransform.Position += Vector3.Up * TextYPadding;
 
-			var TextObject = GameText.CreateTextObject(TextTransform, $"{QueuedObject.GetBuildString()}");
+			var TextObject = GameText.CreateTextObject<GameText>(TextTransform, $"{QueuedObject.GetBuildString()}");
 			QueuedObjectTexts.Add(QueuedObject.GameObjectId, TextObject);
 		}
 

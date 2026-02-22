@@ -17,7 +17,23 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	[Property] public GameObject HexPrefab { get; set; }
 	[Property] public GameObject PlayerPrefab { get; set; }
 	[Property] public GameObject GameTextPrefab { get; set; }
+	[Property] public GameObject DamageTextPrefab { get; set; }
 	[Property] private HashSet<GameObject> ObjectPrefabs { get; set; } // TODO : turn into dict at startup
+
+	public GameObject GetTextPrefab<T>() where T : GameText
+	{
+		if (typeof(T) == typeof(GameText))
+		{
+			return GameTextPrefab;
+		}
+
+		if (typeof(T) == typeof(DamageText))
+		{
+			return DamageTextPrefab;
+		}
+
+		throw new Exception($"cannot find text object for {typeof(T)}");
+	}
 
 	public GameObject GetObject(string ObjectId)
 	{
@@ -382,6 +398,11 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		{
 			Health = DefenderUnit.Hex.UnitData.Health - AttackerUnit.Attack
 		};
+
+		if (DefenderUnit.Hex.UnitObject is { } UnitObject)
+		{
+			UnitObject.OnDamageTaken(AttackerUnit.Attack);
+		}
 	}
 
 	[Rpc.Host]
@@ -579,6 +600,11 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	// TODO : we need a better relationship
 	public Hex HACK_GetHexFromUnit(ObjectUnit Unit)
 	{
+		if (Unit == null)
+		{
+			return null; 
+		}
+
 		foreach (var Hex in BoardHexes)
 		{
 			if (!Hex.IsValid())
@@ -607,9 +633,20 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		Assert.True(Networking.IsHost);
 		Assert.True(PlayerPrefab.IsValid(), "Could not spawn player as no PlayerPrefab assigned to network manager");
 
-		var ConnectionChannel = Connection.Find(ConnectionGuid);
+		var PlayerPrefabComponent = PlayerPrefab.GetComponent<GamePlayer>();
+		Assert.NotNull(PlayerPrefabComponent);
 
-		var PlayerObject = PlayerPrefab.Clone();
+		var ConnectionChannel = Connection.Find(ConnectionGuid);
+		Assert.NotNull(ConnectionChannel);
+
+		var SpawnTransform = PlayerPrefab.WorldTransform;
+		SpawnTransform = SpawnTransform.WithPosition(StartLocation + (PlayerPrefabComponent.CameraObject.WorldRotation.Backward * 1337));
+		CloneConfig PlayerSpawnConfig = new()
+		{
+			Transform = SpawnTransform,
+		};
+
+		var PlayerObject = PlayerPrefab.Clone(PlayerSpawnConfig);
 		PlayerObject.Name = $"PLAYER:{ConnectionChannel.DisplayName}";
 		PlayerObject.Network.SetOrphanedMode(NetworkOrphaned.Destroy);
 		PlayerObject.NetworkSpawn(ConnectionChannel);
@@ -630,7 +667,6 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 		OutGamePlayer.Colour = PlayerColours.Pop();
 		OutGamePlayer.Gold = 100;
-		OutGamePlayer.WorldPosition = StartLocation + (OutGamePlayer.Camera.WorldRotation.Backward * 1337);
 
 		return true;
 	}
