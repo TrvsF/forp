@@ -26,7 +26,7 @@ public class GameText : Component
 	public static T CreateTextObject<T>(Transform Transform, string Text = "") where T : GameText
 	{
 		var TextPrefab = GameManager.Instance.GetTextPrefab<T>();
-		Assert.IsValid(TextPrefab);
+		Assert.NotNull(TextPrefab);
 
 		var ConstructionClone = TextPrefab.Clone();
 		ConstructionClone.WorldTransform = Transform;
@@ -40,6 +40,8 @@ public class GameText : Component
 
 public sealed class DamageText : GameText
 {
+	private int TicksAlive = 0;
+
 	protected override void OnStart()
 	{
 		base.OnStart();
@@ -51,6 +53,12 @@ public sealed class DamageText : GameText
 	{
 		base.OnFixedUpdate();
 
-		WorldPosition += Vector3.Up * 20;
+		WorldPosition += Vector3.Up * 5;
+		TicksAlive++;
+
+		if (TicksAlive > 50)
+		{
+			DestroyGameObject();
+		}
 	}
 }

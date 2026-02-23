@@ -3,7 +3,7 @@
     "__guid": "d867263e-d642-4e34-8cf7-81f06e1908dc",
     "__version": 2,
     "Flags": 0,
-    "Name": "gametext",
+    "Name": "textdmg",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
     "Scale": "1,1,1",
@@ -15,18 +15,6 @@
     "NetworkTransmit": true,
     "OwnerTransfer": 1,
     "Components": [
-      {
-        "__type": "Forp.Game.GameText",
-        "__guid": "e2c55082-f75c-4e96-9e04-32fe2749a979",
-        "__enabled": true,
-        "Flags": 0,
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null
-      },
       {
         "__type": "Sandbox.TextRenderer",
         "__guid": "623f31c0-bde8-4074-927b-a03f0a655884",
@@ -46,7 +34,7 @@
           "GameLayer": true,
           "OverlayLayer": false,
           "BloomLayer": false,
-          "AfterUILayer": false
+          "AfterUILayer": true
         },
         "Scale": 1,
         "TextScope": {
@@ -85,6 +73,18 @@
           }
         },
         "VerticalAlignment": "Center"
+      },
+      {
+        "__type": "Forp.Game.DamageText",
+        "__guid": "f1b9b34a-47b6-43e9-908e-12603b297113",
+        "__enabled": true,
+        "Flags": 0,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null
       }
     ],
     "Children": [],
@@ -97,7 +97,7 @@
         "Enabled": false,
         "IncludeStaticBodies": true,
         "IncludeKeyframedBodies": true,
-        "EditorAutoUpdate": true,
+        "EditorAutoUpdate": false,
         "AgentHeight": 64,
         "AgentRadius": 16,
         "AgentStepSize": 18,

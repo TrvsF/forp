@@ -82,16 +82,7 @@
       "__PrefabInstancePatch": {
         "AddedObjects": [],
         "RemovedObjects": [],
-        "PropertyOverrides": [
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "dbbfe14f-ff65-4bb4-b301-c63ca99d9358"
-            },
-            "Property": "DamageTextPrefab",
-            "Value": null
-          }
-        ],
+        "PropertyOverrides": [],
         "MovedObjects": []
       },
       "__PrefabIdToInstanceId": {

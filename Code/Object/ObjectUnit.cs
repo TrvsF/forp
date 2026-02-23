@@ -73,7 +73,7 @@ public class ObjectUnit : Obj
 	public void OnDamageTaken(float Damage)
 	{
 		var TextTransform = WorldTransform;
-		TextTransform.Position += Vector3.Up * 50;
+		TextTransform.Position += Vector3.Up * 150;
 		GameText.CreateTextObject<DamageText>(TextTransform, $"-{Damage}");
 	}
 
