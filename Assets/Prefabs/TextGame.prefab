@@ -46,7 +46,7 @@
           "GameLayer": true,
           "OverlayLayer": false,
           "BloomLayer": false,
-          "AfterUILayer": false
+          "AfterUILayer": true
         },
         "Scale": 1,
         "TextScope": {

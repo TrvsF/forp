@@ -89,7 +89,12 @@ public sealed partial class GamePlayer : Component
 	private void SelectUnit()
 	{
 		if (GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit) is { } UnitHex)
-		{
+		{	
+			if (SelectedUnit.SelectedMaterial.IsValid())
+			{
+				Log.Info("trna");
+				SelectedUnit.ModelRenderer.SetMaterialOverride(SelectedUnit.SelectedMaterial, "selection");
+			}
 			var MoveRange = UnitHex.UnitData.MoveRange - UnitHex.UnitData.TurnMovementSpent + 1;
 			Hex.HighlightHexesRecusrive(UnitHex, true, MoveRange);
 		}
@@ -99,6 +104,10 @@ public sealed partial class GamePlayer : Component
 	{
 		if (GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit) is { } UnitHex)
 		{
+			if (SelectedUnit.SelectedMaterial.IsValid())
+			{
+				SelectedUnit.ModelRenderer.ClearMaterialOverrides();
+			}
 			Hex.HighlightHexesRecusrive(UnitHex, false, SelectedUnit.MoveRange);
 		}
 	}
@@ -243,9 +252,9 @@ public sealed partial class GamePlayer : Component
 
 					if (SelectedUnit.IsValid())
 					{
-						if (SelectedUnit != ObjectUnit)
+						if (GameManager.CanAttack(SelectedUnit.OwnerHex.UnitData, ObjectUnit.OwnerHex.UnitData, Connection.Local.Id))
 						{
-							GameManager.Instance.Server_UnitAttack(SelectedUnit.OwnerHex.UnitData, ObjectUnit.OwnerHex.UnitData);
+							GameManager.Instance.Server_UnitAttack(SelectedUnit.OwnerHex.UnitData, ObjectUnit.OwnerHex.UnitData, Connection.Local.Id);
 							SelectedUnit = null;
 							return;
 						}

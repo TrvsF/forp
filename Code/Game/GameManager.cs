@@ -83,11 +83,6 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			PlayerStats.Production += Hex.Production;
 			PlayerStats.TerritoryCount += 1;
 		}
-
-		//foreach (var Player in OutPlayerTerritory.Keys)
-		//{
-		//	OutPlayerTerritory[Player] /= BoardHexes.Count;
-		//}
 	}
 
 
@@ -382,11 +377,39 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		Server_CreateHexUnitObject("unit-settler", SpawnHex, ConnectionGuid);
 	}
 
-	[Rpc.Host]
-	public void Server_UnitAttack(FUnit AttackerUnit, FUnit DefenderUnit)
+	public static bool CanAttack(FUnit AttackerUnit, FUnit DefenderUnit, Guid ConnectionId)
 	{
 		Assert.NotNull(AttackerUnit);
 		Assert.NotNull(DefenderUnit);
+		Assert.NotNull(ConnectionId);
+
+		if (AttackerUnit.OwnerGuid != ConnectionId)
+		{
+			Log.Warning($"trying to attack with unit that it not {ConnectionId}");
+			return false; 
+		}
+
+		if (AttackerUnit.OwnerGuid == DefenderUnit.OwnerGuid)
+		{
+			Log.Warning("trying to attack friendly unit");
+			return false;
+		}
+
+		return true;
+	}
+
+	[Rpc.Host]
+	public void Server_UnitAttack(FUnit AttackerUnit, FUnit DefenderUnit, Guid ConnectionId)
+	{
+		Assert.NotNull(AttackerUnit);
+		Assert.NotNull(DefenderUnit);
+		Assert.NotNull(ConnectionId);
+
+		if (!CanAttack(AttackerUnit, DefenderUnit, ConnectionId))
+		{
+			Log.Warning($"{ConnectionId} trying to call an invalid attack");
+			return;
+		}
 
 		if (!AttackerUnit.Hex.IsValid() || !DefenderUnit.Hex.IsValid())
 		{

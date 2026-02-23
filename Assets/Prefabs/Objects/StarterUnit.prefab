@@ -38,6 +38,7 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "ProductionToBuild": 99,
+        "SelectedMaterial": "materials/liquid/retro_lava_01.vmat",
         "ViewRange": 3
       },
       {
@@ -147,7 +148,7 @@
         "Enabled": false,
         "IncludeStaticBodies": true,
         "IncludeKeyframedBodies": true,
-        "EditorAutoUpdate": true,
+        "EditorAutoUpdate": false,
         "AgentHeight": 64,
         "AgentRadius": 16,
         "AgentStepSize": 18,
@@ -164,6 +165,7 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
+    "baik.retrolava#106891",
     "fpopium.crackhead_02#123566"
   ],
   "__version": 2

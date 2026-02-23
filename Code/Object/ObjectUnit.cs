@@ -45,6 +45,7 @@ public record FUnit : IObj
 public class ObjectUnit : Obj
 {
 	[Property] public List<GameObject> Buildings { get; set; }
+	[Property] public Material SelectedMaterial { get; set; }
 	[Property] public int Health { get; set; }
 	[Property] public int Attack { get; set; }
 	[Property] public int ViewRange { get; set; }
