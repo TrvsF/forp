@@ -92,8 +92,7 @@ public sealed partial class GamePlayer : Component
 		{	
 			if (SelectedUnit.SelectedMaterial.IsValid())
 			{
-				Log.Info("trna");
-				SelectedUnit.ModelRenderer.SetMaterialOverride(SelectedUnit.SelectedMaterial, "selection");
+				SelectedUnit.ModelRenderer.MaterialOverride = SelectedUnit.SelectedMaterial;
 			}
 			var MoveRange = UnitHex.UnitData.MoveRange - UnitHex.UnitData.TurnMovementSpent + 1;
 			Hex.HighlightHexesRecusrive(UnitHex, true, MoveRange);
@@ -255,9 +254,10 @@ public sealed partial class GamePlayer : Component
 						if (GameManager.CanAttack(SelectedUnit.OwnerHex.UnitData, ObjectUnit.OwnerHex.UnitData, Connection.Local.Id))
 						{
 							GameManager.Instance.Server_UnitAttack(SelectedUnit.OwnerHex.UnitData, ObjectUnit.OwnerHex.UnitData, Connection.Local.Id);
-							SelectedUnit = null;
-							return;
 						}
+
+						SelectedUnit = null;
+						return;
 					}
 
 					SelectedUnit = ObjectUnit;

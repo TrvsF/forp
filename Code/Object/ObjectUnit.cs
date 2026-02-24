@@ -76,6 +76,9 @@ public class ObjectUnit : Obj
 		var TextTransform = WorldTransform;
 		TextTransform.Position += Vector3.Up * 150;
 		GameText.CreateTextObject<DamageText>(TextTransform, $"-{Damage}");
+
+		// update text if there
+		ToggleHealth(ShowHealth);
 	}
 
 	public void SetCameraMode(ECameraMode CameraMode)
@@ -103,11 +106,15 @@ public class ObjectUnit : Obj
 	private GameText HealthText = null;
 	private void ToggleHealth(bool Show)
 	{
-		if (!Show && HealthText.IsValid())
+		if (HealthText.IsValid())
 		{
 			HealthText.DestroyGameObject();
 			HealthText = null;
-			return;
+
+			if (!Show)
+			{
+				return;
+			}
 		}
 
 		var TextTransform = WorldTransform;
