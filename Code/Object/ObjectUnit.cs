@@ -110,11 +110,11 @@ public class ObjectUnit : Obj
 		{
 			HealthText.DestroyGameObject();
 			HealthText = null;
+		}
 
-			if (!Show)
-			{
-				return;
-			}
+		if (!Show)
+		{
+			return;
 		}
 
 		var TextTransform = WorldTransform;
@@ -145,16 +145,17 @@ public class ObjectUnit : Obj
 		}
 	}
 
-	private List<GameObject> TextBuildingObjects = new();
-	private void ToggleBuidlings(bool Build)
+	private readonly List<GameObject> TextBuildingObjects = new();
+	private void ToggleBuidlings(bool Show)
 	{
-		if (!Build)
+		foreach (var TextBuilding in TextBuildingObjects)
 		{
-			foreach (var TextBuilding in TextBuildingObjects)
-			{
-				TextBuilding.Destroy();
-			}
-			TextBuildingObjects.Clear();
+			TextBuilding.Destroy();
+		}
+		TextBuildingObjects.Clear();
+
+		if (!Show)
+		{
 			return;
 		}
 

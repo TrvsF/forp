@@ -353,11 +353,13 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		}
 	}
 
+	private List<Hex> ValidSpawnHexes { get => BoardHexes.Where(Hex => Hex.Type == EHexType.Grass && Hex.UnitData == null).ToList(); }
+
 	private void StartClient_SeverOnly(Guid ConnectionGuid)
 	{
 		Assert.True(Networking.IsHost);
 
-		var SpawnHex = Random.Shared.FromList(BoardHexes.ToList());
+		var SpawnHex = Random.Shared.FromList(ValidSpawnHexes);
 		if (!SpawnHex.IsValid())
 		{
 			Networking.Disconnect();
