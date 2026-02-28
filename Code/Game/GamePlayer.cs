@@ -3,6 +3,7 @@ using Forp.Object.Building;
 using Forp.Object.Unit;
 using Sandbox.Diagnostics;
 using System;
+using System.Linq.Expressions;
 
 namespace Forp.Game;
 
@@ -23,6 +24,7 @@ public sealed partial class GamePlayer : Component
 {
 	public static GamePlayer Local { get; private set; } = null;
 
+	[Property] public GameObject SixMan { get; private set; }
 	[Property] public GameObject CameraObject { get; private set; }
 
 	[Sync(SyncFlags.FromHost), Property] public ulong SteamId { get; private set; }
@@ -103,6 +105,7 @@ public sealed partial class GamePlayer : Component
 
 	private void SelectUnit()
 	{
+		SixMan.Enabled = true;
 		if (GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit) is { } UnitHex)
 		{
 			if (SelectedUnit.SelectedMaterial.IsValid())
@@ -116,6 +119,7 @@ public sealed partial class GamePlayer : Component
 
 	private void DeselectUnit()
 	{
+		SixMan.Enabled = false;
 		if (GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit) is { } UnitHex)
 		{
 			if (SelectedUnit.SelectedMaterial.IsValid())

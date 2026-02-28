@@ -90,52 +90,6 @@
         "8edb6cdd-b5b6-494f-92ca-4095047c1197": "3e904826-ab3c-46ec-b903-d0c14e23919b",
         "dbbfe14f-ff65-4bb4-b301-c63ca99d9358": "727f7272-27eb-4faf-97bb-cb45b92f2d8c"
       }
-    },
-    {
-      "__guid": "c3bf65b6-4efc-4f0f-bb21-ab7f32c1f208",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "Cube",
-      "Position": "-50.28943,166.1511,178.1828",
-      "Rotation": "0,0,0,1",
-      "Scale": "3.797972,0.1537553,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.ModelRenderer",
-          "__guid": "187a6a54-4daf-4500-af36-7a803555b04e",
-          "__enabled": true,
-          "Flags": 0,
-          "BodyGroups": 18446744073709551615,
-          "CreateAttachments": false,
-          "LodOverride": null,
-          "MaterialGroup": null,
-          "MaterialOverride": null,
-          "Materials": null,
-          "Model": "models/dev/box.vmdl",
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "RenderOptions": {
-            "GameLayer": true,
-            "OverlayLayer": false,
-            "BloomLayer": false,
-            "AfterUILayer": false
-          },
-          "RenderType": "On",
-          "Tint": "1,1,1,1"
-        }
-      ],
-      "Children": []
     }
   ],
   "SceneProperties": {
