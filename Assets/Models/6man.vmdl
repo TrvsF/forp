@@ -36,8 +36,6 @@
 							exclude_by_default = true
 							exception_list = 
 							[
-								"Cube",
-								"Sphere",
 								"Cube_001",
 								"Cube_002",
 								"Cube_003",
@@ -48,6 +46,9 @@
 								"Cube_008",
 								"Cube_010",
 								"Cube_011",
+								"Cube_009",
+								"neck",
+								"Cube",
 							]
 						}
 					},

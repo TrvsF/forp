@@ -250,6 +250,13 @@ public sealed class Hex : Obj
 		}
 	}
 
+	protected override void OnDestroy()
+	{
+		LocalCameraMode = ECameraMode.Normal;
+
+		base.OnDestroy();
+	}
+
 	public void InitHex_ServerOnly()
 	{
 		Assert.True(Networking.IsHost);
@@ -329,6 +336,25 @@ public sealed class Hex : Obj
 		}
 	}
 
+	private readonly List<GameText> ProductionTexts = new();
+
+	private void ProductionShown(bool Shown)
+	{
+		foreach (var ProductionText in ProductionTexts)
+		{
+			ProductionText.DestroyGameObject();
+		}
+		ProductionTexts.Clear();
+
+		if (Shown && IsRevealed)
+		{
+			var TextTransform = WorldTransform;
+			TextTransform.Position += Vector3.Up * 25;
+
+			ProductionTexts.Add(GameText.CreateTextObject<GameText>(TextTransform, $"{Type} : \u00A5{Production}"));
+		}
+	}
+
 	private void OnHighlight()
 	{
 		CloneConfig HighlightConfig = new(WorldTransform);
@@ -356,6 +382,8 @@ public sealed class Hex : Obj
 		OnUnitDataChanged(new(), new());
 		OnBuildingDataChanged(new(), new());
 		OnObjectDataChanged(new(), new());
+
+		LocalCameraMode = GamePlayer.Local.CameraMode;
 	}
 
 	private void OnHide()
@@ -392,6 +420,23 @@ public sealed class Hex : Obj
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public List<Hex> AllBrothers => [HexTL, HexTR, HexMR, HexBR, HexBL, HexML];
+
+	private ECameraMode _LocalCameraMode = ECameraMode.Normal;
+	public ECameraMode LocalCameraMode
+	{
+		get => _LocalCameraMode;
+		set
+		{
+			_LocalCameraMode = value;
+
+			if (UnitObject.IsValid())
+			{
+				UnitObject.SetCameraMode(_LocalCameraMode);
+			}
+
+			ProductionShown(_LocalCameraMode == ECameraMode.Build);
+		}
+	}
 
 	private bool _isHighlighted = false;
 	public bool IsHighlighted

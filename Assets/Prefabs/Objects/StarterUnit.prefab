@@ -73,9 +73,9 @@
         "PlaybackRate": 1,
         "RenderOptions": {
           "GameLayer": true,
-          "OverlayLayer": false,
+          "OverlayLayer": true,
           "BloomLayer": false,
-          "AfterUILayer": true
+          "AfterUILayer": false
         },
         "RenderType": "On",
         "Sequence": {

@@ -39,7 +39,7 @@ public sealed partial class GamePlayer : Component
 	public bool IsConnected => Connection != null && Connection.IsActive;
 
 	public CameraComponent Camera { get => GameObject.GetComponentInChildren<CameraComponent>(); }
-	private ECameraMode _CameraMode = ECameraMode.Normal;
+	private ECameraMode _CameraMode = ECameraMode.Build;
 	public ECameraMode CameraMode
 	{
 		get => _CameraMode;
@@ -77,35 +77,17 @@ public sealed partial class GamePlayer : Component
 		}
 	}
 
-	private readonly List<GameText> ProductionTexts = new();
 	private void OnCameraModeChange()
 	{
-		foreach (var ProductionText in ProductionTexts)
-		{
-			ProductionText.DestroyGameObject();
-		}
-		ProductionTexts.Clear();
-
 		foreach (var Hexogon in GameManager.Instance.BoardHexes)
 		{
-			if (Hexogon.UnitObject.IsValid())
-			{
-				Hexogon.UnitObject.SetCameraMode(CameraMode);
-			}
-
-			if (CameraMode == ECameraMode.Build && Hexogon.IsRevealed)
-			{
-				var TextTransform = Hexogon.WorldTransform;
-				TextTransform.Position += Vector3.Up * 25;
-
-				ProductionTexts.Add(GameText.CreateTextObject<GameText>(TextTransform, $"{Hexogon.Type} : \u00A5{Hexogon.Production}"));
-			}
+			Hexogon.LocalCameraMode = CameraMode;
 		}
 	}
 
 	private void SelectUnit()
 	{
-		SixMan.Enabled = true;
+		//SixMan.Enabled = true;
 		if (GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit) is { } UnitHex)
 		{
 			if (SelectedUnit.SelectedMaterial.IsValid())
@@ -119,7 +101,7 @@ public sealed partial class GamePlayer : Component
 
 	private void DeselectUnit()
 	{
-		SixMan.Enabled = false;
+		//SixMan.Enabled = false;
 		if (GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit) is { } UnitHex)
 		{
 			if (SelectedUnit.SelectedMaterial.IsValid())

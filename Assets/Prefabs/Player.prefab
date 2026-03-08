@@ -190,7 +190,7 @@
             "__version": 2,
             "Flags": 0,
             "Name": "6man",
-            "Position": "64.82845,-31.14725,-7.143146",
+            "Position": "64.82845,-31.14725,-7.143148",
             "Rotation": "-0.08418596,-0.1484526,0.9622501,0.2120123",
             "Scale": "0.05,0.05,0.05",
             "Tags": "",
@@ -210,7 +210,7 @@
                 "BodyGroups": 18446744073709551615,
                 "BoneMergeTarget": null,
                 "CreateAttachments": false,
-                "CreateBoneObjects": false,
+                "CreateBoneObjects": true,
                 "LodOverride": null,
                 "MaterialGroup": null,
                 "MaterialOverride": null,
@@ -247,7 +247,63 @@
                 "UseAnimGraph": true
               }
             ],
-            "Children": []
+            "Children": [
+              {
+                "__guid": "1eccd54b-e97b-4c9f-9095-c834206dbb5a",
+                "__version": 2,
+                "Flags": 0,
+                "Name": "Bone_001",
+                "Position": "-8.700747,0.2193616,300.6915",
+                "Rotation": "0.365685,-0.5786023,0.61751,-0.3875245",
+                "Scale": "1,1,1",
+                "Tags": "",
+                "Enabled": true,
+                "NetworkMode": 2,
+                "NetworkFlags": 0,
+                "NetworkOrphaned": 0,
+                "NetworkTransmit": true,
+                "OwnerTransfer": 1,
+                "Components": [],
+                "Children": [
+                  {
+                    "__guid": "00b36c3b-e880-4e5a-ba6e-b2f4506d96a0",
+                    "__version": 2,
+                    "Flags": 0,
+                    "Name": "Bone_002",
+                    "Position": "0.00003862381,15.20801,0.00005340576",
+                    "Rotation": "-0.01581638,-0.00005838825,0.01388856,0.9997784",
+                    "Scale": "1,1,1",
+                    "Tags": "",
+                    "Enabled": true,
+                    "NetworkMode": 2,
+                    "NetworkFlags": 0,
+                    "NetworkOrphaned": 0,
+                    "NetworkTransmit": true,
+                    "OwnerTransfer": 1,
+                    "Components": [],
+                    "Children": []
+                  }
+                ]
+              },
+              {
+                "__guid": "75f7953c-f566-4d67-8cc9-9d4fbb20cc8a",
+                "__version": 2,
+                "Flags": 0,
+                "Name": "Bone",
+                "Position": "-8.700687,0.2195279,300.6913",
+                "Rotation": "0.4999998,0.4999998,0.4999998,0.5000005",
+                "Scale": "1,1,1",
+                "Tags": "",
+                "Enabled": true,
+                "NetworkMode": 2,
+                "NetworkFlags": 0,
+                "NetworkOrphaned": 0,
+                "NetworkTransmit": true,
+                "OwnerTransfer": 1,
+                "Components": [],
+                "Children": []
+              }
+            ]
           }
         ]
       }
