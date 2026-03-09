@@ -452,11 +452,31 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	}
 
 	[Rpc.Host]
+	public void Server_UpgradeObject(Upgrade Upgrade, IObj Object)
+	{
+		Assert.IsValid(Upgrade);
+		Assert.NotNull(Object);
+
+		FUpgrade UpgradeData = new()
+		{
+			ObjectId = Upgrade.ObjectId,
+			Name = Upgrade.DisplayName,
+			BuildingIds = Upgrade.Buildings,
+			AttackModifyer = Upgrade.AttackModifyer,
+			HealthModifyer = Upgrade.HealthModifyer,
+		};
+
+		if (Object is FUnit Unit)
+		{
+			Unit.Upgrade = UpgradeData;
+		}
+	}
+
+	[Rpc.Host]
 	public void Server_CreateHexUnitObject(string ObjectId, Hex Hex, Guid ConnectionId, bool IsAi = false)
 	{
 		Assert.IsValid(Hex);
 		Assert.NotNull(ConnectionId);
-
 		if (Hex.UnitData != null)
 		{
 			Log.Warning($"trying to build unit on already occupied hex {Hex}! ignoring");
@@ -488,6 +508,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			IsAi = IsAi,
 		};
 
+		Server_UpgradeObject(GetObject("upgrade-builder").GetComponent<Upgrade>(), ObjectData);
 		Hex.UnitData = ObjectData;
 
 		Log.Info($"created object {ObjectId} on {Hex} for {ConnectionId}");

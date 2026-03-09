@@ -1,4 +1,5 @@
 using Forp.Game;
+using Forp.Object.Unit;
 using Sandbox;
 using System;
 using static Sandbox.VideoWriter;
@@ -17,6 +18,7 @@ public record FBuilding : IObj
 
 	public Hex Hex { get; set; }
 
+	public FUpgrade Upgrade { get; set; }
 	public int ProductionToBuild { get; set; } // TODO : remove me
 }
 

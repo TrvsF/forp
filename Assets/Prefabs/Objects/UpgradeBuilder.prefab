@@ -1,0 +1,143 @@
+{
+  "RootObject": {
+    "__guid": "6a00c532-fc02-4c24-813f-45ccb3b31731",
+    "__version": 2,
+    "Flags": 0,
+    "Name": "upgradebuilder",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "1,1,1",
+    "Tags": "",
+    "Enabled": true,
+    "NetworkMode": 2,
+    "NetworkFlags": 0,
+    "NetworkOrphaned": 0,
+    "NetworkTransmit": true,
+    "OwnerTransfer": 1,
+    "Components": [
+      {
+        "__type": "Forp.Object.Unit.Upgrade",
+        "__guid": "f289a166-8e1e-4bee-9561-b6ff9ce0230f",
+        "__enabled": true,
+        "Flags": 0,
+        "AttackModifyer": 5,
+        "Buildings": [
+          {
+            "_type": "gameobject",
+            "prefab": "prefabs/objects/towertext.prefab"
+          },
+          {
+            "_type": "gameobject",
+            "prefab": "prefabs/objects/citytext.prefab"
+          }
+        ],
+        "DisplayName": "Temp Builder",
+        "HealthModifyer": 50,
+        "ObjectId": "upgrade-builder",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null
+      },
+      {
+        "__type": "Sandbox.SkinnedModelRenderer",
+        "__guid": "0cde6b23-2149-413a-b076-ea0feeb521a0",
+        "__enabled": true,
+        "Flags": 0,
+        "AnimationGraph": null,
+        "BodyGroups": 18446744073709551615,
+        "BoneMergeTarget": null,
+        "CreateAttachments": false,
+        "CreateBoneObjects": false,
+        "LodOverride": null,
+        "MaterialGroup": null,
+        "MaterialOverride": null,
+        "Materials": null,
+        "Model": null,
+        "Morphs": {},
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "Parameters": {
+          "bools": {},
+          "ints": {},
+          "floats": {},
+          "vectors": {},
+          "rotations": {}
+        },
+        "PlaybackRate": 1,
+        "RenderOptions": {
+          "GameLayer": true,
+          "OverlayLayer": false,
+          "BloomLayer": false,
+          "AfterUILayer": false
+        },
+        "RenderType": "On",
+        "Sequence": {
+          "Name": null,
+          "Looping": true,
+          "Blending": false
+        },
+        "Tint": "1,1,1,1",
+        "UseAnimGraph": true
+      },
+      {
+        "__type": "Sandbox.ModelCollider",
+        "__guid": "046aeec9-b1b0-4999-aea2-93c51372959a",
+        "__enabled": true,
+        "Flags": 0,
+        "ColliderFlags": 0,
+        "Elasticity": null,
+        "Friction": null,
+        "IsTrigger": false,
+        "Model": null,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OnObjectTriggerEnter": null,
+        "OnObjectTriggerExit": null,
+        "OnTriggerEnter": null,
+        "OnTriggerExit": null,
+        "RollingResistance": null,
+        "Static": false,
+        "Surface": null,
+        "SurfaceVelocity": "0,0,0"
+      }
+    ],
+    "Children": [],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": false,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": ""
+      }
+    },
+    "__variables": []
+  },
+  "ResourceVersion": 2,
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "__references": [],
+  "__version": 2
+}

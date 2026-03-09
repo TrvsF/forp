@@ -39,6 +39,7 @@ public record FUnit : IObj
 	public int MoveRange { get; set; }
 	public int TurnMovementSpent { get; set; }
 
+	public FUpgrade Upgrade { get; set; }
 	public bool IsAi { get; set; }
 }
 
@@ -52,8 +53,40 @@ public class ObjectUnit : Obj
 	[Property] public int MoveRange { get; set; }
 	[Property] public int ProductionToBuild { get; set; }
 
+	[Property] private FUpgrade Upgrade { get; set; } = null;
+
 	public GamePlayer OwnerPlayer { get; set; }
 	public Hex OwnerHex { get; set; }
+
+	public void ApplyUpgrade(FUpgrade InUpgrade)
+	{
+		if (Upgrade == InUpgrade)
+		{
+			return;
+		}
+
+		if (Upgrade != null)
+		{
+
+			Attack += Upgrade.AttackModifyer;
+			Health += Upgrade.HealthModifyer;
+
+			foreach (var BuildingId in Upgrade.BuildingIds)
+			{
+				Buildings.Remove(BuildingId);
+			}
+		}
+
+		Upgrade = InUpgrade;
+
+		Attack += Upgrade.AttackModifyer;
+		Health += Upgrade.HealthModifyer;
+
+		foreach (var BuildingId in Upgrade.BuildingIds)
+		{
+			Buildings.Add(BuildingId);
+		}
+	}
 
 	protected override void OnStart()
 	{
@@ -159,8 +192,9 @@ public class ObjectUnit : Obj
 			return;
 		}
 
-		foreach (var TextBuilding in Buildings)
+		for (int BuildingIndex = 0; BuildingIndex < Buildings.Count; ++BuildingIndex)
 		{
+			var TextBuilding = Buildings[BuildingIndex];
 			var TextBuildingComponent = TextBuilding.GetComponent<TextBuilding>();
 			if (!TextBuildingComponent.IsValid() || !TextBuildingComponent.CanBeBuilt(OwnerHex))
 			{
@@ -168,7 +202,10 @@ public class ObjectUnit : Obj
 			}
 
 			Transform Transform = new();
-			Transform.Position += Vector3.Up * 150;
+
+			float HorizontalOffset = (BuildingIndex - (Buildings.Count - 1) / 2f) * 100f;
+			Transform.Position += new Vector3(0f, HorizontalOffset, 150f);
+			
 			var BuildingComponent = GamePlayer.SpawnObject<TextBuilding>(TextBuilding, Transform, Connection.Local, GameObject);
 
 			BuildingComponent.BelongingHex = OwnerHex;

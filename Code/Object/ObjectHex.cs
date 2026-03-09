@@ -144,6 +144,7 @@ public sealed class Hex : Obj
 
 		if (UnitObject.IsValid())
 		{
+			UnitObject.ApplyUpgrade(UnitData.Upgrade);
 			UnitObject.Health = UnitData.Health;
 			UnitObject.Attack = UnitData.Attack;
 			if (UnitData.Health <= 0)

@@ -69,6 +69,10 @@
               {
                 "_type": "gameobject",
                 "prefab": "prefabs/objects/tree.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/objects/upgradebuilder.prefab"
               }
             ],
             "OnComponentDestroy": null,
