@@ -125,6 +125,7 @@ public sealed partial class GamePlayer : Component
 		else
 		{
 			Mouse.Visibility = MouseVisibility.Visible;
+			DisplayUpgradeIcon(true);
 		}
 	}
 
@@ -138,17 +139,17 @@ public sealed partial class GamePlayer : Component
 		DoMovement();
 		DoAction();
 
-		var ClickRay = Camera.ScreenPixelToRay(Mouse.Position);
-		var ClickTraces = Scene.Trace.Ray(ClickRay.Position, ClickRay.Position + ClickRay.Forward * 10000f).RunAll();
+		var HoverRay = Camera.ScreenPixelToRay(Mouse.Position);
+		var HoverTraces = Scene.Trace.Ray(HoverRay.Position, HoverRay.Position + HoverRay.Forward * 10000f).RunAll();
 
-		foreach (var ClickTrace in ClickTraces)
+		foreach (var HoverTrace in HoverTraces)
 		{
-			if (!ClickTrace.Hit)
+			if (!HoverTrace.Hit)
 			{
 				continue;
 			}
 
-			if (ClickTrace.GameObject.GetComponent<Obj>() is { } HitObject)
+			if (HoverTrace.GameObject.GetComponent<Obj>() is { } HitObject)
 			{
 				HoveredObject = HitObject;
 				return;
@@ -231,6 +232,11 @@ public sealed partial class GamePlayer : Component
 				{
 					HitObject.OnClick();
 					ClickedObjects.Add(HitObject);
+				}
+
+				if (ClickTrace.GameObject == UpgradeIcon)
+				{
+					OnUpgradeIconClick();
 				}
 			}
 

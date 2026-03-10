@@ -39,6 +39,10 @@
         },
         "SteamId": 0,
         "SteamName": null,
+        "UpgradeIcon": {
+          "_type": "gameobject",
+          "go": "fbc4c02a-5687-416c-8cfa-65954a6cc4c3"
+        },
         "Xperiance": 0
       }
     ],
@@ -251,10 +255,10 @@
               {
                 "__guid": "1eccd54b-e97b-4c9f-9095-c834206dbb5a",
                 "__version": 2,
-                "Flags": 0,
+                "Flags": 4,
                 "Name": "Bone_001",
-                "Position": "-8.700747,0.2193616,300.6915",
-                "Rotation": "0.365685,-0.5786023,0.61751,-0.3875245",
+                "Position": "0,0,0",
+                "Rotation": "0,0,0,1",
                 "Scale": "1,1,1",
                 "Tags": "",
                 "Enabled": true,
@@ -268,10 +272,10 @@
                   {
                     "__guid": "00b36c3b-e880-4e5a-ba6e-b2f4506d96a0",
                     "__version": 2,
-                    "Flags": 0,
+                    "Flags": 4,
                     "Name": "Bone_002",
-                    "Position": "0.00003862381,15.20801,0.00005340576",
-                    "Rotation": "-0.01581638,-0.00005838825,0.01388856,0.9997784",
+                    "Position": "0,0,0",
+                    "Rotation": "0,0,0,1",
                     "Scale": "1,1,1",
                     "Tags": "",
                     "Enabled": true,
@@ -288,10 +292,10 @@
               {
                 "__guid": "75f7953c-f566-4d67-8cc9-9d4fbb20cc8a",
                 "__version": 2,
-                "Flags": 0,
+                "Flags": 4,
                 "Name": "Bone",
-                "Position": "-8.700687,0.2195279,300.6913",
-                "Rotation": "0.4999998,0.4999998,0.4999998,0.5000005",
+                "Position": "0,0,0",
+                "Rotation": "0,0,0,1",
                 "Scale": "1,1,1",
                 "Tags": "",
                 "Enabled": true,
@@ -304,6 +308,95 @@
                 "Children": []
               }
             ]
+          },
+          {
+            "__guid": "fbc4c02a-5687-416c-8cfa-65954a6cc4c3",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "UpgradeIcon",
+            "Position": "105.3326,65.09127,-29.9905",
+            "Rotation": "0.02255761,-0.6830127,0.2578342,0.6830127",
+            "Scale": "0.02,0.02,0.02",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Sandbox.SkinnedModelRenderer",
+                "__guid": "1e680566-6899-4712-b800-7e2f24e72ef9",
+                "__enabled": true,
+                "Flags": 0,
+                "AnimationGraph": null,
+                "BodyGroups": 18446744073709551615,
+                "BoneMergeTarget": null,
+                "CreateAttachments": false,
+                "CreateBoneObjects": false,
+                "LodOverride": null,
+                "MaterialGroup": null,
+                "MaterialOverride": null,
+                "Materials": null,
+                "Model": "models/hexagon-kit/hexagon_dirt.vmdl",
+                "Morphs": {},
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "Parameters": {
+                  "bools": {},
+                  "ints": {},
+                  "floats": {},
+                  "vectors": {},
+                  "rotations": {}
+                },
+                "PlaybackRate": 1,
+                "RenderOptions": {
+                  "GameLayer": false,
+                  "OverlayLayer": false,
+                  "BloomLayer": false,
+                  "AfterUILayer": true
+                },
+                "RenderType": "Off",
+                "Sequence": {
+                  "Name": null,
+                  "Looping": true,
+                  "Blending": false
+                },
+                "Tint": "1,1,1,1",
+                "UseAnimGraph": true
+              },
+              {
+                "__type": "Sandbox.ModelCollider",
+                "__guid": "2622959e-0372-46c2-998a-f5fe52734f2d",
+                "__enabled": true,
+                "Flags": 0,
+                "ColliderFlags": 0,
+                "Elasticity": null,
+                "Friction": null,
+                "IsTrigger": false,
+                "Model": "models/hexagon-kit/hexagon_dirt.vmdl",
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "OnObjectTriggerEnter": null,
+                "OnObjectTriggerExit": null,
+                "OnTriggerEnter": null,
+                "OnTriggerExit": null,
+                "RollingResistance": null,
+                "Static": false,
+                "Surface": null,
+                "SurfaceVelocity": "0,0,0"
+              }
+            ],
+            "Children": []
           }
         ]
       }
@@ -333,6 +426,8 @@
   "MenuPath": null,
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
-  "__references": [],
+  "__references": [
+    "kenneynl.hexagondirt#80882"
+  ],
   "__version": 2
 }

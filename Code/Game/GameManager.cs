@@ -321,7 +321,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	{
 		// TODO : loading screen
 		var MainHex = Hex.GetComponent<Hex>();
-		await CreateBoard(MainHex, 50, 50);
+		await CreateBoard(MainHex, 20, 20);
 	}
 
 	private async Task CreateBoard(Hex Hex, int Width, int Height)

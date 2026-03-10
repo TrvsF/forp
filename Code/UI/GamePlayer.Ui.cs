@@ -6,6 +6,7 @@ using Sandbox.Diagnostics;
 using System;
 using System.Resources;
 using System.Runtime.CompilerServices;
+using System.Security.AccessControl;
 using System.Threading;
 using System.Xml.Linq;
 
@@ -84,6 +85,31 @@ public struct FPlayerUiInfo
 
 public sealed partial class GamePlayer : Component
 {
+	[Property] GameObject UpgradeIcon { get; set; }
+
+	public void DisplayUpgradeIcon(bool Show)
+	{
+		if (!UpgradeIcon.IsValid())
+		{
+			UpgradeIcon.Destroy();
+			UpgradeIcon = null;
+		}
+
+		if (!Show)
+		{
+			return;
+		}
+
+		const float Padding = 66;
+		var Ray = Camera.ScreenPixelToRay(Camera.ScreenRect.BottomLeft + new Vector2(Padding, -Padding));
+		UpgradeIcon.WorldPosition = Ray.Position + Ray.Forward * Padding;
+	}
+
+	public void OnUpgradeIconClick()
+	{
+		Log.Info("click");
+	}
+
 	public void GetPlayerUiInfo(out FPlayerUiInfo OutPlayerUiInfo)
 	{
 		OutPlayerUiInfo = new();
