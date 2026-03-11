@@ -86,28 +86,43 @@ public struct FPlayerUiInfo
 public sealed partial class GamePlayer : Component
 {
 	[Property] GameObject UpgradeIcon { get; set; }
+	[Property] GameObject UpgradeRowStart { get; set; }
+	[Property] List<GameObject> Upgrades { get; set; } = new();
+
+	const float GameObjectPadding = 66;
 
 	public void DisplayUpgradeIcon(bool Show)
 	{
-		if (!UpgradeIcon.IsValid())
-		{
-			UpgradeIcon.Destroy();
-			UpgradeIcon = null;
-		}
+		var Ray = Camera.ScreenPixelToRay(Camera.ScreenRect.BottomLeft + new Vector2(GameObjectPadding, -GameObjectPadding));
+		UpgradeIcon.WorldPosition = Ray.Position + Ray.Forward * GameObjectPadding;
+	}
 
-		if (!Show)
+	bool ShowUpgrades = false;
+	readonly List<GameObject> ShownUpgrades = new();
+	public void OnUpgradeIconClick()
+	{
+		ShowUpgrades = !ShowUpgrades;
+
+		foreach (var ShownUpgrade in ShownUpgrades)
+		{
+			ShownUpgrade.Destroy();
+		}
+		ShownUpgrades.Clear();
+
+		if (!ShowUpgrades)
 		{
 			return;
 		}
 
-		const float Padding = 66;
-		var Ray = Camera.ScreenPixelToRay(Camera.ScreenRect.BottomLeft + new Vector2(Padding, -Padding));
-		UpgradeIcon.WorldPosition = Ray.Position + Ray.Forward * Padding;
-	}
+		var LeftPadding = 0;
+		foreach (var Upgrade in Upgrades)
+		{
+			Transform SpawnTransform = new();
+			SpawnTransform.Position += Camera.WorldRotation.Right * LeftPadding;
+			ShownUpgrades.Add(SpawnObject(Upgrade, SpawnTransform, Connection.Local, UpgradeRowStart));
 
-	public void OnUpgradeIconClick()
-	{
-		Log.Info("click");
+			LeftPadding += 8;
+		}
 	}
 
 	public void GetPlayerUiInfo(out FPlayerUiInfo OutPlayerUiInfo)
@@ -120,7 +135,7 @@ public sealed partial class GamePlayer : Component
 		GameManager.Instance.GetPlayerBoardStats(out var PlayerBoardStats);
 		if (PlayerBoardStats.TryGetValue(Local, out var PlayerStats))
 		{
-			OutPlayerUiInfo.Territory = (int) (((float) PlayerStats.TerritoryCount / GameManager.Instance.BoardHexes.Count) * 100f);
+			OutPlayerUiInfo.Territory = (int)(((float)PlayerStats.TerritoryCount / GameManager.Instance.BoardHexes.Count) * 100f);
 			OutPlayerUiInfo.Production = PlayerStats.Production;
 		}
 

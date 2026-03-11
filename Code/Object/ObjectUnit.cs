@@ -60,22 +60,8 @@ public class ObjectUnit : Obj
 
 	public void ApplyUpgrade(FUpgrade InUpgrade)
 	{
-		if (Upgrade == InUpgrade)
-		{
-			return;
-		}
-
-		if (Upgrade != null)
-		{
-
-			Attack += Upgrade.AttackModifyer;
-			Health += Upgrade.HealthModifyer;
-
-			foreach (var BuildingId in Upgrade.BuildingIds)
-			{
-				Buildings.Remove(BuildingId);
-			}
-		}
+		Assert.NotNull(InUpgrade);
+		Assert.IsNull(Upgrade);
 
 		Upgrade = InUpgrade;
 
@@ -86,6 +72,8 @@ public class ObjectUnit : Obj
 		{
 			Buildings.Add(BuildingId);
 		}
+
+		SetCameraMode(GamePlayer.Local.CameraMode);
 	}
 
 	protected override void OnStart()
@@ -126,11 +114,6 @@ public class ObjectUnit : Obj
 		get => _showHealth;
 		set
 		{
-			if (_showHealth == value)
-			{
-				return;
-			}
-
 			_showHealth = value;
 			ToggleHealth(_showHealth);
 		}
@@ -164,11 +147,6 @@ public class ObjectUnit : Obj
 		set
 		{
 			if (GamePlayer.Local != OwnerPlayer)
-			{
-				return;
-			}
-
-			if (_showBuildings == value)
 			{
 				return;
 			}

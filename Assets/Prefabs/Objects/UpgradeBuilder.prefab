@@ -6,7 +6,7 @@
     "Name": "upgradebuilder",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
-    "Scale": "1,1,1",
+    "Scale": "0.066,0.066,0.066",
     "Tags": "",
     "Enabled": true,
     "NetworkMode": 2,
@@ -55,7 +55,7 @@
         "MaterialGroup": null,
         "MaterialOverride": null,
         "Materials": null,
-        "Model": null,
+        "Model": "models/hexagon-kit/hexagon_water-island.vmdl",
         "Morphs": {},
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -72,12 +72,12 @@
         },
         "PlaybackRate": 1,
         "RenderOptions": {
-          "GameLayer": true,
+          "GameLayer": false,
           "OverlayLayer": false,
           "BloomLayer": false,
-          "AfterUILayer": false
+          "AfterUILayer": true
         },
-        "RenderType": "On",
+        "RenderType": "Off",
         "Sequence": {
           "Name": null,
           "Looping": true,
@@ -95,7 +95,7 @@
         "Elasticity": null,
         "Friction": null,
         "IsTrigger": false,
-        "Model": null,
+        "Model": "models/hexagon-kit/hexagon_water-island.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -138,6 +138,8 @@
   "MenuPath": null,
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
-  "__references": [],
+  "__references": [
+    "kenneynl.hexagonwaterisland#80932"
+  ],
   "__version": 2
 }

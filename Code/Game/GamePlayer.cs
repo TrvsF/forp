@@ -209,7 +209,24 @@ public sealed partial class GamePlayer : Component
 		{
 			Camera.WorldPosition += new Vector3(Mouse.Delta.y, Mouse.Delta.x, 0);
 		}
+
+		if (Input.Down("mouse1") && DraggedObject != null)
+		{
+			DraggedObject.WorldPosition -= new Vector3(Mouse.Delta.y, Mouse.Delta.x, 0);
+		}
+		if (!Input.Down("mouse1") && DraggedObject != null)
+		{
+			if (HoveredObject.GetComponent<ObjectUnit>() is { } Unit)
+			{
+				var UnitHex = Unit.OwnerHex;
+				GameManager.Instance.Server_UpgradeObject(DraggedObject.GetComponent<Upgrade>(), UnitHex.UnitData, UnitHex);
+			}
+
+			DraggedObject = null;
+		}
 	}
+
+	private GameObject DraggedObject = null;
 
 	private void DoAction()
 	{
@@ -237,6 +254,10 @@ public sealed partial class GamePlayer : Component
 				if (ClickTrace.GameObject == UpgradeIcon)
 				{
 					OnUpgradeIconClick();
+				}
+				else if (ClickTrace.GameObject.GetComponent<Upgrade>() is { })
+				{
+					DraggedObject = ClickTrace.GameObject;
 				}
 			}
 

@@ -43,6 +43,24 @@
           "_type": "gameobject",
           "go": "fbc4c02a-5687-416c-8cfa-65954a6cc4c3"
         },
+        "UpgradeRowStart": {
+          "_type": "gameobject",
+          "go": "eb151028-a1f4-476c-bdd4-3f7bc60d8767"
+        },
+        "Upgrades": [
+          {
+            "_type": "gameobject",
+            "prefab": "prefabs/objects/upgradebuilder.prefab"
+          },
+          {
+            "_type": "gameobject",
+            "prefab": "prefabs/objects/upgradebuilder.prefab"
+          },
+          {
+            "_type": "gameobject",
+            "prefab": "prefabs/objects/upgradebuilder.prefab"
+          }
+        ],
         "Xperiance": 0
       }
     ],
@@ -316,7 +334,7 @@
             "Name": "UpgradeIcon",
             "Position": "105.3326,65.09127,-29.9905",
             "Rotation": "0.02255761,-0.6830127,0.2578342,0.6830127",
-            "Scale": "0.02,0.02,0.02",
+            "Scale": "0.066,0.066,0.1",
             "Tags": "",
             "Enabled": true,
             "NetworkMode": 2,
@@ -396,7 +414,26 @@
                 "SurfaceVelocity": "0,0,0"
               }
             ],
-            "Children": []
+            "Children": [
+              {
+                "__guid": "eb151028-a1f4-476c-bdd4-3f7bc60d8767",
+                "__version": 2,
+                "Flags": 0,
+                "Name": "UpgradeRowStart",
+                "Position": "-77.49851,-187.325,71.5444",
+                "Rotation": "-0.1830126,0.08418603,-0.1830127,0.9622501",
+                "Scale": "15.15152,15.15152,10",
+                "Tags": "",
+                "Enabled": true,
+                "NetworkMode": 2,
+                "NetworkFlags": 0,
+                "NetworkOrphaned": 0,
+                "NetworkTransmit": true,
+                "OwnerTransfer": 1,
+                "Components": [],
+                "Children": []
+              }
+            ]
           }
         ]
       }

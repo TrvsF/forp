@@ -452,10 +452,18 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	}
 
 	[Rpc.Host]
-	public void Server_UpgradeObject(Upgrade Upgrade, IObj Object)
+	public void Server_UpgradeObject(Upgrade Upgrade, IObj Object, Hex Hex)
 	{
 		Assert.IsValid(Upgrade);
 		Assert.NotNull(Object);
+
+		var Unit = (FUnit)Object;
+
+		if (Unit.Upgrade != null)
+		{
+			Log.Warning("trying to assign upgrade to object with existing upgrade");
+			return;
+		}
 
 		FUpgrade UpgradeData = new()
 		{
@@ -466,10 +474,10 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			HealthModifyer = Upgrade.HealthModifyer,
 		};
 
-		if (Object is FUnit Unit)
+		Hex.UnitData = Hex.UnitData with
 		{
-			Unit.Upgrade = UpgradeData;
-		}
+			Upgrade = UpgradeData,
+		};
 	}
 
 	[Rpc.Host]
@@ -508,7 +516,6 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			IsAi = IsAi,
 		};
 
-		Server_UpgradeObject(GetObject("upgrade-builder").GetComponent<Upgrade>(), ObjectData);
 		Hex.UnitData = ObjectData;
 
 		Log.Info($"created object {ObjectId} on {Hex} for {ConnectionId}");

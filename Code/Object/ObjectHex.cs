@@ -144,7 +144,6 @@ public sealed class Hex : Obj
 
 		if (UnitObject.IsValid())
 		{
-			UnitObject.ApplyUpgrade(UnitData.Upgrade);
 			UnitObject.Health = UnitData.Health;
 			UnitObject.Attack = UnitData.Attack;
 			if (UnitData.Health <= 0)
@@ -152,6 +151,11 @@ public sealed class Hex : Obj
 				Log.Info($"you! yes you are DEAD");
 				UnitObject.DestroyGameObject(); // TODO : server needs to destroy data 2
 				return;
+			}
+
+			if (UnitData.Upgrade != null)
+			{
+				UnitObject.ApplyUpgrade(UnitData.Upgrade);
 			}
 		}
 	}
