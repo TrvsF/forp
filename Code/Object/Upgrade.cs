@@ -25,5 +25,7 @@ public class Upgrade : Obj
 	{
 		return Buildings.Select(Building => Building.GetComponent<TextBuilding>().ObjectId).ToList();
 	}
+
+
 }
 

@@ -217,9 +217,10 @@ public sealed partial class GamePlayer : Component
 		if (!Input.Down("mouse1") && DraggedObject != null)
 		{
 			if (HoveredObject.GetComponent<ObjectUnit>() is { } Unit)
-			{
+			{				
 				var UnitHex = Unit.OwnerHex;
 				GameManager.Instance.Server_UpgradeObject(DraggedObject.GetComponent<Upgrade>(), UnitHex.UnitData, UnitHex);
+				DraggedObject.Destroy(); // TODO : bad
 			}
 
 			DraggedObject = null;
