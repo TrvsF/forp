@@ -22,11 +22,17 @@ public record FQueueObject
 	public string ObjectId { get; init; }
 	public string ObjectName { get; init; }
 	public int ProductionToBuild { get; init; }
+	public int GoldToBuild { get; init; }
 
 	public int Production { get; set; }
 	public bool IsReadyToBuild()
 	{
 		return Production >= ProductionToBuild;
+	}
+
+	public bool CanBeBuilt()
+	{
+		return GamePlayer.Local.Gold >= GoldToBuild;
 	}
 
 	public string GetBuildString()
@@ -41,13 +47,6 @@ public sealed class Hex : Obj
 	GameObject FogObject = null;
 	[Property] GameObject LightPrefab { get; set; }
 	GameObject LightObject = null;
-
-	[Property] public Hex HexTL { get; private set; }
-	[Property] public Hex HexTR { get; private set; }
-	[Property] public Hex HexML { get; private set; }
-	[Property] public Hex HexMR { get; private set; }
-	[Property] public Hex HexBL { get; private set; }
-	[Property] public Hex HexBR { get; private set; }
 
 	[Sync(SyncFlags.FromHost)] public NetList<FQueueObject> QueuedUnits { get; set; } = new();
 	[Sync(SyncFlags.FromHost), Property] public int Production { get; set; } = 0;
@@ -221,7 +220,7 @@ public sealed class Hex : Obj
 		BaseColour = BaseColour.Darken(1f / Production);
 	}
 
-	private readonly List<Vector3> BrotherOffsets = [new(170, 100), new(170, -100), new(0, -200), new(-170, -100), new(-170, 100), new(0, 200)];
+	public static readonly List<Vector3> BrotherOffsets = [new(170, 100), new(170, -100), new(0, -200), new(-170, -100), new(-170, 100), new(0, 200)];
 	private readonly Dictionary<EHexType, Color> TypeColours = new()
 	{
 		{ EHexType.Grass, Color.Green },
@@ -412,19 +411,9 @@ public sealed class Hex : Obj
 		ModelRenderer.Tint = BaseColour;
 	}
 
-	public void ClearBrothers()
-	{
-		HexTL = null;
-		HexTR = null;
-		HexML = null;
-		HexMR = null;
-		HexBL = null;
-		HexBR = null;
-	}
-
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public List<Hex> AllBrothers => [HexTL, HexTR, HexMR, HexBR, HexBL, HexML];
+	public List<Hex> AllBrothers = [null, null, null, null, null, null];
 
 	private ECameraMode _LocalCameraMode = ECameraMode.Normal;
 	public ECameraMode LocalCameraMode
@@ -559,101 +548,5 @@ public sealed class Hex : Obj
 		}
 
 		return BuildingOwners[0].OwnerGuid;
-	}
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////
-
-	// TODO : revisit
-	public void CreateSurroundBrothers()
-	{
-		// spawn all our brothers
-		for (int BrotherIndex = 0; BrotherIndex < AllBrothers.Count; ++BrotherIndex)
-		{
-			var BrotherHex = AllBrothers[BrotherIndex];
-			if (BrotherHex != null)
-			{
-				continue;
-			}
-
-			var SpawnOffset = BrotherOffsets[BrotherIndex];
-
-			var ZOffset = Random.Shared.Next(-5, 6);
-			Transform SpawnTransform = new()
-			{
-				Position = WorldPosition + SpawnOffset + new Vector3(0, 0, ZOffset)
-			};
-			CloneConfig HexBortherConfig = new(SpawnTransform);
-
-			BrotherHex = GameObject.Clone(HexBortherConfig).GetComponent<Hex>();
-			BrotherHex.GameObject.Network.SetOrphanedMode(NetworkOrphaned.Host);
-			BrotherHex.GameObject.NetworkSpawn(Connection.Host);
-			BrotherHex.ClearBrothers(); // TODO : better way? we'll need to whipe a lot more at some point...
-
-			switch (BrotherIndex)
-			{
-				case 0:
-					BrotherHex.HexBR = this;
-					HexTL = BrotherHex;
-					break;
-				case 1:
-					BrotherHex.HexBL = this;
-					HexTR = BrotherHex;
-					break;
-				case 2:
-					BrotherHex.HexML = this;
-					HexMR = BrotherHex;
-					break;
-				case 3:
-					BrotherHex.HexTL = this;
-					HexBR = BrotherHex;
-					break;
-				case 4:
-					BrotherHex.HexTR = this;
-					HexBL = BrotherHex;
-					break;
-				case 5:
-					BrotherHex.HexMR = this;
-					HexML = BrotherHex;
-					break;
-			}
-		}
-
-		// hook the brothers up
-		for (int BrotherIndex = 0; BrotherIndex < AllBrothers.Count; ++BrotherIndex)
-		{
-			var BrotherHex = AllBrothers[BrotherIndex];
-			Assert.NotNull(BrotherHex);
-
-			var BackIndex = BrotherIndex == 0 ? 5 : BrotherIndex - 1;
-			var ForwardIndex = BrotherIndex == 5 ? 0 : BrotherIndex + 1;
-
-			switch (BrotherIndex)
-			{
-				case 0:
-					HexTL.HexBL = AllBrothers[BackIndex];
-					HexTL.HexMR = AllBrothers[ForwardIndex];
-					break;
-				case 1:
-					HexTR.HexML = AllBrothers[BackIndex];
-					HexTR.HexBR = AllBrothers[ForwardIndex];
-					break;
-				case 2:
-					HexMR.HexTL = AllBrothers[BackIndex];
-					HexMR.HexBL = AllBrothers[ForwardIndex];
-					break;
-				case 3:
-					HexBR.HexTR = AllBrothers[BackIndex];
-					HexBR.HexML = AllBrothers[ForwardIndex];
-					break;
-				case 4:
-					HexBL.HexMR = AllBrothers[BackIndex];
-					HexBL.HexTL = AllBrothers[ForwardIndex];
-					break;
-				case 5:
-					HexML.HexBR = AllBrothers[BackIndex];
-					HexML.HexTR = AllBrothers[ForwardIndex];
-					break;
-			}
-		}
 	}
 }

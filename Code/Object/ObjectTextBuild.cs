@@ -12,7 +12,6 @@ namespace Forp.Object;
 public class TextBuilding : Obj
 {
 	[Property] public GameObject ObjectToBuild { get; set; } 
-	[Property] public int ProductionToBuild { get; set; }
 	[Property] public List<EHexType> HexTypesToBuild { get; set; }
 
 	public Hex BelongingHex { get; set; }

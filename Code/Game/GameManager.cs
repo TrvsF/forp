@@ -317,40 +317,68 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		}
 	}
 
+	private Hex MakeHex(Vector3 ParentPosition, int BrotherIndex)
+	{
+		var SpawnOffset = Object.Hex.BrotherOffsets[BrotherIndex];
+
+		var ZOffset = Random.Shared.Next(-5, 6);
+		Transform SpawnTransform = new()
+		{
+			Position = ParentPosition + new Vector3(SpawnOffset.x, SpawnOffset.y, ZOffset)
+		};
+		CloneConfig HexConfig = new(SpawnTransform);
+
+		var Hex = HexPrefab.Clone(HexConfig);
+		Hex.Network.SetOrphanedMode(NetworkOrphaned.Host);
+		Hex.NetworkSpawn(Connection.Host);
+
+		var HexComponent = Hex.GetComponent<Hex>();
+		Assert.NotNull(HexComponent);
+		BoardHexes.Add(HexComponent);
+
+		return HexComponent;
+	}
+
 	private async Task GenerateBoardAsync(GameObject Hex)
 	{
 		// TODO : loading screen
-		var MainHex = Hex.GetComponent<Hex>();
-		await CreateBoard(MainHex, 20, 20);
+		await CreateBoard(20, 20);
 	}
 
-	private async Task CreateBoard(Hex Hex, int Width, int Height)
+	private async Task CreateBoard(int Width, int Height)
 	{
+		Hex CurrentHex = MakeHex(new(), 0);
+
 		bool HAlt = false;
 		for (int HeightIndex = 0; HeightIndex < Height; ++HeightIndex)
 		{
-			Hex.CreateSurroundBrothers();
-			Hex = HAlt ? Hex.HexBL : Hex.HexBR;
+			CurrentHex = MakeHex(CurrentHex.WorldPosition, HAlt ? 3 : 4);
 			HAlt = !HAlt;
 
-			// TODO : imp into net list?
-			if (!BoardHexes.Contains(Hex))
-			{
-				BoardHexes.Add(Hex);
-			}
-
-			var VHex = Hex.HexTR;
+			var HHex = CurrentHex;
 			for (int WidthIndex = 0; WidthIndex < Width; ++WidthIndex)
 			{
-				VHex.CreateSurroundBrothers();
-				VHex = VHex.HexMR;
-
-				if (!BoardHexes.Contains(VHex))
-				{
-					BoardHexes.Add(VHex);
-				}
+				HHex = MakeHex(HHex.WorldPosition, 2);
 			}
 		}
+
+		foreach (var Hex in BoardHexes)
+		{
+			for (int BrotherIndex = 0; BrotherIndex < Object.Hex.BrotherOffsets.Count; ++BrotherIndex)
+			{
+				var BrotherOffset = Object.Hex.BrotherOffsets[BrotherIndex];
+				Vector3 From = Hex.WorldPosition + new Vector3(BrotherOffset.x, BrotherOffset.y, 100f);
+				Vector3 To = Hex.WorldPosition + new Vector3(BrotherOffset.x, BrotherOffset.y, -100f);
+
+				// Scene.DebugOverlay.Line(From, To, Color.Red, 555555);
+
+				var Trace = Scene.Trace.Ray(From, To).Run();
+				if (Trace.GameObject?.GetComponent<Hex>() is { } HitHex)
+				{
+					Hex.AllBrothers[BrotherIndex] = HitHex;
+				}
+			}
+		}	
 	}
 
 	private List<Hex> ValidSpawnHexes { get => BoardHexes.Where(Hex => Hex.Type == EHexType.Grass && Hex.UnitData == null).ToList(); }
@@ -446,6 +474,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			ObjectId = ObjectId,
 			ObjectName = HexObject.Name,
 			ProductionToBuild = ObjectUnit.ProductionToBuild,
+			GoldToBuild = ObjectUnit.GoldToBuild,
 		};
 
 		Hex.AddQueuedObject_ServerOnly(QueueObject);

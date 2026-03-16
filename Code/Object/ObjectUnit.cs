@@ -52,6 +52,7 @@ public class ObjectUnit : Obj
 	[Property] public int ViewRange { get; set; }
 	[Property] public int MoveRange { get; set; }
 	[Property] public int ProductionToBuild { get; set; }
+	[Property] public int GoldToBuild { get; set; }
 
 	[Property] private FUpgrade Upgrade { get; set; } = null;
 
@@ -61,7 +62,11 @@ public class ObjectUnit : Obj
 	public void ApplyUpgrade(FUpgrade InUpgrade)
 	{
 		Assert.NotNull(InUpgrade);
-		Assert.IsNull(Upgrade);
+		
+		if (Upgrade != null)
+		{
+			return;
+		}
 
 		Upgrade = InUpgrade;
 

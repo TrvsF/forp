@@ -220,6 +220,7 @@ public sealed partial class GamePlayer : Component
 			{				
 				var UnitHex = Unit.OwnerHex;
 				GameManager.Instance.Server_UpgradeObject(DraggedObject.GetComponent<Upgrade>(), UnitHex.UnitData, UnitHex);
+				Upgrades.RemoveAt(ShownUpgrades.FindIndex(Obj => Obj == DraggedObject));
 				DraggedObject.Destroy(); // TODO : bad
 			}
 
