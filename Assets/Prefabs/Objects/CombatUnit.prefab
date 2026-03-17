@@ -28,6 +28,7 @@
           }
         ],
         "DisplayName": "Figher",
+        "GoldToBuild": 33,
         "Health": 10,
         "MoveRange": 2,
         "ObjectId": "unit-combat",
@@ -39,6 +40,13 @@
         "OnComponentUpdate": null,
         "ProductionToBuild": 50,
         "SelectedMaterial": null,
+        "Upgrade": {
+          "ObjectId": null,
+          "Name": null,
+          "BuildingIds": null,
+          "AttackModifyer": 0,
+          "HealthModifyer": 0
+        },
         "ViewRange": 3
       },
       {

@@ -24,7 +24,6 @@ public record FBuilding : IObj
 
 public class ObjectBuilding : Obj
 {
-	[Property] public List<GameObject> Buildings { get; set; }
 	[Property] public List<GameObject> Units { get; set; }
 	[Property] public int ProductionToBuild { get; set; }
 	[Property] public int ViewRange { get; set; }

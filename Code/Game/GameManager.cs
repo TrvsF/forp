@@ -459,7 +459,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	}
 
 	[Rpc.Host]
-	public void Server_QueueHexObject(string ObjectId, Hex Hex)
+	public void Server_QueueHexObject(string ObjectId, Hex Hex, int ObjectCost)
 	{
 		Assert.IsValid(Hex);
 
@@ -468,6 +468,17 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		var ObjectUnit = HexObject.GetComponent<ObjectUnit>();
 		Assert.NotNull(ObjectUnit);
 
+		// charge the owner, if we can't afford it back out
+		if (GetGamePlayer(Hex.GetOwnerId()) is { } Owner)
+		{
+			if (Owner.Gold < ObjectCost)
+			{
+				return;
+			}
+
+			Owner.Gold -= ObjectCost;
+		}
+			
 		FQueueObject QueueObject = new()
 		{
 			GameObjectId = Guid.NewGuid(),

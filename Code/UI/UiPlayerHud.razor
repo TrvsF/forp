@@ -57,6 +57,9 @@
 
     private void OnUnitBuildClick(int Index)
     {
-        GameManager.Instance.Server_QueueHexObject(UiInfo.BuildObjects[Index], UiInfo.SelectedHex);
+        var SelectedSplitStrings = UiInfo.BuildObjects[Index].Split(" ", 2);
+        var BuildId = SelectedSplitStrings[0];
+        var Cost = int.Parse(SelectedSplitStrings[1].TrimStart("$"));
+        GameManager.Instance.Server_QueueHexObject(BuildId, UiInfo.SelectedHex, Cost);
     }
 }

@@ -175,18 +175,23 @@ public class ObjectUnit : Obj
 			return;
 		}
 
-		for (int BuildingIndex = 0; BuildingIndex < Buildings.Count; ++BuildingIndex)
+		List<GameObject> ValidBuildings = new();
+		foreach (var Building in Buildings)
 		{
-			var TextBuilding = Buildings[BuildingIndex];
-			var TextBuildingComponent = TextBuilding.GetComponent<TextBuilding>();
-			if (!TextBuildingComponent.IsValid() || !TextBuildingComponent.CanBeBuilt(OwnerHex))
+			if (Building.IsValid() && Building.GetComponent<TextBuilding>().CanBeBuilt(OwnerHex))
 			{
-				continue;
+				ValidBuildings.Add(Building);
 			}
+		}
+
+		for (int BuildingIndex = 0; BuildingIndex < ValidBuildings.Count; ++BuildingIndex)
+		{
+			var TextBuilding = ValidBuildings[BuildingIndex];
+			var TextBuildingComponent = TextBuilding.GetComponent<TextBuilding>();
 
 			Transform Transform = new();
 
-			float HorizontalOffset = (BuildingIndex - (Buildings.Count - 1) / 2f) * 100f;
+			float HorizontalOffset = (BuildingIndex - (ValidBuildings.Count - 1) / 2f) * 100f;
 			Transform.Position += new Vector3(0f, HorizontalOffset, 150f);
 			
 			var BuildingComponent = GamePlayer.SpawnObject<TextBuilding>(TextBuilding, Transform, Connection.Local, GameObject);

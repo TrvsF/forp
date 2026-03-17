@@ -1,14 +1,7 @@
 using Forp.Object;
-using Forp.Object.Building;
 using Forp.Object.Unit;
 using Sandbox;
-using Sandbox.Diagnostics;
 using System;
-using System.Resources;
-using System.Runtime.CompilerServices;
-using System.Security.AccessControl;
-using System.Threading;
-using System.Xml.Linq;
 
 namespace Forp.Game;
 
@@ -150,7 +143,7 @@ public sealed partial class GamePlayer : Component
 			{
 				if (BuildUnit.GetComponent<ObjectUnit>() is { } BuildObjectUnit)
 				{
-					OutPlayerUiInfo.BuildObjects.Add(BuildObjectUnit.ObjectId);
+					OutPlayerUiInfo.BuildObjects.Add($"{BuildObjectUnit.ObjectId} ${BuildObjectUnit.GoldToBuild}");
 				}
 			}
 		}

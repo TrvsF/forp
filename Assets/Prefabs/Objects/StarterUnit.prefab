@@ -28,6 +28,7 @@
           }
         ],
         "DisplayName": "Settler",
+        "GoldToBuild": 100,
         "Health": 5,
         "MoveRange": 2,
         "ObjectId": "unit-settler",
@@ -39,6 +40,13 @@
         "OnComponentUpdate": null,
         "ProductionToBuild": 99,
         "SelectedMaterial": "materials/liquid/retro_lava_01.vmat",
+        "Upgrade": {
+          "ObjectId": null,
+          "Name": null,
+          "BuildingIds": null,
+          "AttackModifyer": 0,
+          "HealthModifyer": 0
+        },
         "ViewRange": 3
       },
       {
