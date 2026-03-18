@@ -39,7 +39,7 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "ProductionToBuild": 50,
-        "SelectedMaterial": null,
+        "SelectedMaterial": "materials/liquid/retro_lava_01.vmat",
         "Upgrade": {
           "ObjectId": null,
           "Name": null,
@@ -173,6 +173,7 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
+    "baik.retrolava#106891",
     "fpopium.crackhead_03#123567"
   ],
   "__version": 2

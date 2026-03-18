@@ -270,7 +270,7 @@ public sealed class Hex : Obj
 		if (Random.Shared.Next(7) == 1 && Type == EHexType.Grass)
 		{
 			GameManager.Instance.Server_CreateHexObject("tree", this, Connection.Host.Id);
-			GameManager.Instance.Server_CreateHexUnitObject("unit-settler", this, Connection.Host.Id, true);
+			GameManager.Instance.Server_CreateHexUnitObject("unit-combat", this, Connection.Host.Id, true);
 		}
 	}
 
@@ -355,7 +355,7 @@ public sealed class Hex : Obj
 			var TextTransform = WorldTransform;
 			TextTransform.Position += Vector3.Up * 25;
 
-			ProductionTexts.Add(GameText.CreateTextObject<GameText>(TextTransform, $"{Type} : \u00A5{Production}"));
+			ProductionTexts.Add(GameText.CreateTextObject<GameText>(TextTransform, $"{Production}⬡"));
 		}
 	}
 

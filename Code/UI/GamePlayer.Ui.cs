@@ -11,7 +11,6 @@ public struct FPlayerUiInfo
 
 	public string Name = "NONE";
 	public int Gold = 0;
-	public int Xperiance = 0;
 	public int Territory = 0;
 	public int Production = 0;
 
@@ -22,7 +21,7 @@ public struct FPlayerUiInfo
 
 	public readonly string GetTopBarString()
 	{
-		return $"{Name} \u00A3{Gold} \u00A5{Production} {Xperiance}xp {Territory}%";
+		return $"{Name} \u00A3{Gold} {Production}⬡ {Territory}%";
 	}
 
 	public readonly string GetBottomBarString()
@@ -123,7 +122,6 @@ public sealed partial class GamePlayer : Component
 		OutPlayerUiInfo = new();
 		OutPlayerUiInfo.Name = Local?.SteamName;
 		OutPlayerUiInfo.Gold = Gold;
-		OutPlayerUiInfo.Xperiance = Xperiance;
 
 		GameManager.Instance.GetPlayerBoardStats(out var PlayerBoardStats);
 		if (PlayerBoardStats.TryGetValue(Local, out var PlayerStats))
@@ -143,7 +141,7 @@ public sealed partial class GamePlayer : Component
 			{
 				if (BuildUnit.GetComponent<ObjectUnit>() is { } BuildObjectUnit)
 				{
-					OutPlayerUiInfo.BuildObjects.Add($"{BuildObjectUnit.ObjectId} ${BuildObjectUnit.GoldToBuild}");
+					OutPlayerUiInfo.BuildObjects.Add($"{BuildObjectUnit.ObjectId} £{BuildObjectUnit.GoldToBuild}");
 				}
 			}
 		}

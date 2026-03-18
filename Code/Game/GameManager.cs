@@ -405,6 +405,10 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		GamePlayers.Add(GamePlayer);
 
 		Server_CreateHexUnitObject("unit-settler", SpawnHex, ConnectionGuid);
+
+		var Brother = SpawnHex.AllBrothers.Where(Hex => Hex != null).OrderBy(Hex => Random.Shared.Next()).First();
+		Server_CreateHexUnitObject("unit-combat", Brother, ConnectionGuid);
+
 	}
 
 	public static bool CanAttack(FUnit AttackerUnit, FUnit DefenderUnit, Guid ConnectionId)

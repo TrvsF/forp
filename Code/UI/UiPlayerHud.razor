@@ -3,8 +3,7 @@
 @inherits PanelComponent
 
 <root>
-    <watermark>Forward Operating: Repair the Planet Infdev @(DateTime.Now.ToShortDateString())</watermark>
-    @(GamePlayer.Local.CameraMode.ToString())
+    <watermark>Forp Infdev @(DateTime.Now.ToShortDateString())</watermark>
     <static-bar>
         @(UiInfo.GetTopBarString())
     </static-bar>
@@ -59,7 +58,7 @@
     {
         var SelectedSplitStrings = UiInfo.BuildObjects[Index].Split(" ", 2);
         var BuildId = SelectedSplitStrings[0];
-        var Cost = int.Parse(SelectedSplitStrings[1].TrimStart("$"));
+        var Cost = int.Parse(SelectedSplitStrings[1].TrimStart("\u00A3"));
         GameManager.Instance.Server_QueueHexObject(BuildId, UiInfo.SelectedHex, Cost);
     }
 }

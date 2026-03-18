@@ -33,7 +33,6 @@ public sealed partial class GamePlayer : Component
 
 	[Sync(SyncFlags.FromHost), Property] public Color Colour { get; set; } = Color.Black;
 	[Sync(SyncFlags.FromHost), Property] public int Gold { get; set; } = 0;
-	[Sync(SyncFlags.FromHost), Property] public int Xperiance { get; set; } = 0;
 
 	public Connection Connection { get; private set; }
 	public bool IsConnected => Connection != null && Connection.IsActive;
@@ -87,7 +86,11 @@ public sealed partial class GamePlayer : Component
 
 	private void SelectUnit()
 	{
-		//SixMan.Enabled = true;
+		if (SelectedUnit.OwnerPlayer != Local)
+		{
+			return;
+		}
+
 		if (GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit) is { } UnitHex)
 		{
 			if (SelectedUnit.SelectedMaterial.IsValid())
@@ -101,7 +104,6 @@ public sealed partial class GamePlayer : Component
 
 	private void DeselectUnit()
 	{
-		//SixMan.Enabled = false;
 		if (GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit) is { } UnitHex)
 		{
 			if (SelectedUnit.SelectedMaterial.IsValid())
