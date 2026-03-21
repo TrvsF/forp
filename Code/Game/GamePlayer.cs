@@ -97,7 +97,7 @@ public sealed partial class GamePlayer : Component
 			{
 				SelectedUnit.ModelRenderer.MaterialOverride = SelectedUnit.SelectedMaterial;
 			}
-			var MoveRange = UnitHex.UnitData.MoveRange - UnitHex.UnitData.TurnMovementSpent + 1;
+			var MoveRange = UnitHex.UnitData.ActionPoints - UnitHex.UnitData.ActionPointsSpent + 1;
 			Hex.HighlightHexesRecusrive(UnitHex, true, MoveRange);
 		}
 	}
@@ -110,7 +110,7 @@ public sealed partial class GamePlayer : Component
 			{
 				SelectedUnit.ModelRenderer.ClearMaterialOverrides();
 			}
-			Hex.HighlightHexesRecusrive(UnitHex, false, SelectedUnit.MoveRange);
+			Hex.HighlightHexesRecusrive(UnitHex, false, SelectedUnit.ActionPoints + 1);
 		}
 	}
 
@@ -127,7 +127,9 @@ public sealed partial class GamePlayer : Component
 		else
 		{
 			Mouse.Visibility = MouseVisibility.Visible;
-			DisplayUpgradeIcon(true);
+
+			var Ray = Camera.ScreenPixelToRay(Camera.ScreenRect.BottomLeft + new Vector2(GameObjectPadding, -GameObjectPadding));
+			UpgradeIcon.WorldPosition = Ray.Position + Ray.Forward * GameObjectPadding;
 		}
 	}
 
@@ -283,9 +285,9 @@ public sealed partial class GamePlayer : Component
 
 					if (SelectedUnit.IsValid())
 					{
-						if (GameManager.CanAttack(SelectedUnit.OwnerHex.UnitData, ObjectUnit.OwnerHex.UnitData, Connection.Local.Id))
+						if (GameManager.Instance.CanAttack(SelectedUnit.OwnerHex, ObjectUnit.OwnerHex, Connection.Local.Id, out var _, out var _))
 						{
-							GameManager.Instance.Server_UnitAttack(SelectedUnit.OwnerHex.UnitData, ObjectUnit.OwnerHex.UnitData, Connection.Local.Id);
+							GameManager.Instance.Server_UnitAttack(SelectedUnit.OwnerHex, ObjectUnit.OwnerHex, Connection.Local.Id);
 						}
 
 						SelectedUnit = null;
@@ -311,7 +313,7 @@ public sealed partial class GamePlayer : Component
 			if (SelectedUnit.IsValid() && SelectedUnit.GetComponent<AiUnit>() == null)
 			{
 				var UnitHex = GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit);
-				Hex.HighlightHexesRecusrive(UnitHex, false, SelectedUnit.MoveRange + 1);
+				Hex.HighlightHexesRecusrive(UnitHex, false, SelectedUnit.ActionPoints + 1);
 				GameManager.Instance.Server_MoveUnitToHex(UnitHex, FoundHex, Local.Connection.Id);
 			}
 			else

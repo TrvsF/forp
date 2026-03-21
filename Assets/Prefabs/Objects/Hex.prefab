@@ -1,7 +1,7 @@
 {
   "RootObject": {
     "__guid": "dd3b7d57-0a20-4581-978c-7733d7bd3122",
-    "__version": 1,
+    "__version": 2,
     "Flags": 0,
     "Name": "hex",
     "Position": "0,0,0",
@@ -10,7 +10,7 @@
     "Tags": "",
     "Enabled": true,
     "NetworkMode": 1,
-    "NetworkInterpolation": false,
+    "NetworkFlags": 0,
     "NetworkOrphaned": 1,
     "NetworkTransmit": true,
     "OwnerTransfer": 0,
@@ -19,36 +19,29 @@
         "__type": "Forp.Object.Hex",
         "__guid": "315fbc22-f775-4ea1-aa41-164164ffe6b8",
         "__enabled": true,
+        "Flags": 0,
         "BaseColour": "0,0,0,1",
         "DisplayName": null,
         "FogPrefab": {
           "_type": "gameobject",
           "prefab": "prefabs/objects/hexfog.prefab"
         },
-        "HexBL": null,
-        "HexBR": null,
-        "HexML": null,
-        "HexMR": null,
-        "HexTL": null,
-        "HexTR": null,
-        "LightPrefab": {
-          "_type": "gameobject",
-          "prefab": "prefabs/objects/hexlight.prefab"
-        },
-        "ObjectGuid": "00000000-0000-0000-0000-000000000000",
+        "HighlightMaterial": "materials/hotspots/wood_varnished_a_hs.vmat",
+        "ObjectId": null,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "Resources": 0,
+        "Production": 0,
         "Type": "Grass"
       },
       {
         "__type": "Sandbox.SkinnedModelRenderer",
         "__guid": "34bed954-428f-4643-b815-dbe8f9fb600a",
         "__enabled": true,
+        "Flags": 0,
         "AnimationGraph": null,
         "BodyGroups": 18446744073709551615,
         "BoneMergeTarget": null,
@@ -93,6 +86,7 @@
         "__type": "Sandbox.ModelCollider",
         "__guid": "b4e655ac-375b-4bb6-adae-cee2e8a53994",
         "__enabled": true,
+        "Flags": 0,
         "ColliderFlags": 0,
         "Elasticity": null,
         "Friction": null,
@@ -116,7 +110,7 @@
     ],
     "Children": [],
     "__properties": {
-      "NetworkInterpolation": false,
+      "NetworkInterpolation": true,
       "TimeScale": 1,
       "WantsSystemScene": true,
       "Metadata": {},
@@ -124,7 +118,7 @@
         "Enabled": false,
         "IncludeStaticBodies": true,
         "IncludeKeyframedBodies": true,
-        "EditorAutoUpdate": true,
+        "EditorAutoUpdate": false,
         "AgentHeight": 64,
         "AgentRadius": 16,
         "AgentStepSize": 18,
@@ -141,6 +135,7 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
+    "facepunch.wood_varnished_a_hs#111284",
     "kenneynl.hexagonstone#80923"
   ],
   "__version": 2

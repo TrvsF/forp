@@ -83,12 +83,6 @@ public sealed partial class GamePlayer : Component
 
 	const float GameObjectPadding = 66;
 
-	public void DisplayUpgradeIcon(bool Show)
-	{
-		var Ray = Camera.ScreenPixelToRay(Camera.ScreenRect.BottomLeft + new Vector2(GameObjectPadding, -GameObjectPadding));
-		UpgradeIcon.WorldPosition = Ray.Position + Ray.Forward * GameObjectPadding;
-	}
-
 	bool ShowUpgrades = false;
 	readonly List<GameObject> ShownUpgrades = new();
 	public void OnUpgradeIconClick()

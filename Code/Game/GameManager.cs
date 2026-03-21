@@ -151,7 +151,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 				Hex.UnitData = Hex.UnitData with
 				{
 					TurnsAlive = Hex.UnitData.TurnsAlive + 1,
-					TurnMovementSpent = 0,
+					ActionPointsSpent = 0,
 				};
 			}
 
@@ -411,11 +411,42 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 
 	}
 
-	public static bool CanAttack(FUnit AttackerUnit, FUnit DefenderUnit, Guid ConnectionId)
+	private Hex GetAttackHex(Hex AttackerUnitHex, Hex DefenderUnitHex, out int Distance)
 	{
+		Hex BestHex = null;
+		Distance = int.MaxValue; 
+		foreach (var Hex in DefenderUnitHex.AllBrothers)
+		{
+			if (!Hex.IsValid())
+			{
+				continue;
+			}
+
+			var DistanceToHex = GetHexDistance(AttackerUnitHex, Hex);
+			if (DistanceToHex < Distance)
+			{
+				BestHex = Hex;
+				Distance = DistanceToHex;
+			}
+		}
+
+		return BestHex;
+	}
+
+	public bool CanAttack(Hex AttackerUnitHex, Hex DefenderUnitHex, Guid ConnectionId, out Hex AttackFromHex, out int AttackHexDistance)
+	{
+		AttackFromHex = null;
+		AttackHexDistance = int.MaxValue;
+
+		Assert.NotNull(AttackerUnitHex);
+		Assert.NotNull(DefenderUnitHex);
+		Assert.NotNull(ConnectionId);
+
+		var AttackerUnit = AttackerUnitHex.UnitData;
+		var DefenderUnit = DefenderUnitHex.UnitData;
+
 		Assert.NotNull(AttackerUnit);
 		Assert.NotNull(DefenderUnit);
-		Assert.NotNull(ConnectionId);
 
 		if (AttackerUnit.OwnerGuid != ConnectionId)
 		{
@@ -429,36 +460,73 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			return false;
 		}
 
+		AttackFromHex = GetAttackHex(AttackerUnitHex, DefenderUnitHex, out AttackHexDistance);
+
+		if (AttackFromHex == null)
+		{
+			Log.Warning("cannot find a hex to attack from");
+			return false;
+		}
+
+		if (AttackerUnit.ActionPoints - AttackerUnit.ActionPointsSpent < AttackHexDistance + 1)
+		{
+			Log.Warning("trying to attack without enougth APs");
+			return false;
+		}
+
 		return true;
 	}
 
 	[Rpc.Host]
-	public void Server_UnitAttack(FUnit AttackerUnit, FUnit DefenderUnit, Guid ConnectionId)
+	public void Server_UnitAttack(Hex AttackerUnitHex, Hex DefenderUnitHex, Guid ConnectionId)
 	{
+		Assert.NotNull(ConnectionId);
+		Assert.NotNull(AttackerUnitHex);
+		Assert.NotNull(DefenderUnitHex);
+
+		var AttackerUnit = AttackerUnitHex.UnitData;
+		var DefenderUnit = DefenderUnitHex.UnitData;
+
 		Assert.NotNull(AttackerUnit);
 		Assert.NotNull(DefenderUnit);
-		Assert.NotNull(ConnectionId);
 
-		if (!CanAttack(AttackerUnit, DefenderUnit, ConnectionId))
+		if (!CanAttack(AttackerUnitHex, DefenderUnitHex, ConnectionId, out var NewAttackUnitHex, out var BestDistance))
 		{
 			Log.Warning($"{ConnectionId} trying to call an invalid attack");
 			return;
 		}
 
-		if (!AttackerUnit.Hex.IsValid() || !DefenderUnit.Hex.IsValid())
+		if (NewAttackUnitHex == null)
 		{
-			Log.Warning($"{AttackerUnit} or {DefenderUnit} does not have a valid hex when calling attack");
+			Log.Warning("invalid attacker hex");
 			return;
 		}
 
-		DefenderUnit.Hex.UnitData = DefenderUnit.Hex.UnitData with
+		if (BestDistance > 0)
+		{
+			Server_MoveUnitToHex(AttackerUnitHex, NewAttackUnitHex, ConnectionId);
+			AttackerUnitHex = NewAttackUnitHex;
+			AttackerUnit = AttackerUnitHex.UnitData;
+		}
+
+		AttackerUnitHex.UnitData = AttackerUnitHex.UnitData with
+		{
+			ActionPointsSpent = AttackerUnitHex.UnitData.ActionPointsSpent + 1
+		};
+
+		if (DefenderUnitHex.UnitObject is { } UnitObject)
+		{
+			UnitObject.OnDamageTaken(AttackerUnit.Attack);
+		}
+
+		DefenderUnitHex.UnitData = DefenderUnitHex.UnitData with
 		{
 			Health = DefenderUnit.Hex.UnitData.Health - AttackerUnit.Attack
 		};
 
-		if (DefenderUnit.Hex.UnitObject is { } UnitObject)
+		if (DefenderUnitHex.UnitData.Health <= 0)
 		{
-			UnitObject.OnDamageTaken(AttackerUnit.Attack);
+			DefenderUnitHex.UnitData = null;
 		}
 	}
 
@@ -554,7 +622,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			OwnerGuid = ConnectionId,
 			Health = TypedObject.Health,
 			Attack = TypedObject.Attack,
-			MoveRange = TypedObject.MoveRange,
+			ActionPoints = TypedObject.ActionPoints,
 			ViewRange = TypedObject.ViewRange,
 			Hex = Hex,
 			IsAi = IsAi,
@@ -659,12 +727,9 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			return;
 		}
 
-		var OldHexPos = OldHex.WorldPosition.WithZ(0);
-		var NewHexPos = NewHex.WorldPosition.WithZ(0);
-		var HexDistance = Vector3.DistanceBetween(OldHexPos, NewHexPos);
-		var HexesBetween = (int)Math.Round(HexDistance / 200f);
-		Log.Info($"Hex distance = {HexesBetween} turns spent = {OldUnitData.TurnMovementSpent} moverange = {OldUnitData.MoveRange}");
-		var MovementLeftover = OldUnitData.MoveRange - (HexesBetween + OldUnitData.TurnMovementSpent);
+		var HexesBetween = GetHexDistance(OldHex, NewHex);
+		Log.Info($"Hex distance = {HexesBetween} turns spent = {OldUnitData.ActionPointsSpent} moverange = {OldUnitData.ActionPoints}");
+		var MovementLeftover = OldUnitData.ActionPoints - (HexesBetween + OldUnitData.ActionPointsSpent);
 		if (MovementLeftover < 0)
 		{
 			return;
@@ -674,11 +739,22 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		{
 			Transform = NewHex.GetObjectSpawnLocation(),
 			Hex = NewHex,
-			TurnMovementSpent = OldUnitData.TurnMovementSpent + HexesBetween,
+			ActionPointsSpent = OldUnitData.ActionPointsSpent + HexesBetween,
 		};
 
 		OldHex.UnitData = null;
 		NewHex.UnitData = NewUnitData;
+	}
+
+	private int GetHexDistance(Hex FromHex, Hex ToHex)
+	{
+		Assert.NotNull(FromHex);
+		Assert.NotNull(ToHex);
+
+		var OldHexPos = FromHex.WorldPosition.WithZ(0);
+		var NewHexPos = ToHex.WorldPosition.WithZ(0);
+		var HexDistance = Vector3.DistanceBetween(OldHexPos, NewHexPos);
+		return (int)Math.Round(HexDistance / 200f);
 	}
 
 	// NOTE : this only works on the local player or if you're the host

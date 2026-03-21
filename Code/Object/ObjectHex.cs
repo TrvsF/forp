@@ -43,10 +43,9 @@ public record FQueueObject
 
 public sealed class Hex : Obj
 {
+	[Property] Material HighlightMaterial { get; set; }
 	[Property] GameObject FogPrefab { get; set; }
 	GameObject FogObject = null;
-	[Property] GameObject LightPrefab { get; set; }
-	GameObject LightObject = null;
 
 	[Sync(SyncFlags.FromHost)] public NetList<FQueueObject> QueuedUnits { get; set; } = new();
 	[Sync(SyncFlags.FromHost), Property] public int Production { get; set; } = 0;
@@ -361,17 +360,12 @@ public sealed class Hex : Obj
 
 	private void OnHighlight()
 	{
-		CloneConfig HighlightConfig = new(WorldTransform);
-		LightObject = LightPrefab.Clone(HighlightConfig);
+		ModelRenderer.MaterialOverride = HighlightMaterial;
 	}
 
 	private void OnDeHighlight()
 	{
-		if (LightObject.IsValid())
-		{
-			LightObject.Destroy();
-			LightObject = null;
-		}
+		ModelRenderer.MaterialOverride = null;
 	}
 
 	private void OnReveal()

@@ -20,6 +20,7 @@
         "__guid": "43de9620-38cc-40c5-a1fb-3703290a1677",
         "__enabled": true,
         "Flags": 0,
+        "ActionPoints": 3,
         "Attack": 10,
         "Buildings": [
           {
@@ -30,7 +31,6 @@
         "DisplayName": "Figher",
         "GoldToBuild": 33,
         "Health": 10,
-        "MoveRange": 2,
         "ObjectId": "unit-combat",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,

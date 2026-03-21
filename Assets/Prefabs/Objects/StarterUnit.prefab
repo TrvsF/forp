@@ -20,6 +20,7 @@
         "__guid": "43de9620-38cc-40c5-a1fb-3703290a1677",
         "__enabled": true,
         "Flags": 0,
+        "ActionPoints": 2,
         "Attack": 1,
         "Buildings": [
           {
@@ -30,7 +31,6 @@
         "DisplayName": "Settler",
         "GoldToBuild": 100,
         "Health": 5,
-        "MoveRange": 2,
         "ObjectId": "unit-settler",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,

@@ -36,8 +36,8 @@ public record FUnit : IObj
 	public int Health { get; set; }
 	public int Attack { get; set; }
 
-	public int MoveRange { get; set; }
-	public int TurnMovementSpent { get; set; }
+	public int ActionPoints { get; set; }
+	public int ActionPointsSpent { get; set; }
 
 	public FUpgrade Upgrade { get; set; }
 	public bool IsAi { get; set; }
@@ -50,7 +50,7 @@ public class ObjectUnit : Obj
 	[Property] public int Health { get; set; }
 	[Property] public int Attack { get; set; }
 	[Property] public int ViewRange { get; set; }
-	[Property] public int MoveRange { get; set; }
+	[Property] public int ActionPoints { get; set; }
 	[Property] public int ProductionToBuild { get; set; }
 	[Property] public int GoldToBuild { get; set; }
 
