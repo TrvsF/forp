@@ -297,18 +297,17 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		}
 	}
 
+	void INetworkListener.OnBecameHost(Connection PreviousHost)
+	{
+		Networking.Disconnect();
+	}
+
 	void ISceneStartup.OnHostInitialize()
 	{
 		Assert.IsValid(HexPrefab);
 		Assert.IsValid(PlayerPrefab);
 
-		Transform HexTransform = new();
-		CloneConfig HexConfig = new(HexTransform);
-		var Hex = HexPrefab.Clone(HexConfig);
-		Hex.Network.SetOrphanedMode(NetworkOrphaned.Host);
-		Hex.NetworkSpawn(Connection.Host);
-
-		_ = GenerateBoardAsync(Hex);
+		_ = GenerateBoardAsync();
 		Log.Info($"created board with {BoardHexes.Count} hexes");
 
 		if (!Networking.IsActive)
@@ -339,7 +338,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		return HexComponent;
 	}
 
-	private async Task GenerateBoardAsync(GameObject Hex)
+	private async Task GenerateBoardAsync()
 	{
 		// TODO : loading screen
 		await CreateBoard(20, 20);
@@ -394,7 +393,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			throw new Exception($"cannot find a valid spawn hex for {ConnectionGuid}. This is very bad.");
 		}
 
-		bool CreatedPlayerState = CreatePlayerObject_ServerOnly(ConnectionGuid, SpawnHex.WorldPosition, out var GamePlayer);
+		bool CreatedPlayerState = CreatePlayerObject_ServerOnly(ConnectionGuid, SpawnHex, out var GamePlayer);
 
 		if (!CreatedPlayerState || GamePlayer == null)
 		{
@@ -403,12 +402,6 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		}
 
 		GamePlayers.Add(GamePlayer);
-
-		Server_CreateHexUnitObject("unit-settler", SpawnHex, ConnectionGuid);
-
-		var Brother = SpawnHex.AllBrothers.Where(Hex => Hex != null).OrderBy(Hex => Random.Shared.Next()).First();
-		Server_CreateHexUnitObject("unit-combat", Brother, ConnectionGuid);
-
 	}
 
 	private Hex GetAttackHex(Hex AttackerUnitHex, Hex DefenderUnitHex, out int Distance)
@@ -767,6 +760,13 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 				return GamePlayer;
 			}
 		}
+
+		// last resort, god this method is shit
+		if (ConnectionId == Connection.Local.Id)
+		{
+			return GamePlayer.Local;
+		}
+
 		return null;
 	}
 
@@ -799,9 +799,12 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		Color.Red,
 		Color.Gray,
 		Color.Orange,
+		Color.Magenta,
+		Color.Cyan,
+		Color.White,
 	]);
 
-	private bool CreatePlayerObject_ServerOnly(Guid ConnectionGuid, Vector3 StartLocation, out GamePlayer OutGamePlayer)
+	private bool CreatePlayerObject_ServerOnly(Guid ConnectionGuid, Hex SpawnHex, out GamePlayer OutGamePlayer)
 	{
 		Assert.True(Networking.IsHost);
 		Assert.True(PlayerPrefab.IsValid(), "Could not spawn player as no PlayerPrefab assigned to network manager");
@@ -813,7 +816,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		Assert.NotNull(ConnectionChannel);
 
 		var SpawnTransform = PlayerPrefab.WorldTransform;
-		SpawnTransform = SpawnTransform.WithPosition(StartLocation + (PlayerPrefabComponent.CameraObject.WorldRotation.Backward * 1337));
+		SpawnTransform = SpawnTransform.WithPosition(SpawnHex.WorldPosition + (PlayerPrefabComponent.PlayerCameraPrefab.WorldRotation.Backward * 1337));
 		CloneConfig PlayerSpawnConfig = new()
 		{
 			Transform = SpawnTransform,
@@ -832,7 +835,7 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 			throw new Exception($"Could not spawn player as no PlayerStatePrefab assigned to network manager for {ConnectionChannel.DisplayName}");
 		}
 
-		if (!OutGamePlayer.Initilize_ServerOnly(ConnectionChannel))
+		if (!OutGamePlayer.Initilize_ServerOnly(ConnectionChannel, SpawnHex))
 		{
 			OutGamePlayer.GameObject.DestroyImmediate();
 			return false;

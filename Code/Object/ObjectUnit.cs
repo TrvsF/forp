@@ -14,7 +14,7 @@ public class AiUnit : Component
 	{
 		Assert.True(Networking.IsHost);
 
-		if (Random.Shared.FromList(ObjectUnit.OwnerHex.AllBrothers) is { } MoveHex)
+		if (Random.Shared.FromList(ObjectUnit.OwnerHex.AllBrothers.ToList()) is { } MoveHex)
 		{
 			GameManager.Instance.Server_MoveUnitToHex(ObjectUnit.OwnerHex, MoveHex, Connection.Local.Id);
 		}
@@ -54,10 +54,12 @@ public class ObjectUnit : Obj
 	[Property] public int ProductionToBuild { get; set; }
 	[Property] public int GoldToBuild { get; set; }
 
-	[Property] private FUpgrade Upgrade { get; set; } = null;
+	[Property] private FUpgrade Upgrade { get; set; }
 
 	public GamePlayer OwnerPlayer { get; set; }
 	public Hex OwnerHex { get; set; }
+
+	public bool IsAi { get => GetComponent<AiUnit>() != null; }
 
 	public void ApplyUpgrade(FUpgrade InUpgrade)
 	{
@@ -84,6 +86,12 @@ public class ObjectUnit : Obj
 	protected override void OnStart()
 	{
 		base.OnStart();
+
+		if (GamePlayer.Local == null)
+		{
+			Log.Warning("game play somehow not valid, not good!");
+			return;
+		}
 
 		SetCameraMode(GamePlayer.Local.CameraMode);
 	}

@@ -128,13 +128,12 @@ public sealed class Hex : Obj
 			UnitObject = Clone.GetComponent<ObjectUnit>();
 			UnitObject.OwnerHex = this;
 
-			if (GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid) is { } OwnerPlayer)
+			if (!UnitData.IsAi && GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid) is { } OwnerPlayer)
 			{
-				UnitObject.ModelRenderer.Tint = OwnerPlayer.Colour;
 				UnitObject.OwnerPlayer = OwnerPlayer;
+				UnitObject.ModelRenderer?.Tint = OwnerPlayer.Colour;
 			}
-
-			if (UnitData.IsAi)
+			else
 			{
 				UnitObject.AddComponent<AiUnit>();
 			}
@@ -407,7 +406,7 @@ public sealed class Hex : Obj
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public List<Hex> AllBrothers = [null, null, null, null, null, null];
+	[Sync(SyncFlags.FromHost)] public NetList<Hex> AllBrothers { get; set; } = [null, null, null, null, null, null];
 
 	private ECameraMode _LocalCameraMode = ECameraMode.Normal;
 	public ECameraMode LocalCameraMode

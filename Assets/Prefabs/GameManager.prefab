@@ -81,6 +81,10 @@
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
             "OnComponentUpdate": null,
+            "PlayerCameraPrefab": {
+              "_type": "gameobject",
+              "prefab": "prefabs/playercamera.prefab"
+            },
             "PlayerPrefab": {
               "_type": "gameobject",
               "prefab": "prefabs/player.prefab"
@@ -105,7 +109,8 @@
         "AgentStepSize": 18,
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
-        "IncludedBodies": ""
+        "IncludedBodies": "",
+        "CustomBounds": false
       }
     },
     "__variables": []

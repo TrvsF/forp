@@ -4,6 +4,7 @@ using Forp.Object.Unit;
 using Sandbox.Diagnostics;
 using System;
 using System.Linq.Expressions;
+using System.Threading;
 
 namespace Forp.Game;
 
@@ -24,8 +25,11 @@ public sealed partial class GamePlayer : Component
 {
 	public static GamePlayer Local { get; private set; } = null;
 
+	[Property] public GameObject PlayerCameraPrefab { get; private set; }
+
 	[Property] public GameObject SixMan { get; private set; }
 	[Property] public GameObject CameraObject { get; private set; }
+	public CameraComponent Camera { get; private set; }
 
 	[Sync(SyncFlags.FromHost), Property] public ulong SteamId { get; private set; }
 	[Sync(SyncFlags.FromHost), Property] public string SteamName { get; private set; }
@@ -37,7 +41,6 @@ public sealed partial class GamePlayer : Component
 	public Connection Connection { get; private set; }
 	public bool IsConnected => Connection != null && Connection.IsActive;
 
-	public CameraComponent Camera { get => GameObject.GetComponentInChildren<CameraComponent>(); }
 	private ECameraMode _CameraMode = ECameraMode.Build;
 	public ECameraMode CameraMode
 	{
@@ -118,19 +121,25 @@ public sealed partial class GamePlayer : Component
 	{
 		base.OnStart();
 
-		// TODO : should we make the camera seperate
-		// so we don't have to destroy it 4 clients?
 		if (IsProxy)
 		{
-			Camera.Destroy();
+			return;
 		}
-		else
-		{
-			Mouse.Visibility = MouseVisibility.Visible;
 
-			var Ray = Camera.ScreenPixelToRay(Camera.ScreenRect.BottomLeft + new Vector2(GameObjectPadding, -GameObjectPadding));
-			UpgradeIcon.WorldPosition = Ray.Position + Ray.Forward * GameObjectPadding;
-		}
+		Mouse.Visibility = MouseVisibility.Visible;
+
+		// TODO : CLEAN
+		Transform CloneTransform = new();
+		var Cloneconfig = new CloneConfig();
+		Cloneconfig.Parent = GameObject;
+		Cloneconfig.StartEnabled = true;
+		Cloneconfig.Transform = CloneTransform;
+		var CameraObject = PlayerCameraPrefab.Clone(Cloneconfig);
+		Camera = CameraObject.GetComponentInChildren<CameraComponent>();
+		UpgradeIcon = CameraObject.Children.Find(Child => Child.Name == "UpgradeIcon");
+
+		var Ray = Camera.ScreenPixelToRay(Camera.ScreenRect.BottomLeft + new Vector2(GameObjectPadding, -GameObjectPadding));
+		UpgradeIcon.WorldPosition = Ray.Position + Ray.Forward * GameObjectPadding;
 	}
 
 	protected override void OnUpdate()
@@ -161,7 +170,7 @@ public sealed partial class GamePlayer : Component
 		}
 	}
 
-	public bool Initilize_ServerOnly(Connection ConnectionIn)
+	public bool Initilize_ServerOnly(Connection ConnectionIn, Hex SpawnHex)
 	{
 		Assert.True(Networking.IsHost);
 		Assert.NotNull(ConnectionIn);
@@ -173,17 +182,21 @@ public sealed partial class GamePlayer : Component
 
 		using (Rpc.FilterInclude(Connection))
 		{
-			Initilize_Client();
+			Initilize_Client(SpawnHex);
 		}
 
 		return true;
 	}
 
 	[Rpc.Broadcast]
-	public void Initilize_Client()
+	public void Initilize_Client(Hex SpawnHex)
 	{
 		Connection = Connection.Local; // TODO : this is only set on server & local client per player... 
 		Local = this;
+
+		GameManager.Instance.Server_CreateHexUnitObject("unit-settler", SpawnHex, Connection.Id);
+		var Brother = SpawnHex.AllBrothers.Where(Hex => Hex != null && Hex.ObjectData == null).OrderBy(Hex => Random.Shared.Next()).First();
+		GameManager.Instance.Server_CreateHexUnitObject("unit-combat", Brother, Connection.Id);
 	}
 
 	const float MovementExp = 2f;
@@ -221,7 +234,7 @@ public sealed partial class GamePlayer : Component
 		if (!Input.Down("mouse1") && DraggedObject != null)
 		{
 			if (HoveredObject.GetComponent<ObjectUnit>() is { } Unit)
-			{				
+			{
 				var UnitHex = Unit.OwnerHex;
 				GameManager.Instance.Server_UpgradeObject(DraggedObject.GetComponent<Upgrade>(), UnitHex.UnitData, UnitHex);
 				Upgrades.RemoveAt(ShownUpgrades.FindIndex(Obj => Obj == DraggedObject));

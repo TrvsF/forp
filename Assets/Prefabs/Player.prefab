@@ -20,10 +20,7 @@
         "__guid": "99461265-f323-4dd4-82c8-7de3c4d8528e",
         "__enabled": true,
         "Flags": 0,
-        "CameraObject": {
-          "_type": "gameobject",
-          "go": "5ab378ca-fc2e-404f-bb8f-3aebfcdff916"
-        },
+        "CameraObject": null,
         "Colour": "0,0,0,1",
         "ConnectionId": "00000000-0000-0000-0000-000000000000",
         "Gold": 0,
@@ -33,20 +30,15 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "SixMan": {
+        "PlayerCameraPrefab": {
           "_type": "gameobject",
-          "go": "7e36e994-71a6-4c3b-b8f8-b42c58355155"
+          "prefab": "prefabs/playercamera.prefab"
         },
+        "SixMan": null,
         "SteamId": 0,
         "SteamName": null,
-        "UpgradeIcon": {
-          "_type": "gameobject",
-          "go": "fbc4c02a-5687-416c-8cfa-65954a6cc4c3"
-        },
-        "UpgradeRowStart": {
-          "_type": "gameobject",
-          "go": "eb151028-a1f4-476c-bdd4-3f7bc60d8767"
-        },
+        "UpgradeIcon": null,
+        "UpgradeRowStart": null,
         "Upgrades": [
           {
             "_type": "gameobject",
@@ -60,384 +52,10 @@
             "_type": "gameobject",
             "prefab": "prefabs/objects/upgradebuilder.prefab"
           }
-        ],
-        "Xperiance": 0
-      }
-    ],
-    "Children": [
-      {
-        "__guid": "5ab378ca-fc2e-404f-bb8f-3aebfcdff916",
-        "__version": 2,
-        "Flags": 0,
-        "Name": "camera",
-        "Position": "0,0,0",
-        "Rotation": "0.00000001283086,0.3420201,-0.0000000352525,0.9396926",
-        "Scale": "1,1,1",
-        "Tags": "",
-        "Enabled": true,
-        "NetworkMode": 0,
-        "NetworkFlags": 0,
-        "NetworkOrphaned": 0,
-        "NetworkTransmit": true,
-        "OwnerTransfer": 1,
-        "Components": [
-          {
-            "__type": "Sandbox.CameraComponent",
-            "__guid": "42ea0ffd-258c-4b54-b210-61627562a422",
-            "__enabled": true,
-            "Flags": 0,
-            "BackgroundColor": "0.46047,0.42191,0.42191,1",
-            "ClearFlags": "All",
-            "EnablePostProcessing": true,
-            "FieldOfView": 80,
-            "FovAxis": "Horizontal",
-            "IsMainCamera": true,
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null,
-            "Orthographic": false,
-            "OrthographicHeight": 250,
-            "PostProcessAnchor": null,
-            "Priority": 1,
-            "RenderExcludeTags": "",
-            "RenderTags": "",
-            "RenderTexture": null,
-            "TargetEye": "None",
-            "Viewport": "0,0,1,1",
-            "ZFar": 10000,
-            "ZNear": 10
-          },
-          {
-            "__type": "Sandbox.Bloom",
-            "__guid": "62eb0e34-3407-41d8-a1dc-f241dfffbbf5",
-            "__enabled": false,
-            "Flags": 0,
-            "__version": 1,
-            "Filter": "Bilinear",
-            "Gamma": 2.2,
-            "Mode": "Additive",
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null,
-            "Strength": 0.5,
-            "Threshold": 1.25,
-            "Tint": "1,1,1,1"
-          },
-          {
-            "__type": "Sandbox.Tonemapping",
-            "__guid": "4df985f5-eb2e-4184-b4ff-e93cd989a67e",
-            "__enabled": false,
-            "Flags": 0,
-            "__version": 3,
-            "AutoExposureEnabled": true,
-            "ExposureCompensation": 0,
-            "ExposureMethod": "RGB",
-            "MaximumExposure": 2,
-            "MinimumExposure": 1,
-            "Mode": "HableFilmic",
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null,
-            "Rate": 1
-          },
-          {
-            "__type": "Sandbox.Sharpen",
-            "__guid": "dba7fb6c-843c-4093-a7e4-d443eefafb25",
-            "__enabled": true,
-            "Flags": 0,
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null,
-            "Scale": 0.2,
-            "TexelSize": 1
-          },
-          {
-            "__type": "Sandbox.ScreenPanel",
-            "__guid": "78375ac3-2fba-4633-85ed-296d4f8f9fe4",
-            "__enabled": true,
-            "Flags": 0,
-            "AutoScreenScale": true,
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null,
-            "Opacity": 1,
-            "Scale": 1,
-            "ScaleStrategy": "ConsistentHeight",
-            "TargetCamera": null,
-            "ZIndex": 100
-          },
-          {
-            "__type": "Sandbox.UI.UiPlayerHud",
-            "__guid": "0ad89999-dad9-403c-b0f8-971e2b4f8969",
-            "__enabled": true,
-            "Flags": 0,
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null
-          },
-          {
-            "__type": "Sandbox.Highlight",
-            "__guid": "c2e27b1d-2006-44fd-aad7-377eb6eb8b0b",
-            "__enabled": true,
-            "Flags": 0,
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null
-          }
-        ],
-        "Children": [
-          {
-            "__guid": "7e36e994-71a6-4c3b-b8f8-b42c58355155",
-            "__version": 2,
-            "Flags": 0,
-            "Name": "6man",
-            "Position": "64.82845,-31.14725,-7.143148",
-            "Rotation": "-0.08418596,-0.1484526,0.9622501,0.2120123",
-            "Scale": "0.05,0.05,0.05",
-            "Tags": "",
-            "Enabled": false,
-            "NetworkMode": 0,
-            "NetworkFlags": 0,
-            "NetworkOrphaned": 0,
-            "NetworkTransmit": true,
-            "OwnerTransfer": 1,
-            "Components": [
-              {
-                "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "70f879f4-6289-4c5d-af14-5b80060f83e3",
-                "__enabled": true,
-                "Flags": 0,
-                "AnimationGraph": null,
-                "BodyGroups": 18446744073709551615,
-                "BoneMergeTarget": null,
-                "CreateAttachments": false,
-                "CreateBoneObjects": true,
-                "LodOverride": null,
-                "MaterialGroup": null,
-                "MaterialOverride": null,
-                "Materials": null,
-                "Model": "models/6man.vmdl",
-                "Morphs": {},
-                "OnComponentDestroy": null,
-                "OnComponentDisabled": null,
-                "OnComponentEnabled": null,
-                "OnComponentFixedUpdate": null,
-                "OnComponentStart": null,
-                "OnComponentUpdate": null,
-                "Parameters": {
-                  "bools": {},
-                  "ints": {},
-                  "floats": {},
-                  "vectors": {},
-                  "rotations": {}
-                },
-                "PlaybackRate": 1,
-                "RenderOptions": {
-                  "GameLayer": false,
-                  "OverlayLayer": true,
-                  "BloomLayer": false,
-                  "AfterUILayer": false
-                },
-                "RenderType": "Off",
-                "Sequence": {
-                  "Name": null,
-                  "Looping": true,
-                  "Blending": false
-                },
-                "Tint": "0.22161,0.91628,0.24477,1",
-                "UseAnimGraph": true
-              }
-            ],
-            "Children": [
-              {
-                "__guid": "1eccd54b-e97b-4c9f-9095-c834206dbb5a",
-                "__version": 2,
-                "Flags": 4,
-                "Name": "Bone_001",
-                "Position": "0,0,0",
-                "Rotation": "0,0,0,1",
-                "Scale": "1,1,1",
-                "Tags": "",
-                "Enabled": true,
-                "NetworkMode": 2,
-                "NetworkFlags": 0,
-                "NetworkOrphaned": 0,
-                "NetworkTransmit": true,
-                "OwnerTransfer": 1,
-                "Components": [],
-                "Children": [
-                  {
-                    "__guid": "00b36c3b-e880-4e5a-ba6e-b2f4506d96a0",
-                    "__version": 2,
-                    "Flags": 4,
-                    "Name": "Bone_002",
-                    "Position": "0,0,0",
-                    "Rotation": "0,0,0,1",
-                    "Scale": "1,1,1",
-                    "Tags": "",
-                    "Enabled": true,
-                    "NetworkMode": 2,
-                    "NetworkFlags": 0,
-                    "NetworkOrphaned": 0,
-                    "NetworkTransmit": true,
-                    "OwnerTransfer": 1,
-                    "Components": [],
-                    "Children": []
-                  }
-                ]
-              },
-              {
-                "__guid": "75f7953c-f566-4d67-8cc9-9d4fbb20cc8a",
-                "__version": 2,
-                "Flags": 4,
-                "Name": "Bone",
-                "Position": "0,0,0",
-                "Rotation": "0,0,0,1",
-                "Scale": "1,1,1",
-                "Tags": "",
-                "Enabled": true,
-                "NetworkMode": 2,
-                "NetworkFlags": 0,
-                "NetworkOrphaned": 0,
-                "NetworkTransmit": true,
-                "OwnerTransfer": 1,
-                "Components": [],
-                "Children": []
-              }
-            ]
-          },
-          {
-            "__guid": "fbc4c02a-5687-416c-8cfa-65954a6cc4c3",
-            "__version": 2,
-            "Flags": 0,
-            "Name": "UpgradeIcon",
-            "Position": "105.3326,65.09127,-29.9905",
-            "Rotation": "0.02255761,-0.6830127,0.2578342,0.6830127",
-            "Scale": "0.066,0.066,0.1",
-            "Tags": "",
-            "Enabled": true,
-            "NetworkMode": 0,
-            "NetworkFlags": 0,
-            "NetworkOrphaned": 0,
-            "NetworkTransmit": true,
-            "OwnerTransfer": 1,
-            "Components": [
-              {
-                "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "1e680566-6899-4712-b800-7e2f24e72ef9",
-                "__enabled": true,
-                "Flags": 0,
-                "AnimationGraph": null,
-                "BodyGroups": 18446744073709551615,
-                "BoneMergeTarget": null,
-                "CreateAttachments": false,
-                "CreateBoneObjects": false,
-                "LodOverride": null,
-                "MaterialGroup": null,
-                "MaterialOverride": null,
-                "Materials": null,
-                "Model": "models/hexagon-kit/hexagon_dirt.vmdl",
-                "Morphs": {},
-                "OnComponentDestroy": null,
-                "OnComponentDisabled": null,
-                "OnComponentEnabled": null,
-                "OnComponentFixedUpdate": null,
-                "OnComponentStart": null,
-                "OnComponentUpdate": null,
-                "Parameters": {
-                  "bools": {},
-                  "ints": {},
-                  "floats": {},
-                  "vectors": {},
-                  "rotations": {}
-                },
-                "PlaybackRate": 1,
-                "RenderOptions": {
-                  "GameLayer": false,
-                  "OverlayLayer": false,
-                  "BloomLayer": false,
-                  "AfterUILayer": true
-                },
-                "RenderType": "Off",
-                "Sequence": {
-                  "Name": null,
-                  "Looping": true,
-                  "Blending": false
-                },
-                "Tint": "1,1,1,1",
-                "UseAnimGraph": true
-              },
-              {
-                "__type": "Sandbox.ModelCollider",
-                "__guid": "2622959e-0372-46c2-998a-f5fe52734f2d",
-                "__enabled": true,
-                "Flags": 0,
-                "ColliderFlags": 0,
-                "Elasticity": null,
-                "Friction": null,
-                "IsTrigger": false,
-                "Model": "models/hexagon-kit/hexagon_dirt.vmdl",
-                "OnComponentDestroy": null,
-                "OnComponentDisabled": null,
-                "OnComponentEnabled": null,
-                "OnComponentFixedUpdate": null,
-                "OnComponentStart": null,
-                "OnComponentUpdate": null,
-                "OnObjectTriggerEnter": null,
-                "OnObjectTriggerExit": null,
-                "OnTriggerEnter": null,
-                "OnTriggerExit": null,
-                "RollingResistance": null,
-                "Static": false,
-                "Surface": null,
-                "SurfaceVelocity": "0,0,0"
-              }
-            ],
-            "Children": [
-              {
-                "__guid": "eb151028-a1f4-476c-bdd4-3f7bc60d8767",
-                "__version": 2,
-                "Flags": 0,
-                "Name": "UpgradeRowStart",
-                "Position": "-77.49851,-187.325,71.5444",
-                "Rotation": "-0.1830126,0.08418603,-0.1830127,0.9622501",
-                "Scale": "15.15152,15.15152,10",
-                "Tags": "",
-                "Enabled": true,
-                "NetworkMode": 0,
-                "NetworkFlags": 0,
-                "NetworkOrphaned": 0,
-                "NetworkTransmit": true,
-                "OwnerTransfer": 1,
-                "Components": [],
-                "Children": []
-              }
-            ]
-          }
         ]
       }
     ],
+    "Children": [],
     "__properties": {
       "NetworkInterpolation": true,
       "TimeScale": 1,
@@ -453,7 +71,8 @@
         "AgentStepSize": 18,
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
-        "IncludedBodies": ""
+        "IncludedBodies": "",
+        "CustomBounds": false
       }
     },
     "__variables": []
@@ -463,8 +82,6 @@
   "MenuPath": null,
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
-  "__references": [
-    "kenneynl.hexagondirt#80882"
-  ],
+  "__references": [],
   "__version": 2
 }
