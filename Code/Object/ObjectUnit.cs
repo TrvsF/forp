@@ -89,7 +89,7 @@ public class ObjectUnit : Obj
 
 		if (GamePlayer.Local == null)
 		{
-			Log.Warning("game play somehow not valid, not good!");
+			Log.Warning("game player somehow not valid, not good!");
 			return;
 		}
 

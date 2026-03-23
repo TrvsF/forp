@@ -26,6 +26,18 @@ public class Upgrade : Obj
 		return Buildings.Select(Building => Building.GetComponent<TextBuilding>().ObjectId).ToList();
 	}
 
+	public FUpgrade GetUpgradeData()
+	{
+		FUpgrade UpgradeData = new()
+		{
+			ObjectId = ObjectId,
+			Name = DisplayName,
+			BuildingIds = Buildings,
+			AttackModifyer = AttackModifyer,
+			HealthModifyer = HealthModifyer,
+		};
 
+		return UpgradeData;
+	}
 }
 

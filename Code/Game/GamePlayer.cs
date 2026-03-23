@@ -26,9 +26,6 @@ public sealed partial class GamePlayer : Component
 	public static GamePlayer Local { get; private set; } = null;
 
 	[Property] public GameObject PlayerCameraPrefab { get; private set; }
-
-	[Property] public GameObject SixMan { get; private set; }
-	[Property] public GameObject CameraObject { get; private set; }
 	public CameraComponent Camera { get; private set; }
 
 	[Sync(SyncFlags.FromHost), Property] public ulong SteamId { get; private set; }
@@ -236,7 +233,7 @@ public sealed partial class GamePlayer : Component
 			if (HoveredObject.GetComponent<ObjectUnit>() is { } Unit)
 			{
 				var UnitHex = Unit.OwnerHex;
-				GameManager.Instance.Server_UpgradeObject(DraggedObject.GetComponent<Upgrade>(), UnitHex.UnitData, UnitHex);
+				GameManager.Instance.Server_UpgradeObject(DraggedObject.GetComponent<Upgrade>().GetUpgradeData(), UnitHex, ConnectionId);
 				Upgrades.RemoveAt(ShownUpgrades.FindIndex(Obj => Obj == DraggedObject));
 				DraggedObject.Destroy(); // TODO : bad
 			}

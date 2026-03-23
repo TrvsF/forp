@@ -77,8 +77,7 @@ public struct FPlayerUiInfo
 
 public sealed partial class GamePlayer : Component
 {
-	[Property] GameObject UpgradeIcon { get; set; }
-	[Property] GameObject UpgradeRowStart { get; set; }
+	public GameObject UpgradeIcon { get; private set; }
 	[Property] List<GameObject> Upgrades { get; set; } = new();
 
 	const float GameObjectPadding = 66;
@@ -105,7 +104,7 @@ public sealed partial class GamePlayer : Component
 		{
 			Transform SpawnTransform = new();
 			SpawnTransform.Position += Camera.WorldRotation.Right * LeftPadding;
-			ShownUpgrades.Add(SpawnObject(Upgrade, SpawnTransform, Connection.Local, UpgradeRowStart));
+			ShownUpgrades.Add(SpawnObject(Upgrade, SpawnTransform, Connection.Local, UpgradeIcon.Children[0]));
 
 			LeftPadding += 8;
 		}

@@ -12,8 +12,15 @@ using System.Threading.Tasks;
 
 namespace Forp.Game;
 
-public sealed class GameManager : SingletonComponent<GameManager>, Component.INetworkListener, ISceneStartup
+public enum EGameManagerMode
 {
+	Game,
+	Menu,
+}
+
+public partial class GameManager : SingletonComponent<GameManager>, Component.INetworkListener, ISceneStartup
+{
+	[Property] public EGameManagerMode Mode { get; set; }
 	[Property] public GameObject HexPrefab { get; set; }
 	[Property] public GameObject PlayerPrefab { get; set; }
 	[Property] public GameObject GameTextPrefab { get; set; }
@@ -306,6 +313,14 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	{
 		Assert.IsValid(HexPrefab);
 		Assert.IsValid(PlayerPrefab);
+		Assert.IsValid(GameTextPrefab);
+		Assert.IsValid(DamageTextPrefab);
+
+		if (Mode == EGameManagerMode.Menu)
+		{
+			SpawnMenu();
+			return;
+		}
 
 		_ = GenerateBoardAsync();
 		Log.Info($"created board with {BoardHexes.Count} hexes");
@@ -557,27 +572,29 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 	}
 
 	[Rpc.Host]
-	public void Server_UpgradeObject(Upgrade Upgrade, IObj Object, Hex Hex)
+	public void Server_UpgradeObject(FUpgrade UpgradeData, Hex Hex, Guid ConnectionId)
 	{
-		Assert.IsValid(Upgrade);
-		Assert.NotNull(Object);
+		Assert.NotNull(UpgradeData);
+		Assert.NotNull(ConnectionId);
+		Assert.NotNull(Hex);
 
-		var Unit = (FUnit)Object;
+		if (Hex.UnitData == null)
+		{
+			Log.Warning("tryna upgrade NOTHIN");
+			return;
+		}
 
-		if (Unit.Upgrade != null)
+		if (Hex.UnitData.Upgrade != null)
 		{
 			Log.Warning("trying to assign upgrade to object with existing upgrade");
 			return;
 		}
 
-		FUpgrade UpgradeData = new()
+		if (Hex.UnitData.OwnerGuid != ConnectionId)
 		{
-			ObjectId = Upgrade.ObjectId,
-			Name = Upgrade.DisplayName,
-			BuildingIds = Upgrade.Buildings,
-			AttackModifyer = Upgrade.AttackModifyer,
-			HealthModifyer = Upgrade.HealthModifyer,
-		};
+			Log.Warning($"trying to upgrade a unit that is not {ConnectionId}s");
+			return;
+		}
 
 		Hex.UnitData = Hex.UnitData with
 		{
@@ -624,6 +641,15 @@ public sealed class GameManager : SingletonComponent<GameManager>, Component.INe
 		Hex.UnitData = ObjectData;
 
 		Log.Info($"created object {ObjectId} on {Hex} for {ConnectionId}");
+	}
+
+	[Rpc.Host]
+	public void Server_CreateHexBuildingObject(string BuildingId, Hex Hex, bool FromUnit, Guid ConnectionId)
+	{
+		var HexObject = GetObject(BuildingId);
+		Assert.NotNull(HexObject);
+
+		Server_CreateHexBuildingObject(HexObject, Hex, FromUnit, ConnectionId);
 	}
 
 	[Rpc.Host]

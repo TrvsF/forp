@@ -84,7 +84,7 @@
       "__version": 2,
       "Flags": 0,
       "Name": "Play",
-      "Position": "0,0,0",
+      "Position": "-2230.556,0,0",
       "Rotation": "0.00000001672762,-0.3826834,0.9238796,-0.00000004038406",
       "Scale": "1.649999,1,1",
       "Tags": "",
@@ -180,7 +180,7 @@
           "RenderOptions": {
             "GameLayer": true,
             "OverlayLayer": false,
-            "BloomLayer": false,
+            "BloomLayer": true,
             "AfterUILayer": false
           },
           "RenderType": "On",
@@ -224,6 +224,109 @@
         }
       ],
       "Children": []
+    },
+    {
+      "__guid": "b1113c36-5576-420a-a2a2-33df472f2282",
+      "__version": 2,
+      "__Prefab": "prefabs/gamemanager.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "dbbfe14f-ff65-4bb4-b301-c63ca99d9358"
+            },
+            "Property": "Mode",
+            "Value": "Menu"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "4647e1f8-cfd8-4579-aac0-a4a1e08db488": "b1113c36-5576-420a-a2a2-33df472f2282",
+        "8edb6cdd-b5b6-494f-92ca-4095047c1197": "405e6aeb-48ce-42d2-a5fe-e170071d9a48",
+        "dbbfe14f-ff65-4bb4-b301-c63ca99d9358": "b3c17a4c-e8c4-465a-9689-2e02b2e2a568"
+      }
+    },
+    {
+      "__guid": "e365c58c-ce5a-4bfc-af58-0e1ed0c2bedb",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Textes",
+      "Position": "0,0,281.3029",
+      "Rotation": "0,0,0.7071067,0.7071068",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.TextRenderer",
+          "__guid": "3553057d-1086-4711-897b-6afb3784c6b9",
+          "__enabled": true,
+          "Flags": 0,
+          "__version": 2,
+          "BlendMode": "Normal",
+          "FogStrength": 1,
+          "HorizontalAlignment": "Center",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": true
+          },
+          "Scale": 1,
+          "TextScope": {
+            "Text": "Forward Operating: Restore the Planet",
+            "TextColor": "0.94419,0,0,1",
+            "FontName": "Inter",
+            "FontSize": 32,
+            "FontWeight": 400,
+            "FontItalic": false,
+            "LineHeight": 1,
+            "LetterSpacing": 0,
+            "WordSpacing": 0,
+            "FilterMode": "Bilinear",
+            "FontSmooth": "Auto",
+            "Outline": {
+              "Enabled": false,
+              "Size": 4,
+              "Color": "0,0,1,1"
+            },
+            "Shadow": {
+              "Enabled": false,
+              "Size": 4,
+              "Color": "0,0,0,1",
+              "Offset": "4,4"
+            },
+            "OutlineUnder": {
+              "Enabled": false,
+              "Size": 4,
+              "Color": "0,1,0,1"
+            },
+            "ShadowUnder": {
+              "Enabled": false,
+              "Size": 4,
+              "Color": "0,0,0,1",
+              "Offset": "4,4"
+            }
+          },
+          "VerticalAlignment": "Center"
+        }
+      ],
+      "Children": []
     }
   ],
   "SceneProperties": {
@@ -247,7 +350,7 @@
     "GameObjectSystems": {
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
-          "$blob": "b61b06d1-bb75-4e15-b2cf-8167e78ea7d3"
+          "$blob": "43e8184f-7874-44e5-80f2-5803923b8dbe"
         }
       }
     }

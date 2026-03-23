@@ -5,6 +5,7 @@ using System;
 using Sandbox.UI;
 using Forp.Game;
 using Forp.Object.Building;
+using System.Transactions;
 
 namespace Forp.Object;
 
@@ -96,8 +97,13 @@ public sealed class Hex : Obj
 		// we only build once
 		if (IsRevealed && !BuildingObject.IsValid())
 		{
-			var Clone = GameManager.Instance.GetObject(BuildingData.ObjectId).Clone();
-			Clone.WorldTransform = BuildingData.Transform;
+			CloneConfig BuildingCloneConfig = new()
+			{
+				StartEnabled = true,
+				Parent = GameObject,
+			};
+
+			var Clone = GameManager.Instance.GetObject(BuildingData.ObjectId).Clone(BuildingCloneConfig);
 			BuildingObject = Clone.GetComponent<ObjectBuilding>();
 		}
 	}
@@ -123,10 +129,16 @@ public sealed class Hex : Obj
 
 		if (IsRevealed && !UnitObject.IsValid())
 		{
-			var Clone = GameManager.Instance.GetObject(UnitData.ObjectId).Clone();
-			Clone.WorldTransform = UnitData.Transform;
+			CloneConfig UnitCloneConfig = new()
+			{
+				StartEnabled = true,
+				Parent = GameObject,
+			};
+
+			var Clone = GameManager.Instance.GetObject(UnitData.ObjectId).Clone(UnitCloneConfig);
 			UnitObject = Clone.GetComponent<ObjectUnit>();
 			UnitObject.OwnerHex = this;
+			UnitObject.WorldPosition += Vector3.Up * 20f;
 
 			if (!UnitData.IsAi && GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid) is { } OwnerPlayer)
 			{
@@ -173,8 +185,14 @@ public sealed class Hex : Obj
 
 		if (IsRevealed && !Obj.IsValid())
 		{
-			var Clone = GameManager.Instance.GetObject(ObjectData.ObjectId).Clone();
-			Clone.WorldTransform = ObjectData.Transform;
+			CloneConfig ObjCloneConfig = new()
+			{
+				StartEnabled = true,
+				Parent = GameObject,
+			};
+
+			var Clone = GameManager.Instance.GetObject(ObjectData.ObjectId).Clone(ObjCloneConfig);
+			Clone.WorldPosition += Vector3.Up * 30f; // HACK
 		}
 	}
 
@@ -375,12 +393,16 @@ public sealed class Hex : Obj
 			FogObject = null;
 		}
 
-		// TODO : revisist
+		// TODO : revisit
 		OnUnitDataChanged(new(), new());
 		OnBuildingDataChanged(new(), new());
 		OnObjectDataChanged(new(), new());
 
-		LocalCameraMode = GamePlayer.Local.CameraMode;
+		// TODO : REALLY revisit
+		if (GamePlayer.Local != null)
+		{
+			LocalCameraMode = GamePlayer.Local.CameraMode;
+		}
 	}
 
 	private void OnHide()
@@ -388,7 +410,7 @@ public sealed class Hex : Obj
 		CloneConfig FogConfig = new(WorldTransform);
 		FogObject = FogPrefab.Clone(FogConfig);
 
-		// TODO : revisist
+		// TODO : revisit
 		OnUnitDataChanged(new(), new());
 		OnBuildingDataChanged(new(), new());
 		OnObjectDataChanged(new(), new());
