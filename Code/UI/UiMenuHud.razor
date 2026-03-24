@@ -48,7 +48,8 @@
 
     protected void OnStartClick()
     {
-        Log.Info(LobbyPrivacy);
+        GameManager.CreateLobby($"epic lobby number {Game.SteamId}", LobbyPrivacy);
+        Game.ActiveScene.LoadFromFile("scenes/minimal.scene");
     }
 
     protected override int BuildHash()

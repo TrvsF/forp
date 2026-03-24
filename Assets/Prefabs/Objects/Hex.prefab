@@ -26,7 +26,7 @@
           "_type": "gameobject",
           "prefab": "prefabs/objects/hexfog.prefab"
         },
-        "HighlightMaterial": "materials/hotspots/wood_varnished_a_hs.vmat",
+        "HighlightMaterial": "materials/glow/glow green.vmat",
         "ObjectId": null,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -35,7 +35,13 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "Production": 0,
-        "Type": "Grass"
+        "Type": "Grass",
+        "TypeModels": {
+          "Grass": "models/hexagon-kit/hexagon_grass.vmdl",
+          "Sand": "models/hexagon-kit/hexagon_sand-rocks.vmdl",
+          "Stone": "models/hexagon-kit/hexagon_stone.vmdl",
+          "Water": "models/hexagon-kit/hexagon_water.vmdl"
+        }
       },
       {
         "__type": "Sandbox.SkinnedModelRenderer",
@@ -51,7 +57,7 @@
         "MaterialGroup": null,
         "MaterialOverride": null,
         "Materials": null,
-        "Model": "models/hexagon-kit/hexagon_stone.vmdl",
+        "Model": "models/hexagon-kit/hexagon_stone-hill.vmdl",
         "Morphs": {},
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -135,8 +141,12 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "facepunch.wood_varnished_a_hs#111284",
-    "kenneynl.hexagonstone#80923"
+    "danivisit.glowgreen#162701",
+    "kenneynl.hexagongrass#80885",
+    "kenneynl.hexagonsandrocks#80917",
+    "kenneynl.hexagonstone#80923",
+    "kenneynl.hexagonstonehill#80935",
+    "kenneynl.hexagonwater#80934"
   ],
   "__version": 2
 }

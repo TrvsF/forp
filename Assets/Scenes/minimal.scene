@@ -62,7 +62,7 @@
           "Flags": 0,
           "FogMode": "Disabled",
           "FogStrength": 1,
-          "LightColor": "0.43256,0.36566,0.24143,1",
+          "LightColor": "0.49767,0.44825,0.35647,1",
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -70,7 +70,7 @@
           "OnComponentStart": null,
           "OnComponentUpdate": null,
           "Shadows": true,
-          "SkyColor": "0.49116,0.57302,0.61395,1"
+          "SkyColor": "0.0675,0.08451,0.09302,1"
         }
       ],
       "Children": []

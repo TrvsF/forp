@@ -60,7 +60,7 @@
         "CreateAttachments": false,
         "CreateBoneObjects": false,
         "LodOverride": null,
-        "MaterialGroup": null,
+        "MaterialGroup": "default",
         "MaterialOverride": null,
         "Materials": null,
         "Model": "models/citizen/citizen.vmdl",
@@ -93,32 +93,6 @@
         },
         "Tint": "1,1,1,1",
         "UseAnimGraph": true
-      },
-      {
-        "__type": "Sandbox.BoxCollider",
-        "__guid": "005ff6f6-c716-416e-84ab-0210e453ab72",
-        "__enabled": false,
-        "Flags": 0,
-        "Center": "0.6336546,-0.9722166,34.70306",
-        "ColliderFlags": 0,
-        "Elasticity": null,
-        "Friction": null,
-        "IsTrigger": false,
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null,
-        "OnObjectTriggerEnter": null,
-        "OnObjectTriggerExit": null,
-        "OnTriggerEnter": null,
-        "OnTriggerExit": null,
-        "RollingResistance": null,
-        "Scale": "21.82688,31.1014,70.07653",
-        "Static": false,
-        "Surface": null,
-        "SurfaceVelocity": "0,0,0"
       },
       {
         "__type": "Sandbox.ModelCollider",
@@ -173,9 +147,108 @@
           "go": "a0ea17bc-813a-41cf-afc4-796c3582076f",
           "component_type": "SkinnedModelRenderer"
         }
+      },
+      {
+        "__type": "Sandbox.Dresser",
+        "__guid": "9968a401-43d9-4022-9e25-205a4b125b4d",
+        "__enabled": true,
+        "Flags": 0,
+        "ApplyHeightScale": true,
+        "BodyTarget": {
+          "_type": "component",
+          "component_id": "61105fb5-abcd-45dc-bf9d-9ea2c1def99c",
+          "go": "a0ea17bc-813a-41cf-afc4-796c3582076f",
+          "component_type": "SkinnedModelRenderer"
+        },
+        "Clothing": [
+          {
+            "Clothing": "models/citizen_clothes/hat/chefs_hat/chefs_hat.clothing"
+          }
+        ],
+        "ManualAge": 0.78203475,
+        "ManualHeight": 0.9566592,
+        "ManualTint": 0.6545454,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "Source": "Manual",
+        "WorkshopItems": []
       }
     ],
-    "Children": [],
+    "Children": [
+      {
+        "__guid": "6269bb60-a558-4242-b89c-0c5ba068284e",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Clothing - chefs_hat",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "clothing",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.SkinnedModelRenderer",
+            "__guid": "e805002b-bd97-431e-bd9c-562e638cdccb",
+            "__enabled": true,
+            "Flags": 0,
+            "AnimationGraph": null,
+            "BodyGroups": 18446744073709551615,
+            "BoneMergeTarget": {
+              "_type": "component",
+              "component_id": "61105fb5-abcd-45dc-bf9d-9ea2c1def99c",
+              "go": "a0ea17bc-813a-41cf-afc4-796c3582076f",
+              "component_type": "SkinnedModelRenderer"
+            },
+            "CreateAttachments": false,
+            "CreateBoneObjects": false,
+            "LodOverride": null,
+            "MaterialGroup": null,
+            "MaterialOverride": null,
+            "Materials": null,
+            "Model": "models/citizen_clothes/hat/chefs_hat/models/chefs_hat.vmdl",
+            "Morphs": {},
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Parameters": {
+              "bools": {},
+              "ints": {},
+              "floats": {},
+              "vectors": {},
+              "rotations": {}
+            },
+            "PlaybackRate": 1,
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderType": "On",
+            "Sequence": {
+              "Name": null,
+              "Looping": true,
+              "Blending": false
+            },
+            "Tint": "1,1,1,1",
+            "UseAnimGraph": true
+          }
+        ],
+        "Children": []
+      }
+    ],
     "__properties": {
       "NetworkInterpolation": true,
       "TimeScale": 1,

@@ -274,6 +274,12 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 	void INetworkListener.OnActive(Connection ConnectionChannel)
 	{
 		Assert.True(Networking.IsHost);
+	
+		if (Mode == EGameManagerMode.Menu)
+		{
+			return;
+		}
+
 		Log.Info($"Connection activating with name = {ConnectionChannel.DisplayName}:{ConnectionChannel.Ping} | is host = {ConnectionChannel.IsHost}");
 
 		StartClient_SeverOnly(ConnectionChannel.Id);
@@ -679,7 +685,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		};
 
 		Hex.BuildingData = ObjectData;
-		Hex.SetOwner_ServerOnly(ObjectData, true);
+		Hex.SetOwnerHexesRecursive_ServerOnly(Hex, ObjectData, TypedObject.ViewRange - 1);
 
 		if (FromUnit) // TODO : check building charge
 		{
@@ -724,6 +730,12 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 
 		if (OldHex == NewHex)
 		{
+			return;
+		}
+
+		if (!NewHex.CanWalkOn())
+		{
+			Log.Warning("Cannot move to hex that is not walkable");
 			return;
 		}
 
@@ -822,12 +834,11 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 
 	private readonly Stack<Color> PlayerColours = new(
 	[
-		Color.Gray,
+		Color.Green,
 		Color.Orange,
-		Color.Magenta,
-		Color.Cyan,
-		Color.White,
 		Color.Red,
+		Color.Blue,
+		Color.Magenta,
 	]);
 
 	private bool CreatePlayerObject_ServerOnly(Guid ConnectionGuid, Hex SpawnHex, out GamePlayer OutGamePlayer)
@@ -873,12 +884,12 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		return true;
 	}
 
-	private static bool CreateLobby(string LobbyName = "awesomelobby", LobbyPrivacy Privacy = LobbyPrivacy.Private)
+	public static bool CreateLobby(string LobbyName = "awesomelobby", LobbyPrivacy Privacy = LobbyPrivacy.Private)
 	{
 		LobbyConfig Config = new();
 		Config.Name = LobbyName;
-		Config.DestroyWhenHostLeaves = false;
-		Config.MaxPlayers = 8;
+		Config.DestroyWhenHostLeaves = true;
+		Config.MaxPlayers = 5;
 		Config.Privacy = Privacy;
 
 		Networking.CreateLobby(Config);

@@ -5,7 +5,7 @@
     "Flags": 0,
     "Name": "combatunit",
     "Position": "0,0,0",
-    "Rotation": "0,-0,-0.9999705,0.007678151",
+    "Rotation": "0,0,1,-0.00000004371139",
     "Scale": "1,1,1",
     "Tags": "",
     "Enabled": true,
@@ -50,20 +50,45 @@
         "ViewRange": 3
       },
       {
+        "__type": "Sandbox.ModelCollider",
+        "__guid": "32d2fbb6-38e9-4adb-8454-94c6d55a8606",
+        "__enabled": true,
+        "Flags": 0,
+        "ColliderFlags": 0,
+        "Elasticity": null,
+        "Friction": null,
+        "IsTrigger": false,
+        "Model": "models/citizen/citizen.vmdl",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OnObjectTriggerEnter": null,
+        "OnObjectTriggerExit": null,
+        "OnTriggerEnter": null,
+        "OnTriggerExit": null,
+        "RollingResistance": null,
+        "Static": false,
+        "Surface": null,
+        "SurfaceVelocity": "0,0,0"
+      },
+      {
         "__type": "Sandbox.SkinnedModelRenderer",
-        "__guid": "61105fb5-abcd-45dc-bf9d-9ea2c1def99c",
+        "__guid": "fe3b91c9-c6cf-4a4b-8ac1-1f5ca0ce5ac2",
         "__enabled": true,
         "Flags": 0,
         "AnimationGraph": null,
-        "BodyGroups": 18446744073709551615,
+        "BodyGroups": 341,
         "BoneMergeTarget": null,
         "CreateAttachments": false,
         "CreateBoneObjects": false,
         "LodOverride": null,
-        "MaterialGroup": null,
+        "MaterialGroup": "default",
         "MaterialOverride": null,
         "Materials": null,
-        "Model": "models/characters/crackhead_01/master_rig/crackhead_samir.vmdl",
+        "Model": "models/citizen/citizen.vmdl",
         "Morphs": {},
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -95,58 +120,135 @@
         "UseAnimGraph": true
       },
       {
-        "__type": "Sandbox.BoxCollider",
-        "__guid": "005ff6f6-c716-416e-84ab-0210e453ab72",
-        "__enabled": false,
-        "Flags": 0,
-        "Center": "0.6336546,-0.9722166,34.70306",
-        "ColliderFlags": 0,
-        "Elasticity": null,
-        "Friction": null,
-        "IsTrigger": false,
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null,
-        "OnObjectTriggerEnter": null,
-        "OnObjectTriggerExit": null,
-        "OnTriggerEnter": null,
-        "OnTriggerExit": null,
-        "RollingResistance": null,
-        "Scale": "21.82688,31.1014,70.07653",
-        "Static": false,
-        "Surface": null,
-        "SurfaceVelocity": "0,0,0"
-      },
-      {
-        "__type": "Sandbox.ModelCollider",
-        "__guid": "32d2fbb6-38e9-4adb-8454-94c6d55a8606",
+        "__type": "Sandbox.Citizen.CitizenAnimationHelper",
+        "__guid": "b4874479-4169-468e-b642-496d37d25f2d",
         "__enabled": true,
         "Flags": 0,
-        "ColliderFlags": 0,
-        "Elasticity": null,
-        "Friction": null,
-        "IsTrigger": false,
-        "Model": "models/characters/crackhead_01/master_rig/crackhead_samir.vmdl",
+        "BodyWeight": 1,
+        "EyeSource": null,
+        "EyesWeight": 1,
+        "HeadWeight": 1,
+        "Height": null,
+        "IkLeftFoot": null,
+        "IkLeftHand": null,
+        "IkRightFoot": null,
+        "IkRightHand": null,
+        "LookAt": null,
+        "LookAtEnabled": false,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "OnObjectTriggerEnter": null,
-        "OnObjectTriggerExit": null,
-        "OnTriggerEnter": null,
-        "OnTriggerExit": null,
-        "RollingResistance": null,
-        "Static": false,
-        "Surface": null,
-        "SurfaceVelocity": "0,0,0"
+        "Target": {
+          "_type": "component",
+          "component_id": "fe3b91c9-c6cf-4a4b-8ac1-1f5ca0ce5ac2",
+          "go": "a0ea17bc-813a-41cf-afc4-796c3582076f",
+          "component_type": "SkinnedModelRenderer"
+        }
+      },
+      {
+        "__type": "Sandbox.Dresser",
+        "__guid": "b8ce98a2-7931-4644-b958-86acc9d5c1a5",
+        "__enabled": true,
+        "Flags": 0,
+        "ApplyHeightScale": true,
+        "BodyTarget": {
+          "_type": "component",
+          "component_id": "fe3b91c9-c6cf-4a4b-8ac1-1f5ca0ce5ac2",
+          "go": "a0ea17bc-813a-41cf-afc4-796c3582076f",
+          "component_type": "SkinnedModelRenderer"
+        },
+        "Clothing": [
+          {
+            "Clothing": "models/citizen_clothes/vest/tactical_vest/models/tactical_vest.clothing"
+          }
+        ],
+        "ManualAge": 0,
+        "ManualHeight": 0.18787879,
+        "ManualTint": 0,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "Source": "Manual",
+        "WorkshopItems": []
       }
     ],
-    "Children": [],
+    "Children": [
+      {
+        "__guid": "d29207a5-3400-4e34-9747-bdaeff929911",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Clothing - tactical_vest",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "clothing",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.SkinnedModelRenderer",
+            "__guid": "3c4dc823-ec9f-4800-bd42-f15c11e4e631",
+            "__enabled": true,
+            "Flags": 0,
+            "AnimationGraph": null,
+            "BodyGroups": 18446744073709551615,
+            "BoneMergeTarget": {
+              "_type": "component",
+              "component_id": "fe3b91c9-c6cf-4a4b-8ac1-1f5ca0ce5ac2",
+              "go": "a0ea17bc-813a-41cf-afc4-796c3582076f",
+              "component_type": "SkinnedModelRenderer"
+            },
+            "CreateAttachments": false,
+            "CreateBoneObjects": false,
+            "LodOverride": null,
+            "MaterialGroup": null,
+            "MaterialOverride": null,
+            "Materials": null,
+            "Model": "models/citizen_clothes/vest/tactical_vest/models/tactical_vest.vmdl",
+            "Morphs": {},
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Parameters": {
+              "bools": {},
+              "ints": {},
+              "floats": {},
+              "vectors": {},
+              "rotations": {}
+            },
+            "PlaybackRate": 1,
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderType": "On",
+            "Sequence": {
+              "Name": null,
+              "Looping": true,
+              "Blending": false
+            },
+            "Tint": "1,1,1,1",
+            "UseAnimGraph": true
+          }
+        ],
+        "Children": []
+      }
+    ],
     "__properties": {
       "NetworkInterpolation": true,
       "TimeScale": 1,
@@ -162,8 +264,7 @@
         "AgentStepSize": 18,
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
-        "IncludedBodies": "",
-        "CustomBounds": false
+        "IncludedBodies": ""
       }
     },
     "__variables": []
@@ -174,8 +275,7 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "baik.retrolava#106891",
-    "fpopium.crackhead_03#123567"
+    "baik.retrolava#106891"
   ],
   "__version": 2
 }

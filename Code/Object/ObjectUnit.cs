@@ -151,6 +151,7 @@ public class ObjectUnit : Obj
 
 		var OwnerString = OwnerPlayer == null ? "AI" : OwnerPlayer.SteamName;
 		HealthText = GameText.CreateTextObject<GameText>(TextTransform, $"{DisplayName} : {OwnerString}\n{Health}hp");
+		HealthText.WorldRotation = new();
 	}
 
 	private bool _showBuildings = false;
@@ -159,7 +160,7 @@ public class ObjectUnit : Obj
 		get => _showBuildings;
 		set
 		{
-			if (GamePlayer.Local != OwnerPlayer)
+			if (GamePlayer.Local != OwnerPlayer && GamePlayer.Local != null)
 			{
 				return;
 			}

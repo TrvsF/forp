@@ -290,16 +290,16 @@
           "Scale": 1,
           "TextScope": {
             "Text": "Forward Operating: Restore the Planet",
-            "TextColor": "0.94419,0,0,1",
+            "TextColor": "0.89767,0.11691,0.11691,1",
             "FontName": "Inter",
             "FontSize": 65.61539,
-            "FontWeight": 400,
+            "FontWeight": 437,
             "FontItalic": false,
             "LineHeight": 1,
-            "LetterSpacing": 0,
-            "WordSpacing": 0,
-            "FilterMode": "Bilinear",
-            "FontSmooth": "Auto",
+            "LetterSpacing": 4.329997,
+            "WordSpacing": -9.279927,
+            "FilterMode": "Trilinear",
+            "FontSmooth": "Always",
             "Outline": {
               "Enabled": false,
               "Size": 4,
@@ -307,7 +307,7 @@
             },
             "Shadow": {
               "Enabled": false,
-              "Size": 4,
+              "Size": 1,
               "Color": "0,0,0,1",
               "Offset": "4,4"
             },
@@ -318,12 +318,52 @@
             },
             "ShadowUnder": {
               "Enabled": false,
-              "Size": 4,
+              "Size": 1,
               "Color": "0,0,0,1",
               "Offset": "4,4"
             }
           },
           "VerticalAlignment": "Center"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "b3123848-9375-4bd4-8e51-22b8be8c2305",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Spot Light",
+      "Position": "0,-1725.359,-238.2784",
+      "Rotation": "0.1830127,-0.1830127,0.6830126,0.6830127",
+      "Scale": "1,1,1",
+      "Tags": "light_spot,light",
+      "Enabled": false,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.SpotLight",
+          "__guid": "dc418c75-3032-4c6a-9e70-a7bad0ecf32d",
+          "__enabled": true,
+          "Flags": 0,
+          "Attenuation": 6.1490684,
+          "ConeInner": 56.459625,
+          "ConeOuter": 37.45342,
+          "Cookie": null,
+          "FogMode": "Disabled",
+          "FogStrength": 1,
+          "LightColor": "0.91373,0.98039,1,1",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Radius": 5000,
+          "Shadows": false
         }
       ],
       "Children": []

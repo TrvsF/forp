@@ -13,6 +13,7 @@ public enum EHexType
 {
 	Grass,
 	Sand,
+	Stone,
 	Water,
 }
 
@@ -51,7 +52,9 @@ public sealed class Hex : Obj
 	[Sync(SyncFlags.FromHost)] public NetList<FQueueObject> QueuedUnits { get; set; } = new();
 	[Sync(SyncFlags.FromHost), Property] public int Production { get; set; } = 0;
 	[Sync(SyncFlags.FromHost), Property] public EHexType Type { get; set; } = EHexType.Grass;
-	[Sync(SyncFlags.FromHost), Change, Property] public Color BaseColour { get; set; } = Color.Black;
+	[Sync(SyncFlags.FromHost), Change, Property] public Color BaseColour { get; set; } = Color.White;
+
+	[Property] public Dictionary<EHexType, Model> TypeModels { get; private set; }
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -75,6 +78,7 @@ public sealed class Hex : Obj
 			if (!ConstructionObject.IsValid())
 			{
 				var ConstructionClone = GameManager.Instance.GameTextPrefab.Clone();
+				ConstructionClone.NetworkMode = NetworkMode.Never;
 				ConstructionClone.WorldTransform = BuildingData.Transform;
 				ConstructionClone.WorldPosition += Vector3.Up * 100;
 				ConstructionObject = ConstructionClone.GetComponent<TextRenderer>();
@@ -139,10 +143,11 @@ public sealed class Hex : Obj
 			UnitObject = Clone.GetComponent<ObjectUnit>();
 			UnitObject.OwnerHex = this;
 			UnitObject.WorldPosition += Vector3.Up * 20f;
+			UnitObject.WorldRotation = Rotation.FromYaw(180);
 
 			if (GameManager.Instance.Mode != EGameManagerMode.Menu)
 			{
-				UnitObject.ModelRenderer.RenderOptions.Overlay = true;
+				//UnitObject.ModelRenderer.RenderOptions.Overlay = true;
 			}
 
 			if (!UnitData.IsAi && GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid) is { } OwnerPlayer)
@@ -202,7 +207,7 @@ public sealed class Hex : Obj
 	}
 
 	[Sync(SyncFlags.FromHost)] public NetList<FBuilding> BuildingOwners { get; set; } = new();
-	public void SetOwner_ServerOnly(FBuilding OwnerIn, bool DoBrothers = false)
+	public void SetOwner_ServerOnly(FBuilding OwnerIn)
 	{
 		Assert.True(Networking.IsHost);
 
@@ -211,16 +216,6 @@ public sealed class Hex : Obj
 		if (GameManager.Instance.GetGamePlayer(OwnerIn.OwnerGuid) is { } OwnerPlayer)
 		{
 			SetBaseColour_ServerOnly(OwnerPlayer.Colour);
-		}
-
-		if (!DoBrothers)
-		{
-			return;
-		}
-
-		foreach (var BrothermanHex in AllBrothers)
-		{
-			BrothermanHex?.SetOwner_ServerOnly(OwnerIn, false);
 		}
 	}
 
@@ -238,16 +233,10 @@ public sealed class Hex : Obj
 	private void SetBaseColour_ServerOnly(Color Colour)
 	{
 		BaseColour = Colour;
-		BaseColour = BaseColour.Darken(1f / Production);
+		//BaseColour = BaseColour.Darken(1f / Production);
 	}
 
 	public static readonly List<Vector3> BrotherOffsets = [new(170, 100), new(170, -100), new(0, -200), new(-170, -100), new(-170, 100), new(0, 200)];
-	private readonly Dictionary<EHexType, Color> TypeColours = new()
-	{
-		{ EHexType.Grass, Color.Green },
-		{ EHexType.Sand, Color.Yellow },
-		{ EHexType.Water, Color.Blue },
-	};
 
 	protected override void OnAwake()
 	{
@@ -273,6 +262,8 @@ public sealed class Hex : Obj
 		{
 			InitHex_ServerOnly();
 		}
+
+		ModelRenderer.Model = TypeModels[Type];
 	}
 
 	protected override void OnDestroy()
@@ -285,9 +276,25 @@ public sealed class Hex : Obj
 	public void InitHex_ServerOnly()
 	{
 		Assert.True(Networking.IsHost);
-		Production = Random.Shared.Int(2, 7);
+
 		Type = Random.Shared.FromArray(Enum.GetValues<EHexType>());
-		SetBaseColour_ServerOnly(TypeColours[Type]);
+
+		switch (Type)
+		{
+			case EHexType.Grass:
+				Production = Random.Shared.Int(5, 9);
+				break;
+			case EHexType.Sand:
+				Production = Random.Shared.Int(2, 3);
+				break;
+			case EHexType.Stone:
+				Production = Random.Shared.Int(6, 10);
+				break;
+			case EHexType.Water:
+				Production = Random.Shared.Int(3, 5);
+				break;
+		}
+
 		if (Random.Shared.Next(7) == 1 && Type == EHexType.Grass)
 		{
 			GameManager.Instance.Server_CreateHexObject("tree", this, Connection.Host.Id);
@@ -376,12 +383,19 @@ public sealed class Hex : Obj
 			var TextTransform = WorldTransform;
 			TextTransform.Position += Vector3.Up * 25;
 
-			ProductionTexts.Add(GameText.CreateTextObject<GameText>(TextTransform, $"{Production}⬡"));
+			var ProductionText = GameText.CreateTextObject<GameText>(TextTransform, $"{Production}⬡");
+			ProductionText.GetComponent<TextRenderer>().Color = Color.Lerp(Color.FromBytes(255, 120, 120), Color.White, Production / 10f);
+			ProductionTexts.Add(ProductionText);
 		}
 	}
 
 	private void OnHighlight()
 	{
+		if (!CanWalkOn())
+		{
+			return;
+		}
+
 		ModelRenderer.MaterialOverride = HighlightMaterial;
 	}
 
@@ -423,12 +437,12 @@ public sealed class Hex : Obj
 
 	private void OnSelect()
 	{
-		ModelRenderer.Tint = BaseColour.Darken(0.66f);
+		// ModelRenderer.Tint = BaseColour.Darken(0.66f);
 	}
 
 	private void OnDeselect()
 	{
-		ModelRenderer.Tint = BaseColour;
+		// ModelRenderer.Tint = BaseColour;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -524,6 +538,20 @@ public sealed class Hex : Obj
 		}
 	}
 
+	public static void SetOwnerHexesRecursive_ServerOnly(Hex Hex, FBuilding OwnerBuilding, int Depth)
+	{
+		Assert.True(Networking.IsHost);
+		if (Hex == null || Depth <= 0) return;
+
+		Hex.SetOwner_ServerOnly(OwnerBuilding);
+
+		foreach (var Brother in Hex.AllBrothers)
+		{
+			if (Brother == null) continue;
+			SetOwnerHexesRecursive_ServerOnly(Brother.GetComponent<Hex>(), OwnerBuilding, Depth - 1);
+		}
+	}
+
 	public static void RevealHexesRecusrive(Hex Hex, bool Reveal, int Depth)
 	{
 		if (Hex == null || Depth <= 0) return;
@@ -558,6 +586,11 @@ public sealed class Hex : Obj
 	public bool IsLocallyOwned()
 	{
 		return GetOwnerId() == GamePlayer.Local.ConnectionId;
+	}
+
+	public bool CanWalkOn()
+	{
+		return Type != EHexType.Water;
 	}
 
 	public Guid GetOwnerId()

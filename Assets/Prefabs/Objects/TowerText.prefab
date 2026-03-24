@@ -22,7 +22,8 @@
         "Flags": 0,
         "DisplayName": "Tower Text",
         "HexTypesToBuild": [
-          "Grass"
+          "Grass",
+          "Stone"
         ],
         "ObjectId": "building-tower",
         "ObjectToBuild": {
@@ -123,8 +124,7 @@
         "AgentStepSize": 18,
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
-        "IncludedBodies": "",
-        "CustomBounds": false
+        "IncludedBodies": ""
       }
     },
     "__variables": []

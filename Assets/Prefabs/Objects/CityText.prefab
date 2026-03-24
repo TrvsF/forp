@@ -23,7 +23,8 @@
         "DisplayName": "City Text",
         "HexTypesToBuild": [
           "Grass",
-          "Sand"
+          "Sand",
+          "Stone"
         ],
         "ObjectId": "building-city",
         "ObjectToBuild": {
@@ -124,8 +125,7 @@
         "AgentStepSize": 18,
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
-        "IncludedBodies": "",
-        "CustomBounds": false
+        "IncludedBodies": ""
       }
     },
     "__variables": []

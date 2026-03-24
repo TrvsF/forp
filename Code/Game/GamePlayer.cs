@@ -191,8 +191,16 @@ public sealed partial class GamePlayer : Component
 		Connection = Connection.Local; // TODO : this is only set on server & local client per player... 
 		Local = this;
 
+
 		GameManager.Instance.Server_CreateHexUnitObject("unit-settler", SpawnHex, Connection.Id);
-		var Brother = SpawnHex.AllBrothers.Where(Hex => Hex != null && Hex.ObjectData == null).OrderBy(Hex => Random.Shared.Next()).First();
+		var ValidBrothers = SpawnHex.AllBrothers.Where(Hex => Hex != null && Hex.ObjectData == null && Hex.CanWalkOn()).OrderBy(Hex => Random.Shared.Next());
+		if (!ValidBrothers.Any())
+		{
+			Log.Warning($"urrr, couldn't spawn a brother unit... this isn't good...");
+			return;
+		}
+
+		var Brother = ValidBrothers.First();
 		GameManager.Instance.Server_CreateHexUnitObject("unit-combat", Brother, Connection.Id);
 	}
 

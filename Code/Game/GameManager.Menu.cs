@@ -76,29 +76,9 @@ public partial class GameManager
 
 	protected void SpawnRandomObject()
 	{
-		Vector3 RandomPos = new(0, 2000, Random.Shared.Int(-200, 200));
-		Rotation RandomRotation = new();
-
-		switch (Random.Shared.Int(0, 2))
-		{
-			case 0:
-				RandomPos.x = Random.Shared.Int(300, 900);
-				RandomRotation = RandomRotation.RotateAroundAxis(Vector3.Right, 30);
-				break;
-			case 1:
-				RandomPos.x = Random.Shared.Int(-900, -300);
-				RandomRotation = RandomRotation.RotateAroundAxis(Vector3.Right, -30);
-				break;
-			case 2:
-				RandomPos.x = Random.Shared.Int(200, 600);
-				RandomRotation = RandomRotation.RotateAroundAxis(Vector3.Forward, 30);
-				break;
-		}
-
 		CloneConfig HexConfig = new()
 		{
 			StartEnabled = true,
-			Transform = new(RandomPos, RandomRotation),
 		};
 
 		var Hex = HexPrefab.Clone(HexConfig);
@@ -116,11 +96,31 @@ public partial class GameManager
 		{
 			case 0:
 				Server_CreateHexUnitObject(Random.Shared.FromList(RandomUnits), HexComponent, Connection.Local.Id);
+				HexComponent.UnitObject.SetCameraMode(ECameraMode.Normal);
 				break;
 			case 1:
 				Server_CreateHexBuildingObject(Random.Shared.FromList(RandomBuilding), HexComponent, false, Connection.Local.Id);
 				break;
 			case 2:
+				break;
+		}
+
+		Vector3 RandomPos = new(0, 2000, Random.Shared.Int(-200, 200));
+		Rotation RandomRotation = Rotation.FromYaw(Random.Shared.Int(0, 360));
+
+		switch (Random.Shared.Int(0, 2))
+		{
+			case 0:
+				HexComponent.WorldPosition = RandomPos.WithX(Random.Shared.Int(300, 900));
+				HexComponent.WorldRotation = RandomRotation.RotateAroundAxis(Vector3.Right, 30);
+				break;
+			case 1:
+				HexComponent.WorldPosition = RandomPos.WithX(Random.Shared.Int(-900, -300));
+				HexComponent.WorldRotation = RandomRotation.RotateAroundAxis(Vector3.Right, -30);
+				break;
+			case 2:
+				HexComponent.WorldPosition = RandomPos.WithX(Random.Shared.Int(200, 600));
+				HexComponent.WorldRotation = RandomRotation.RotateAroundAxis(Vector3.Forward, 30);
 				break;
 		}
 	}
