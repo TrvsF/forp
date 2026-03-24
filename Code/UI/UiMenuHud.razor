@@ -1,0 +1,73 @@
+@using System;
+@using Forp.Game
+@using Sandbox.Network
+@inherits PanelComponent
+
+<root>
+    <watermark>Forp Infdev @(DateTime.Now.ToShortDateString())</watermark>
+
+    <menu-container>
+        @if (SubMenu == ESubMenu.Main)
+        {
+            <menu-button @onclick=@(() => SubMenu = ESubMenu.Lobby) style="font-size: 48px;">
+                Play
+            </menu-button>
+
+            <menu-button @onclick=@(() => Game.Disconnect()) style="font-size: 18px;">
+                Quit
+            </menu-button>
+        }
+
+        @if (SubMenu == ESubMenu.Lobby)
+        {
+            <menu-row>
+                @foreach (LobbyPrivacy NetworkMode in Enum.GetValues(typeof(LobbyPrivacy)))
+                {
+                    <menu-button class="@(LobbyPrivacy == NetworkMode ? "selected" : "")" @onclick="@(() => LobbyPrivacy = NetworkMode)">
+                        @NetworkMode
+                    </menu-button>
+                }
+            </menu-row>
+            <menu-button @onclick="@(() => OnStartClick())" style="font-size: 48px;">
+                Start
+            </menu-button>
+            <menu-button @onclick="@(() => SubMenu = ESubMenu.Main)" style="font-size: 18px;">
+                Back
+            </menu-button>
+        }
+    </menu-container>
+</root>
+
+@code
+{
+    enum ESubMenu
+    {
+        Main,
+        Lobby,
+    }
+
+    protected void OnStartClick()
+    {
+        Log.Info(LobbyPrivacy);
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(Time.Now);
+    }
+
+    private LobbyPrivacy LobbyPrivacy = LobbyPrivacy.Public;
+    private ESubMenu SubMenu = ESubMenu.Main;
+
+    protected override void OnEnabled()
+    {
+        base.OnEnabled();
+
+        Mouse.Visibility = MouseVisibility.Visible;
+    }
+
+    protected override void OnUpdate()
+    {
+        base.OnUpdate();
+    }
+}

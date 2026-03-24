@@ -822,12 +822,12 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 
 	private readonly Stack<Color> PlayerColours = new(
 	[
-		Color.Red,
 		Color.Gray,
 		Color.Orange,
 		Color.Magenta,
 		Color.Cyan,
 		Color.White,
+		Color.Red,
 	]);
 
 	private bool CreatePlayerObject_ServerOnly(Guid ConnectionGuid, Hex SpawnHex, out GamePlayer OutGamePlayer)

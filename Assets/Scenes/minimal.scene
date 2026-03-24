@@ -60,9 +60,9 @@
           "__guid": "d3659344-a90d-48fa-927a-095f70fe041f",
           "__enabled": true,
           "Flags": 0,
-          "FogMode": "Enabled",
+          "FogMode": "Disabled",
           "FogStrength": 1,
-          "LightColor": "0.29858,0.30641,0.31163,1",
+          "LightColor": "0.43256,0.36566,0.24143,1",
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -70,7 +70,7 @@
           "OnComponentStart": null,
           "OnComponentUpdate": null,
           "Shadows": true,
-          "SkyColor": "0.2532,0.32006,0.35349,1"
+          "SkyColor": "0.49116,0.57302,0.61395,1"
         }
       ],
       "Children": []
@@ -157,15 +157,7 @@
       "AgentStepSize": 18,
       "AgentMaxSlope": 40,
       "ExcludedBodies": "",
-      "IncludedBodies": "",
-      "CustomBounds": false
-    },
-    "GameObjectSystems": {
-      "Sandbox.Clutter.ClutterGridSystem": {
-        "Storage": {
-          "$blob": "4c764982-6b2d-4dd0-92cc-175fd0762ab2"
-        }
-      }
+      "IncludedBodies": ""
     }
   },
   "ResourceVersion": 3,

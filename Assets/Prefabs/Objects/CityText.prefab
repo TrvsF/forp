@@ -35,8 +35,7 @@
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
-        "OnComponentUpdate": null,
-        "ProductionToBuild": 0
+        "OnComponentUpdate": null
       },
       {
         "__type": "Sandbox.SkinnedModelRenderer",
@@ -70,7 +69,7 @@
         "PlaybackRate": 1,
         "RenderOptions": {
           "GameLayer": true,
-          "OverlayLayer": true,
+          "OverlayLayer": false,
           "BloomLayer": false,
           "AfterUILayer": false
         },
@@ -119,13 +118,14 @@
         "Enabled": false,
         "IncludeStaticBodies": true,
         "IncludeKeyframedBodies": true,
-        "EditorAutoUpdate": true,
+        "EditorAutoUpdate": false,
         "AgentHeight": 64,
         "AgentRadius": 16,
         "AgentStepSize": 18,
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
-        "IncludedBodies": ""
+        "IncludedBodies": "",
+        "CustomBounds": false
       }
     },
     "__variables": []

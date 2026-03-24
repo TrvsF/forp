@@ -65,8 +65,8 @@
           "ZIndex": 100
         },
         {
-          "__type": "Sandbox.UI.UiPlayerHud",
-          "__guid": "1d509350-b99b-46ff-b663-52e11121737b",
+          "__type": "Sandbox.UI.UiMenuHud",
+          "__guid": "2a8df1eb-dd5f-4c6d-9b54-a8204e75462c",
           "__enabled": true,
           "Flags": 0,
           "OnComponentDestroy": null,
@@ -255,7 +255,7 @@
       "__version": 2,
       "Flags": 0,
       "Name": "Textes",
-      "Position": "0,0,281.3029",
+      "Position": "0,0,341.3914",
       "Rotation": "0,0,0.7071067,0.7071068",
       "Scale": "1,1,1",
       "Tags": "",
@@ -292,7 +292,7 @@
             "Text": "Forward Operating: Restore the Planet",
             "TextColor": "0.94419,0,0,1",
             "FontName": "Inter",
-            "FontSize": 32,
+            "FontSize": 65.61539,
             "FontWeight": 400,
             "FontItalic": false,
             "LineHeight": 1,
@@ -344,15 +344,7 @@
       "AgentStepSize": 18,
       "AgentMaxSlope": 40,
       "ExcludedBodies": "",
-      "IncludedBodies": "",
-      "CustomBounds": false
-    },
-    "GameObjectSystems": {
-      "Sandbox.Clutter.ClutterGridSystem": {
-        "Storage": {
-          "$blob": "43e8184f-7874-44e5-80f2-5803923b8dbe"
-        }
-      }
+      "IncludedBodies": ""
     }
   },
   "ResourceVersion": 3,

@@ -5,7 +5,7 @@
     "Flags": 0,
     "Name": "starterunit",
     "Position": "0,0,0",
-    "Rotation": "0,0,0,1",
+    "Rotation": "0,0,1,-0.00000004371139",
     "Scale": "1,1,1",
     "Tags": "",
     "Enabled": true,
@@ -55,7 +55,7 @@
         "__enabled": true,
         "Flags": 0,
         "AnimationGraph": null,
-        "BodyGroups": 18446744073709551615,
+        "BodyGroups": 341,
         "BoneMergeTarget": null,
         "CreateAttachments": false,
         "CreateBoneObjects": false,
@@ -63,7 +63,7 @@
         "MaterialGroup": null,
         "MaterialOverride": null,
         "Materials": null,
-        "Model": "models/characters/crackhead_01/master_rig/crackhead_rick.vmdl",
+        "Model": "models/citizen/citizen.vmdl",
         "Morphs": {},
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -81,7 +81,7 @@
         "PlaybackRate": 1,
         "RenderOptions": {
           "GameLayer": true,
-          "OverlayLayer": true,
+          "OverlayLayer": false,
           "BloomLayer": false,
           "AfterUILayer": false
         },
@@ -129,7 +129,7 @@
         "Elasticity": null,
         "Friction": null,
         "IsTrigger": false,
-        "Model": "models/characters/crackhead_01/master_rig/crackhead_rick.vmdl",
+        "Model": "models/citizen/citizen.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -144,6 +144,35 @@
         "Static": false,
         "Surface": null,
         "SurfaceVelocity": "0,0,0"
+      },
+      {
+        "__type": "Sandbox.Citizen.CitizenAnimationHelper",
+        "__guid": "d3f30958-e012-4edc-b08f-d8b4820e8b4a",
+        "__enabled": true,
+        "Flags": 0,
+        "BodyWeight": 1,
+        "EyeSource": null,
+        "EyesWeight": 1,
+        "HeadWeight": 1,
+        "Height": null,
+        "IkLeftFoot": null,
+        "IkLeftHand": null,
+        "IkRightFoot": null,
+        "IkRightHand": null,
+        "LookAt": null,
+        "LookAtEnabled": false,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "Target": {
+          "_type": "component",
+          "component_id": "61105fb5-abcd-45dc-bf9d-9ea2c1def99c",
+          "go": "a0ea17bc-813a-41cf-afc4-796c3582076f",
+          "component_type": "SkinnedModelRenderer"
+        }
       }
     ],
     "Children": [],
@@ -173,8 +202,7 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "baik.retrolava#106891",
-    "fpopium.crackhead_02#123566"
+    "baik.retrolava#106891"
   ],
   "__version": 2
 }

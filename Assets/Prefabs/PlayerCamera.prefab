@@ -5,7 +5,7 @@
     "Flags": 0,
     "Name": "playercamera",
     "Position": "0,0,0",
-    "Rotation": "0.00000001283086,0.3420201,-0.0000000352525,0.9396926",
+    "Rotation": "0.000000000000001089512,0.3420201,-0.0000000000000003965499,0.9396926",
     "Scale": "1,1,1",
     "Tags": "",
     "Enabled": true,
@@ -385,8 +385,7 @@
         "AgentStepSize": 18,
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
-        "IncludedBodies": "",
-        "CustomBounds": false
+        "IncludedBodies": ""
       }
     },
     "__variables": []

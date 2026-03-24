@@ -140,6 +140,11 @@ public sealed class Hex : Obj
 			UnitObject.OwnerHex = this;
 			UnitObject.WorldPosition += Vector3.Up * 20f;
 
+			if (GameManager.Instance.Mode != EGameManagerMode.Menu)
+			{
+				UnitObject.ModelRenderer.RenderOptions.Overlay = true;
+			}
+
 			if (!UnitData.IsAi && GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid) is { } OwnerPlayer)
 			{
 				UnitObject.OwnerPlayer = OwnerPlayer;

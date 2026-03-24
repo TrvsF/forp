@@ -42,7 +42,7 @@ public partial class GameManager
 
 		++TicksSinceLastSpawn;
 
-		if (TicksSinceLastSpawn > Random.Shared.Int(200, 400))
+		if (TicksSinceLastSpawn > Random.Shared.Int(100, 400))
 		{
 			SpawnRandomObject();
 			TicksSinceLastSpawn = 0;
@@ -76,12 +76,29 @@ public partial class GameManager
 
 	protected void SpawnRandomObject()
 	{
-		Vector3 RandomPos = new(Random.Shared.Int(-500, 500), 2000, Random.Shared.Int(-200, 200));
+		Vector3 RandomPos = new(0, 2000, Random.Shared.Int(-200, 200));
+		Rotation RandomRotation = new();
+
+		switch (Random.Shared.Int(0, 2))
+		{
+			case 0:
+				RandomPos.x = Random.Shared.Int(300, 900);
+				RandomRotation = RandomRotation.RotateAroundAxis(Vector3.Right, 30);
+				break;
+			case 1:
+				RandomPos.x = Random.Shared.Int(-900, -300);
+				RandomRotation = RandomRotation.RotateAroundAxis(Vector3.Right, -30);
+				break;
+			case 2:
+				RandomPos.x = Random.Shared.Int(200, 600);
+				RandomRotation = RandomRotation.RotateAroundAxis(Vector3.Forward, 30);
+				break;
+		}
 
 		CloneConfig HexConfig = new()
 		{
 			StartEnabled = true,
-			Transform = WorldTransform.WithPosition(RandomPos),
+			Transform = new(RandomPos, RandomRotation),
 		};
 
 		var Hex = HexPrefab.Clone(HexConfig);
@@ -93,7 +110,7 @@ public partial class GameManager
 		HexComponent.IsRevealed = true;
 		HexComponent.LocalCameraMode = ECameraMode.Normal;
 
-		MenuHexes.Add(new(HexComponent, Random.Shared.Int(3, 12), Random.Shared.Int(0, 12)));
+		MenuHexes.Add(new(HexComponent, Random.Shared.Int(6, 15), Random.Shared.Int(0, 12)));
 
 		switch (Random.Shared.Int(0, 2))
 		{
