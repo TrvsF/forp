@@ -22,11 +22,13 @@ static-bar {
     font-size: 21px;
     position: absolute;
     top: 32px;
-    left: 66%;
-    width: 70%;
+    right: 0;
+    width: 34%;
     padding-left: 1em;
     background-color: #FFFFFFAA;
-    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 }
 
 bottom-bar {
@@ -68,10 +70,10 @@ build-unit {
 
 next-turn-button {
     position: absolute;
-    bottom: 2%;
-    left: 90%;
-    width: 10%;
-    height: 10%;
+    bottom: 4%;
+    left: 93%;
+    width: 96px;
+    height: 96px;
     border-radius: 50%;
     background-color: #000000AA;
     pointer-events: all;

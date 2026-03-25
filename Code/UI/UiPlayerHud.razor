@@ -5,7 +5,10 @@
 <root>
     <watermark>Forp Infdev @(DateTime.Now.ToShortDateString())</watermark>
     <static-bar>
-        @(UiInfo.GetTopBarString())
+        @foreach (string TopMenuString in UiInfo.GetTopBarStrings())
+        {
+            <div>@TopMenuString</div>
+        }
     </static-bar>
 
     @if (UiInfo.AnythingSelected())
@@ -23,13 +26,13 @@
         </build-unit-container>
     }
 
-    <next-turn-button onclick="@OnNextTurnClick">
-        Next Turn. @(GameManager.Instance.Turn)
+    <next-turn-button onclick="@OnNextTurnClick" style="background-color: @GetNextColour();">
+        @(GetNextTurnString())
     </next-turn-button>
 </root>
 
 @code
-{
+            {
     protected override int BuildHash()
     {
         return HashCode.Combine(Time.Now);
@@ -49,9 +52,20 @@
         Forp.Game.GamePlayer.Local.GetPlayerUiInfo(out UiInfo);
     }
 
+    private string GetNextColour()
+    {
+        return GameManager.Instance.WaitingForLocal() ? "red" : "black";
+    }
+
     private void OnNextTurnClick()
     {
         GameManager.Instance.NextTurn();
+    }
+
+    private string GetNextTurnString()
+    {
+        GameManager.Instance.GetWaitingConnections(out var Waiting, out var Total);
+        return $"{Waiting}/{Total}";
     }
 
     private void OnUnitBuildClick(int Index)

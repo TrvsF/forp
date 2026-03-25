@@ -19,9 +19,10 @@ public struct FPlayerUiInfo
 	public Hex SelectedHex = null;
 	public List<string> BuildObjects = new();
 
-	public readonly string GetTopBarString()
+	public readonly List<string> GetTopBarStrings()
 	{
-		return $"{Name} \u00A3{Gold} {Production}⬡ {Territory}%";
+		GameManager.Instance.GetPlayerBoardStats(out var BoardStats);
+		return BoardStats.Select(Player => $"{Player.Key.SteamName} \u00A3{Player.Key.Gold} {Player.Value.Production}⬡ {Player.Value.TerritoryPercentage}%").ToList();
 	}
 
 	public readonly string GetBottomBarString()
@@ -119,7 +120,7 @@ public sealed partial class GamePlayer : Component
 		GameManager.Instance.GetPlayerBoardStats(out var PlayerBoardStats);
 		if (PlayerBoardStats.TryGetValue(Local, out var PlayerStats))
 		{
-			OutPlayerUiInfo.Territory = (int)(((float)PlayerStats.TerritoryCount / GameManager.Instance.BoardHexes.Count) * 100f);
+			OutPlayerUiInfo.Territory = PlayerStats.TerritoryPercentage;
 			OutPlayerUiInfo.Production = PlayerStats.Production;
 		}
 

@@ -5,6 +5,7 @@ using Sandbox.Diagnostics;
 using System;
 using System.Linq.Expressions;
 using System.Threading;
+using static Sandbox.Services.Stats;
 
 namespace Forp.Game;
 
@@ -19,6 +20,7 @@ public record FPlayerBoardStats
 {
 	public int Production { get; set; }
 	public int TerritoryCount { get; set; }
+	public int TerritoryPercentage { get => (int)(((float)TerritoryCount / GameManager.Instance.BoardHexes.Count) * 100f); }
 }
 
 public sealed partial class GamePlayer : Component
@@ -111,6 +113,11 @@ public sealed partial class GamePlayer : Component
 				SelectedUnit.ModelRenderer.ClearMaterialOverrides();
 			}
 			Hex.HighlightHexesRecusrive(UnitHex, false, SelectedUnit.ActionPoints + 1);
+		}
+
+		foreach (var Hex in GameManager.Instance.BoardHexes)
+		{
+			Hex.IsHighlighted = false;
 		}
 	}
 

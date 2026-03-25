@@ -71,35 +71,44 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 	public void GetPlayerBoardStats(out Dictionary<GamePlayer, FPlayerBoardStats> OutPlayerBoardStats)
 	{
 		OutPlayerBoardStats = new();
+		foreach (var Player in GamePlayers)
+		{
+			OutPlayerBoardStats.Add(Player, new());
+		}
 
 		foreach (var Hex in BoardHexes)
 		{
-			var Player = GetGamePlayer(Hex.GetOwnerId());
-			if (!Player.IsValid())
+			var FoundPlayer = GetGamePlayer(Hex.GetOwnerId());			
+
+			if (FoundPlayer == null)
 			{
 				continue;
 			}
 
-			if (!OutPlayerBoardStats.TryGetValue(Player, out var PlayerStats))
-			{
-				PlayerStats = new();
-				OutPlayerBoardStats[Player] = PlayerStats;
-			}
-
-
-			PlayerStats.Production += Hex.Production;
-			PlayerStats.TerritoryCount += 1;
+			OutPlayerBoardStats[FoundPlayer].Production += Hex.Production;
+			OutPlayerBoardStats[FoundPlayer].TerritoryCount += 1;
 		}
 	}
 
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 
-	private readonly List<Guid> WaitingConnections = new();
+	[Sync(SyncFlags.FromHost)] private NetList<Guid> WaitingConnections { get; set; } = new();
 
 	public void NextTurn()
 	{
 		Server_OnNextTurnRequest(Connection.Local.Id);
+	}
+
+	public void GetWaitingConnections(out int Waiting, out int Total)
+	{
+		Waiting = WaitingConnections.Count;
+		Total = GamePlayers.Count;
+	}
+
+	public bool WaitingForLocal()
+	{
+		return !WaitingConnections.Contains(Connection.Local.Id) && WaitingConnections.Count == GamePlayers.Count - 1;
 	}
 
 	[Rpc.Host]
@@ -223,7 +232,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 				continue;
 			}
 
-			int Production = (int)Math.Ceiling((double) ProductionHexes.Production / ProductionHexes.Units);
+			int Production = (int)Math.Ceiling((double)ProductionHexes.Production / ProductionHexes.Units);
 
 			foreach (var Hex in ProductionHexes.Hexes)
 			{
@@ -274,7 +283,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 	void INetworkListener.OnActive(Connection ConnectionChannel)
 	{
 		Assert.True(Networking.IsHost);
-	
+
 		if (Mode == EGameManagerMode.Menu)
 		{
 			return;
@@ -398,7 +407,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 					Hex.AllBrothers[BrotherIndex] = HitHex;
 				}
 			}
-		}	
+		}
 	}
 
 	private List<Hex> ValidSpawnHexes { get => BoardHexes.Where(Hex => Hex.Type == EHexType.Grass && Hex.UnitData == null).ToList(); }
@@ -428,7 +437,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 	private Hex GetAttackHex(Hex AttackerUnitHex, Hex DefenderUnitHex, out int Distance)
 	{
 		Hex BestHex = null;
-		Distance = int.MaxValue; 
+		Distance = int.MaxValue;
 		foreach (var Hex in DefenderUnitHex.AllBrothers)
 		{
 			if (!Hex.IsValid())
@@ -465,7 +474,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		if (AttackerUnit.OwnerGuid != ConnectionId)
 		{
 			Log.Warning($"trying to attack with unit that it not {ConnectionId}");
-			return false; 
+			return false;
 		}
 
 		if (AttackerUnit.OwnerGuid == DefenderUnit.OwnerGuid)
@@ -564,7 +573,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 
 			Owner.Gold -= ObjectCost;
 		}
-			
+
 		FQueueObject QueueObject = new()
 		{
 			GameObjectId = Guid.NewGuid(),
@@ -813,7 +822,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 	{
 		if (Unit == null)
 		{
-			return null; 
+			return null;
 		}
 
 		foreach (var Hex in BoardHexes)
