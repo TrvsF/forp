@@ -310,9 +310,9 @@ public sealed partial class GamePlayer : Component
 
 					if (SelectedUnit.IsValid())
 					{
-						if (GameManager.Instance.CanAttack(SelectedUnit.OwnerHex, ObjectUnit.OwnerHex, Connection.Local.Id, out var _, out var _))
+						if (GameManager.Instance.CanAttack(SelectedUnit.OwnerHex, ObjectUnit.OwnerHex, ObjectUnit.OwnerHex.UnitData, Connection.Local.Id, out var _, out var _))
 						{
-							GameManager.Instance.Server_UnitAttack(SelectedUnit.OwnerHex, ObjectUnit.OwnerHex, Connection.Local.Id);
+							GameManager.Instance.Server_UnitAttackUnit(SelectedUnit.OwnerHex, ObjectUnit.OwnerHex, Connection.Local.Id);
 						}
 
 						SelectedUnit = null;
@@ -321,6 +321,19 @@ public sealed partial class GamePlayer : Component
 
 					SelectedUnit = ObjectUnit;
 					return;
+				}
+				
+				if (ClickedObject is ObjectBuilding ObjectBuilding)
+				{
+					if (SelectedUnit.IsValid())
+					{
+						if (GameManager.Instance.CanAttack(SelectedUnit.OwnerHex, ObjectBuilding.OwnerHex, ObjectBuilding.OwnerHex.BuildingData, Connection.Local.Id, out var _, out var _))
+						{
+							GameManager.Instance.Server_UnitAttackBuilding(SelectedUnit.OwnerHex, ObjectBuilding.OwnerHex, Connection.Local.Id);
+						}
+
+						SelectedUnit = null;
+					}
 				}
 			}
 

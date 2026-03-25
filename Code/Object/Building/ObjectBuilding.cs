@@ -16,6 +16,9 @@ public record FBuilding : IObj
 	public int TurnsAlive { get; set; }
 	public int ViewRange { get; set; }
 
+	public int Health { get; set; }
+	public int Attack { get; set; }
+
 	public Hex Hex { get; set; }
 
 	public FUpgrade Upgrade { get; set; }
@@ -27,6 +30,10 @@ public class ObjectBuilding : Obj
 	[Property] public List<GameObject> Units { get; set; }
 	[Property] public int ProductionToBuild { get; set; }
 	[Property] public int ViewRange { get; set; }
+	[Property] public int Health { get; set; }
+	[Property] public int Attack { get; set; }
+
+	public Hex OwnerHex { get; set; }
 
 	protected virtual void OnBuildDone()
 	{

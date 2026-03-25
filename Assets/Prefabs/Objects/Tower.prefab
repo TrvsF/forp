@@ -90,13 +90,9 @@
         "__guid": "ce6f4910-3ff3-4609-9814-9903a7caa6ca",
         "__enabled": true,
         "Flags": 0,
-        "Buildings": [
-          {
-            "_type": "gameobject",
-            "prefab": "prefabs/objects/city.prefab"
-          }
-        ],
+        "Attack": 0,
         "DisplayName": "Tower",
+        "Health": 5,
         "ObjectId": "building-tower",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -124,7 +120,7 @@
         "Enabled": false,
         "IncludeStaticBodies": true,
         "IncludeKeyframedBodies": true,
-        "EditorAutoUpdate": true,
+        "EditorAutoUpdate": false,
         "AgentHeight": 64,
         "AgentRadius": 16,
         "AgentStepSize": 18,

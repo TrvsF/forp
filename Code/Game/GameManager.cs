@@ -434,6 +434,8 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		GamePlayers.Add(GamePlayer);
 	}
 
+	// TODO : figure out how to attack using IObj's
+
 	private Hex GetAttackHex(Hex AttackerUnitHex, Hex DefenderUnitHex, out int Distance)
 	{
 		Hex BestHex = null;
@@ -456,20 +458,19 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		return BestHex;
 	}
 
-	public bool CanAttack(Hex AttackerUnitHex, Hex DefenderUnitHex, Guid ConnectionId, out Hex AttackFromHex, out int AttackHexDistance)
+	public bool CanAttack(Hex AttackerUnitHex, Hex DefenderUnitHex, IObj Defender, Guid ConnectionId, out Hex AttackFromHex, out int AttackHexDistance)
 	{
 		AttackFromHex = null;
 		AttackHexDistance = int.MaxValue;
 
 		Assert.NotNull(AttackerUnitHex);
 		Assert.NotNull(DefenderUnitHex);
+		Assert.NotNull(Defender);
 		Assert.NotNull(ConnectionId);
 
 		var AttackerUnit = AttackerUnitHex.UnitData;
-		var DefenderUnit = DefenderUnitHex.UnitData;
 
 		Assert.NotNull(AttackerUnit);
-		Assert.NotNull(DefenderUnit);
 
 		if (AttackerUnit.OwnerGuid != ConnectionId)
 		{
@@ -477,7 +478,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 			return false;
 		}
 
-		if (AttackerUnit.OwnerGuid == DefenderUnit.OwnerGuid)
+		if (AttackerUnit.OwnerGuid == Defender.OwnerGuid)
 		{
 			Log.Warning("trying to attack friendly unit");
 			return false;
@@ -501,7 +502,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 	}
 
 	[Rpc.Host]
-	public void Server_UnitAttack(Hex AttackerUnitHex, Hex DefenderUnitHex, Guid ConnectionId)
+	public void Server_UnitAttackUnit(Hex AttackerUnitHex, Hex DefenderUnitHex, Guid ConnectionId)
 	{
 		Assert.NotNull(ConnectionId);
 		Assert.NotNull(AttackerUnitHex);
@@ -513,7 +514,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		Assert.NotNull(AttackerUnit);
 		Assert.NotNull(DefenderUnit);
 
-		if (!CanAttack(AttackerUnitHex, DefenderUnitHex, ConnectionId, out var NewAttackUnitHex, out var BestDistance))
+		if (!CanAttack(AttackerUnitHex, DefenderUnitHex, DefenderUnit, ConnectionId, out var NewAttackUnitHex, out var BestDistance))
 		{
 			Log.Warning($"{ConnectionId} trying to call an invalid attack");
 			return;
@@ -550,6 +551,60 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		if (DefenderUnitHex.UnitData.Health <= 0)
 		{
 			DefenderUnitHex.UnitData = null;
+		}
+	}
+
+	[Rpc.Host]
+	public void Server_UnitAttackBuilding(Hex AttackerUnitHex, Hex DefenderBuildingHex, Guid ConnectionId)
+	{
+		Assert.NotNull(ConnectionId);
+		Assert.NotNull(AttackerUnitHex);
+		Assert.NotNull(DefenderBuildingHex);
+
+		var AttackerUnit = AttackerUnitHex.UnitData;
+		var DefenderBuilding = DefenderBuildingHex.BuildingData;
+
+		Assert.NotNull(AttackerUnit);
+		Assert.NotNull(DefenderBuilding);
+
+		if (!CanAttack(AttackerUnitHex, DefenderBuildingHex, DefenderBuilding, ConnectionId, out var NewAttackUnitHex, out var BestDistance))
+		{
+			Log.Warning($"{ConnectionId} trying to call an invalid attack");
+			return;
+		}
+
+		if (NewAttackUnitHex == null)
+		{
+			Log.Warning("invalid attacker hex");
+			return;
+		}
+
+		if (BestDistance > 0)
+		{
+			Server_MoveUnitToHex(AttackerUnitHex, NewAttackUnitHex, ConnectionId);
+			AttackerUnitHex = NewAttackUnitHex;
+			AttackerUnit = AttackerUnitHex.UnitData;
+		}
+
+		AttackerUnitHex.UnitData = AttackerUnitHex.UnitData with
+		{
+			ActionPointsSpent = AttackerUnitHex.UnitData.ActionPointsSpent + 1
+		};
+
+		if (DefenderBuildingHex.BuildingObject is { } BuildingObject)
+		{
+			BuildingObject.OnDamageTaken(AttackerUnit.Attack);
+		}
+
+		DefenderBuildingHex.BuildingData = DefenderBuildingHex.BuildingData with
+		{
+			Health = DefenderBuilding.Hex.BuildingData.Health - AttackerUnit.Attack
+		};
+
+		if (DefenderBuildingHex.BuildingData.Health <= 0)
+		{
+			DefenderBuildingHex.BuildingData = null;
+			Hex.SetOwnerHexesRecursive_ServerOnly(DefenderBuildingHex, null, DefenderBuilding.ViewRange);
 		}
 	}
 
@@ -690,6 +745,8 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 			OwnerGuid = ConnectionId,
 			ProductionToBuild = TypedObject.ProductionToBuild,
 			ViewRange = TypedObject.ViewRange,
+			Health = TypedObject.Health,
+			Attack = TypedObject.Attack,
 			Hex = Hex,
 		};
 

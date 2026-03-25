@@ -109,6 +109,18 @@ public sealed class Hex : Obj
 
 			var Clone = GameManager.Instance.GetObject(BuildingData.ObjectId).Clone(BuildingCloneConfig);
 			BuildingObject = Clone.GetComponent<ObjectBuilding>();
+			BuildingObject.OwnerHex = this;
+		}
+
+		if (BuildingObject.IsValid())
+		{
+			BuildingObject.Health = BuildingData.Health;
+			BuildingObject.Attack = BuildingData.Attack;
+			if (BuildingData.Health <= 0)
+			{
+				BuildingObject.DestroyGameObject();
+				return;
+			}
 		}
 	}
 
@@ -168,7 +180,7 @@ public sealed class Hex : Obj
 			if (UnitData.Health <= 0)
 			{
 				Log.Info($"you! yes you are DEAD");
-				UnitObject.DestroyGameObject(); // TODO : server needs to destroy data 2
+				UnitObject.DestroyGameObject();
 				return;
 			}
 
@@ -217,6 +229,14 @@ public sealed class Hex : Obj
 		{
 			SetBaseColour_ServerOnly(OwnerPlayer.Colour);
 		}
+	}
+
+	public void RemoveOwner_ServerOnly()
+	{
+		Assert.True(Networking.IsHost);
+
+		BuildingOwners.Clear();
+		SetBaseColour_ServerOnly(Color.White);
 	}
 
 	public void AddQueuedObject_ServerOnly(FQueueObject QueueObject)
@@ -543,7 +563,14 @@ public sealed class Hex : Obj
 		Assert.True(Networking.IsHost);
 		if (Hex == null || Depth <= 0) return;
 
-		Hex.SetOwner_ServerOnly(OwnerBuilding);
+		if (OwnerBuilding != null)
+		{
+			Hex.SetOwner_ServerOnly(OwnerBuilding);
+		}
+		else
+		{
+			Hex.RemoveOwner_ServerOnly();
+		}
 
 		foreach (var Brother in Hex.AllBrothers)
 		{

@@ -57,7 +57,7 @@ public class ObjectUnit : Obj
 	[Property] private FUpgrade Upgrade { get; set; }
 
 	public GamePlayer OwnerPlayer { get; set; }
-	public Hex OwnerHex { get; set; }
+	public Hex OwnerHex { get; set; } // TODO : revist, this & the one in building
 
 	public bool IsAi { get => GetComponent<AiUnit>() != null; }
 
@@ -104,14 +104,10 @@ public class ObjectUnit : Obj
 		base.OnDestroy();
 	}
 
-	[Rpc.Broadcast]
-	public void OnDamageTaken(float Damage)
+	protected override void OnDamageTaken_Internal()
 	{
-		var TextTransform = WorldTransform;
-		TextTransform.Position += Vector3.Up * 150;
-		GameText.CreateTextObject<DamageText>(TextTransform, $"-{Damage}");
+		base.OnDamageTaken_Internal();
 
-		// update text if there
 		ToggleHealth(ShowHealth);
 	}
 
