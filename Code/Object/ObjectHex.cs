@@ -110,6 +110,12 @@ public sealed class Hex : Obj
 			var Clone = GameManager.Instance.GetObject(BuildingData.ObjectId).Clone(BuildingCloneConfig);
 			BuildingObject = Clone.GetComponent<ObjectBuilding>();
 			BuildingObject.OwnerHex = this;
+
+			if (GameManager.Instance.GetGamePlayer(BuildingData.OwnerGuid) is { } OwnerPlayer)
+			{
+				BuildingObject.OwnerPlayer = OwnerPlayer;
+				BuildingObject.ModelRenderer?.Tint = OwnerPlayer.Colour;
+			}
 		}
 
 		if (BuildingObject.IsValid())

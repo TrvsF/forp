@@ -54,8 +54,7 @@ public class ObjectUnit : Obj
 	[Property] public int ProductionToBuild { get; set; }
 	[Property] public int GoldToBuild { get; set; }
 
-	[Property] private FUpgrade Upgrade { get; set; }
-
+	private FUpgrade Upgrade { get; set; } = null;
 	public GamePlayer OwnerPlayer { get; set; }
 	public Hex OwnerHex { get; set; } // TODO : revist, this & the one in building
 
@@ -64,7 +63,7 @@ public class ObjectUnit : Obj
 	public void ApplyUpgrade(FUpgrade InUpgrade)
 	{
 		Assert.NotNull(InUpgrade);
-		
+
 		if (Upgrade != null)
 		{
 			return;

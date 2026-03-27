@@ -241,7 +241,7 @@ public sealed partial class GamePlayer : Component
 
 		if (Input.Down("mouse1") && DraggedObject != null)
 		{
-			DraggedObject.WorldPosition -= new Vector3(Mouse.Delta.y, Mouse.Delta.x, 0);
+			DraggedObject.WorldPosition -= new Vector3(Mouse.Delta.y * 0.19f, Mouse.Delta.x * 0.11f, 0);
 		}
 		if (!Input.Down("mouse1") && DraggedObject != null)
 		{
@@ -304,7 +304,6 @@ public sealed partial class GamePlayer : Component
 					if (SelectedUnit == ObjectUnit)
 					{
 						SelectedUnit = null;
-
 						return;
 					}
 
