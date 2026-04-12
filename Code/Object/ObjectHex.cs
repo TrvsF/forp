@@ -229,6 +229,17 @@ public sealed class Hex : Obj
 	{
 		Assert.True(Networking.IsHost);
 
+		if (BuildingOwners.Count > 0 && BuildingOwners[0].OwnerGuid != OwnerIn.OwnerGuid)
+		{
+			// TODO : think about this
+			if (BuildingData != null)
+			{
+				BuildingData = null;
+			}
+
+			BuildingOwners.Clear();
+		}
+
 		BuildingOwners.Add(OwnerIn);
 
 		if (GameManager.Instance.GetGamePlayer(OwnerIn.OwnerGuid) is { } OwnerPlayer)

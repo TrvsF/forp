@@ -78,7 +78,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 
 		foreach (var Hex in BoardHexes)
 		{
-			var FoundPlayer = GetGamePlayer(Hex.GetOwnerId());			
+			var FoundPlayer = GetGamePlayer(Hex.GetOwnerId());
 
 			if (FoundPlayer == null)
 			{
@@ -147,9 +147,28 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 	{
 		Assert.True(Networking.IsHost);
 
-		foreach (var AiBody in Scene.GetAllComponents<AiUnit>())
+		// tick ai ////////////////////
+		foreach (var Hex in BoardHexes)
 		{
-			AiBody.MoveRandomly_ServerOnly();
+			if (Hex.UnitData == null || !Hex.UnitData.IsAi)
+			{
+				continue;
+			}
+
+			foreach (var BrotherHex in Hex.AllBrothers)
+			{
+				if (BrotherHex == null || BrotherHex.UnitData == null || BrotherHex.UnitData.IsAi)
+				{
+					continue;
+				}
+
+				Server_UnitAttackUnit(Hex, BrotherHex, Connection.Local.Id);
+			}
+
+			if (Random.Shared.FromList(Hex.AllBrothers.ToList()) is { } RandomMoveHex)
+			{
+				Server_MoveUnitToHex(Hex, RandomMoveHex, Connection.Local.Id);
+			}
 		}
 
 		List<HexUnitProduction> SharedProductionHexes = new();
@@ -371,7 +390,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 	private async Task GenerateBoardAsync()
 	{
 		// TODO : loading screen
-		await CreateBoard(20, 20);
+		await CreateBoard(5, 10);
 	}
 
 	private async Task CreateBoard(int Width, int Height)
@@ -442,7 +461,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		Distance = int.MaxValue;
 		foreach (var Hex in DefenderUnitHex.AllBrothers)
 		{
-			if (!Hex.IsValid())
+			if (!Hex.IsValid() || !Hex.CanWalkOn()) 
 			{
 				continue;
 			}
@@ -472,7 +491,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 
 		Assert.NotNull(AttackerUnit);
 
-		if (AttackerUnit.OwnerGuid != ConnectionId)
+		if (AttackerUnit.OwnerGuid != ConnectionId && !AttackerUnit.IsAi)
 		{
 			Log.Warning($"trying to attack with unit that it not {ConnectionId}");
 			return false;
