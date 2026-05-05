@@ -57,7 +57,7 @@
         "MaterialGroup": null,
         "MaterialOverride": null,
         "Materials": null,
-        "Model": "models/hexagon-kit/hexagon_stone-hill.vmdl",
+        "Model": "models/hexagon-kit/hexagon_grass.vmdl",
         "Morphs": {},
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -130,7 +130,9 @@
         "AgentStepSize": 18,
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
-        "IncludedBodies": ""
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
       }
     },
     "__variables": []
@@ -145,7 +147,6 @@
     "kenneynl.hexagongrass#80885",
     "kenneynl.hexagonsandrocks#80917",
     "kenneynl.hexagonstone#80923",
-    "kenneynl.hexagonstonehill#80935",
     "kenneynl.hexagonwater#80934"
   ],
   "__version": 2

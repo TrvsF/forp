@@ -110,11 +110,11 @@ public sealed class Hex : Obj
 			var Clone = GameManager.Instance.GetObject(BuildingData.ObjectId).Clone(BuildingCloneConfig);
 			BuildingObject = Clone.GetComponent<ObjectBuilding>();
 			BuildingObject.OwnerHex = this;
+			BuildingObject.ModelRenderer?.Tint = GameManager.Instance.GetTintColour(BuildingData.OwnerGuid);
 
 			if (GameManager.Instance.GetGamePlayer(BuildingData.OwnerGuid) is { } OwnerPlayer)
 			{
 				BuildingObject.OwnerPlayer = OwnerPlayer;
-				BuildingObject.ModelRenderer?.Tint = OwnerPlayer.Colour;
 			}
 		}
 
@@ -162,16 +162,16 @@ public sealed class Hex : Obj
 			UnitObject.OwnerHex = this;
 			UnitObject.WorldPosition += Vector3.Up * 20f;
 			UnitObject.WorldRotation = Rotation.FromYaw(180);
+			UnitObject.ModelRenderer?.Tint = GameManager.Instance.GetTintColour(UnitData.OwnerGuid);
 
 			if (GameManager.Instance.Mode != EGameManagerMode.Menu)
 			{
-				//UnitObject.ModelRenderer.RenderOptions.Overlay = true;
+				UnitObject.ModelRenderer.RenderOptions.Overlay = true;
 			}
 
 			if (!UnitData.IsAi && GameManager.Instance.GetGamePlayer(UnitData.OwnerGuid) is { } OwnerPlayer)
 			{
 				UnitObject.OwnerPlayer = OwnerPlayer;
-				UnitObject.ModelRenderer?.Tint = OwnerPlayer.Colour;
 			}
 			else
 			{
@@ -224,35 +224,21 @@ public sealed class Hex : Obj
 		}
 	}
 
-	[Sync(SyncFlags.FromHost)] public NetList<FBuilding> BuildingOwners { get; set; } = new();
-	public void SetOwner_ServerOnly(FBuilding OwnerIn)
+	[Sync(SyncFlags.FromHost)] public Guid OwningConnectionGuid { get; set; }
+
+	public void SetOwner_ServerOnly(Guid OwnerIn)
 	{
 		Assert.True(Networking.IsHost);
 
-		if (BuildingOwners.Count > 0 && BuildingOwners[0].OwnerGuid != OwnerIn.OwnerGuid)
-		{
-			// TODO : think about this
-			if (BuildingData != null)
-			{
-				BuildingData = null;
-			}
-
-			BuildingOwners.Clear();
-		}
-
-		BuildingOwners.Add(OwnerIn);
-
-		if (GameManager.Instance.GetGamePlayer(OwnerIn.OwnerGuid) is { } OwnerPlayer)
-		{
-			SetBaseColour_ServerOnly(OwnerPlayer.Colour);
-		}
+		OwningConnectionGuid = OwnerIn;
+		SetBaseColour_ServerOnly(GameManager.Instance.GetTintColour(OwningConnectionGuid));
 	}
 
 	public void RemoveOwner_ServerOnly()
 	{
 		Assert.True(Networking.IsHost);
 
-		BuildingOwners.Clear();
+		OwningConnectionGuid = Guid.Empty;
 		SetBaseColour_ServerOnly(Color.White);
 	}
 
@@ -336,6 +322,7 @@ public sealed class Hex : Obj
 		{
 			GameManager.Instance.Server_CreateHexObject("tree", this, Connection.Host.Id);
 			GameManager.Instance.Server_CreateHexUnitObject("unit-combat", this, Connection.Host.Id, true);
+			SetOwner_ServerOnly(GameManager.AiGuid);
 		}
 	}
 
@@ -575,14 +562,14 @@ public sealed class Hex : Obj
 		}
 	}
 
-	public static void SetOwnerHexesRecursive_ServerOnly(Hex Hex, FBuilding OwnerBuilding, int Depth)
+	public static void SetOwnerHexesRecursive_ServerOnly(Hex Hex, Guid OwningConnectionGuid, int Depth)
 	{
 		Assert.True(Networking.IsHost);
 		if (Hex == null || Depth <= 0) return;
 
-		if (OwnerBuilding != null)
+		if (OwningConnectionGuid != Guid.Empty)
 		{
-			Hex.SetOwner_ServerOnly(OwnerBuilding);
+			Hex.SetOwner_ServerOnly(OwningConnectionGuid);
 		}
 		else
 		{
@@ -592,7 +579,7 @@ public sealed class Hex : Obj
 		foreach (var Brother in Hex.AllBrothers)
 		{
 			if (Brother == null) continue;
-			SetOwnerHexesRecursive_ServerOnly(Brother.GetComponent<Hex>(), OwnerBuilding, Depth - 1);
+			SetOwnerHexesRecursive_ServerOnly(Brother.GetComponent<Hex>(), OwningConnectionGuid, Depth - 1);
 		}
 	}
 
@@ -624,7 +611,7 @@ public sealed class Hex : Obj
 
 	public bool HasOwner()
 	{
-		return BuildingOwners.Count > 0;
+		return OwningConnectionGuid != Guid.Empty;
 	}
 
 	public bool IsLocallyOwned()
@@ -639,11 +626,6 @@ public sealed class Hex : Obj
 
 	public Guid GetOwnerId()
 	{
-		if (BuildingOwners.Count == 0)
-		{
-			return Guid.Empty;
-		}
-
-		return BuildingOwners[0].OwnerGuid;
+		return OwningConnectionGuid;
 	}
 }

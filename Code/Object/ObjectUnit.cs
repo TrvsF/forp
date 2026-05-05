@@ -86,6 +86,16 @@ public class ObjectUnit : Obj
 	{
 		base.OnStart();
 
+		if (OwnerPlayer != null)
+		{
+			ModelRenderer.Tint = GameManager.Instance.GetTintColour(OwnerPlayer.ConnectionId);
+		}
+
+		if (IsAi)
+		{
+			ModelRenderer.Tint = GameManager.Instance.GetTintColour(GameManager.AiGuid);
+		}
+
 		if (GamePlayer.Local == null)
 		{
 			Log.Warning("game player somehow not valid, not good!");

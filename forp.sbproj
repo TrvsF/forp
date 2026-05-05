@@ -9,7 +9,7 @@
   "PackageReferences": [],
   "EditorReferences": null,
   "Mounts": null,
-  "IsStandaloneOnly": false,
+  "IsStandaloneOnly": true,
   "Metadata": {
     "MaxPlayers": 5,
     "MinPlayers": 1,
@@ -28,6 +28,8 @@
       "Keyboard": true,
       "VR": false,
       "Gamepad": false
-    }
+    },
+    "LaunchMode": "Normal",
+    "DedicatedServerStartupScene": "scenes/minimal.scene"
   }
 }

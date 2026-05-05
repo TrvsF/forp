@@ -48,6 +48,13 @@ public class ObjectBuilding : Obj
 		ShowHealth = true;
 	}
 
+	protected override void OnDestroy()
+	{
+		ShowHealth = false;
+
+		base.OnDestroy();
+	}
+
 	private bool _showHealth = false;
 	public bool ShowHealth
 	{

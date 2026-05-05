@@ -20,6 +20,8 @@ public enum EGameManagerMode
 
 public partial class GameManager : SingletonComponent<GameManager>, Component.INetworkListener, ISceneStartup
 {
+	public static readonly Guid AiGuid = new("d85b1407-351d-4694-9392-03acc5870eb1");
+
 	[Property] public EGameManagerMode Mode { get; set; }
 	[Property] public GameObject HexPrefab { get; set; }
 	[Property] public GameObject PlayerPrefab { get; set; }
@@ -623,7 +625,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		if (DefenderBuildingHex.BuildingData.Health <= 0)
 		{
 			DefenderBuildingHex.BuildingData = null;
-			Hex.SetOwnerHexesRecursive_ServerOnly(DefenderBuildingHex, null, DefenderBuilding.ViewRange);
+			Hex.SetOwnerHexesRecursive_ServerOnly(DefenderBuildingHex, Guid.Empty, DefenderBuilding.ViewRange);
 		}
 	}
 
@@ -770,7 +772,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		};
 
 		Hex.BuildingData = ObjectData;
-		Hex.SetOwnerHexesRecursive_ServerOnly(Hex, ObjectData, TypedObject.ViewRange - 1);
+		Hex.SetOwnerHexesRecursive_ServerOnly(Hex, ConnectionId, TypedObject.ViewRange - 1);
 
 		if (FromUnit) // TODO : check building charge
 		{
@@ -917,14 +919,31 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		return null;
 	}
 
+	public readonly Color AiColour = (Color)Color.Parse("#1D00FF");
 	private readonly Stack<Color> PlayerColours = new(
 	[
-		Color.Green,
-		Color.Orange,
-		Color.Red,
-		Color.Blue,
-		Color.Magenta,
+		(Color)Color.Parse("#DD00FF"),
+		(Color)Color.Parse("#44FF00"),
+		(Color)Color.Parse("#FF1900"),
+		(Color)Color.Parse("#0022FF"),
+		(Color)Color.Parse("#FF3F00"),
+		(Color)Color.Parse("#FF0000"),
 	]);
+
+	public Color GetTintColour(Guid Connection)
+	{
+		if (Connection.Equals(AiGuid))
+		{
+			return AiColour;
+		}
+
+		if (GetGamePlayer(Connection) is { } OwnerPlayer)
+		{
+			return OwnerPlayer.Colour;
+		}
+
+		return Color.White;
+	}
 
 	private bool CreatePlayerObject_ServerOnly(Guid ConnectionGuid, Hex SpawnHex, out GamePlayer OutGamePlayer)
 	{
