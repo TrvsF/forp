@@ -20,7 +20,6 @@
         "__guid": "99461265-f323-4dd4-82c8-7de3c4d8528e",
         "__enabled": true,
         "Flags": 0,
-        "CameraObject": null,
         "Colour": "0,0,0,1",
         "ConnectionId": "00000000-0000-0000-0000-000000000000",
         "Gold": 0,
@@ -34,23 +33,43 @@
           "_type": "gameobject",
           "prefab": "prefabs/playercamera.prefab"
         },
-        "SixMan": null,
         "SteamId": 0,
         "SteamName": null,
-        "UpgradeIcon": null,
-        "UpgradeRowStart": null,
         "Upgrades": [
           {
-            "_type": "gameobject",
-            "prefab": "prefabs/objects/upgradebuilder.prefab"
+            "ObjectId": "upgrade-builder",
+            "Name": null,
+            "BuildingIds": [],
+            "AttackModifyer": 0,
+            "HealthModifyer": 55
           },
           {
-            "_type": "gameobject",
-            "prefab": "prefabs/objects/upgradebuilder.prefab"
+            "ObjectId": "upgrade-builder",
+            "Name": null,
+            "BuildingIds": [],
+            "AttackModifyer": 0,
+            "HealthModifyer": 55
           },
           {
-            "_type": "gameobject",
-            "prefab": "prefabs/objects/upgradebuilder.prefab"
+            "ObjectId": "upgrade-builder",
+            "Name": null,
+            "BuildingIds": [],
+            "AttackModifyer": 0,
+            "HealthModifyer": 55
+          },
+          {
+            "ObjectId": "upgrade-builder",
+            "Name": null,
+            "BuildingIds": [],
+            "AttackModifyer": 0,
+            "HealthModifyer": 55
+          },
+          {
+            "ObjectId": "upgrade-builder",
+            "Name": null,
+            "BuildingIds": [],
+            "AttackModifyer": 0,
+            "HealthModifyer": 55
           }
         ]
       }
@@ -72,6 +91,7 @@
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
         "IncludedBodies": "",
+        "DeferGeneration": false,
         "CustomBounds": false
       }
     },

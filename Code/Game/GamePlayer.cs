@@ -4,6 +4,7 @@ using Forp.Object.Unit;
 using Sandbox.Diagnostics;
 using System;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using static Sandbox.Services.Stats;
 
@@ -29,11 +30,13 @@ public sealed partial class GamePlayer : Component
 
 	[Property] public GameObject PlayerCameraPrefab { get; private set; }
 	public CameraComponent Camera { get; private set; }
+	public GamePlayerGUi GUi { get; private set; }
 
 	[Sync(SyncFlags.FromHost), Property] public ulong SteamId { get; private set; }
 	[Sync(SyncFlags.FromHost), Property] public string SteamName { get; private set; }
 	[Sync(SyncFlags.FromHost), Property] public Guid ConnectionId { get; private set; }
 
+	[Sync(SyncFlags.FromHost), Property] public NetList<FUpgrade> Upgrades { get; private set; }
 	[Sync(SyncFlags.FromHost), Property] public Color Colour { get; set; }
 	[Sync(SyncFlags.FromHost), Property] public int Gold { get; set; }
 
@@ -127,23 +130,30 @@ public sealed partial class GamePlayer : Component
 
 		if (IsProxy)
 		{
-			return;
+			return; // !
 		}
 
 		Mouse.Visibility = MouseVisibility.Visible;
+		Assert.True(CreateCamera());
+	}
 
-		// TODO : CLEAN
+	private bool CreateCamera()
+	{
 		Transform CloneTransform = new();
 		var Cloneconfig = new CloneConfig();
 		Cloneconfig.Parent = GameObject;
 		Cloneconfig.StartEnabled = true;
 		Cloneconfig.Transform = CloneTransform;
 		var CameraObject = PlayerCameraPrefab.Clone(Cloneconfig);
-		Camera = CameraObject.GetComponentInChildren<CameraComponent>();
-		UpgradeIcon = CameraObject.Children.Find(Child => Child.Name == "UpgradeIcon");
 
-		var Ray = Camera.ScreenPixelToRay(Camera.ScreenRect.BottomLeft + new Vector2(GameObjectPadding, -GameObjectPadding));
-		UpgradeIcon.WorldPosition = Ray.Position + Ray.Forward * GameObjectPadding;
+		Camera = CameraObject.GetComponentInChildren<CameraComponent>();
+		if (Camera == null)
+		{
+			return false;
+		}
+		GUi = Camera.GetComponentInChildren<GamePlayerGUi>();
+
+		return GUi != null;
 	}
 
 	protected override void OnUpdate()
@@ -245,14 +255,6 @@ public sealed partial class GamePlayer : Component
 		}
 		if (!Input.Down("mouse1") && DraggedObject != null)
 		{
-			if (HoveredObject.GetComponent<ObjectUnit>() is { } Unit)
-			{
-				var UnitHex = Unit.OwnerHex;
-				GameManager.Instance.Server_UpgradeObject(DraggedObject.GetComponent<Upgrade>().GetUpgradeData(), UnitHex, ConnectionId);
-				Upgrades.RemoveAt(ShownUpgrades.FindIndex(Obj => Obj == DraggedObject));
-				DraggedObject.Destroy(); // TODO : bad
-			}
-
 			DraggedObject = null;
 		}
 	}
@@ -282,13 +284,14 @@ public sealed partial class GamePlayer : Component
 					ClickedObjects.Add(HitObject);
 				}
 
-				if (ClickTrace.GameObject == UpgradeIcon)
-				{
-					OnUpgradeIconClick();
-				}
-				else if (ClickTrace.GameObject.GetComponent<Upgrade>() is { })
+				if (ClickTrace.GameObject.GetComponent<Upgrade>() is { })
 				{
 					DraggedObject = ClickTrace.GameObject;
+				}
+
+				if (ClickTrace.GameObject == GUi.UpgradeGUi)
+				{
+					GUi.OnUpgradeClicked(Local);
 				}
 			}
 

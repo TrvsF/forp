@@ -1,6 +1,7 @@
 using Forp.Object;
 using Forp.Object.Unit;
 using Sandbox;
+using Sandbox.Diagnostics;
 using System;
 
 namespace Forp.Game;
@@ -78,39 +79,6 @@ public struct FPlayerUiInfo
 
 public sealed partial class GamePlayer : Component
 {
-	public GameObject UpgradeIcon { get; private set; }
-	[Property] List<GameObject> Upgrades { get; set; } = new();
-
-	const float GameObjectPadding = 66;
-
-	bool ShowUpgrades = false;
-	readonly List<GameObject> ShownUpgrades = new();
-	public void OnUpgradeIconClick()
-	{
-		ShowUpgrades = !ShowUpgrades;
-
-		foreach (var ShownUpgrade in ShownUpgrades)
-		{
-			ShownUpgrade.Destroy();
-		}
-		ShownUpgrades.Clear();
-
-		if (!ShowUpgrades)
-		{
-			return;
-		}
-
-		var LeftPadding = 0;
-		foreach (var Upgrade in Upgrades)
-		{
-			Transform SpawnTransform = new();
-			SpawnTransform.Position += Camera.WorldRotation.Right * LeftPadding;
-			ShownUpgrades.Add(SpawnObject(Upgrade, SpawnTransform, Connection.Local, UpgradeIcon.Children[0]));
-
-			LeftPadding += 8;
-		}
-	}
-
 	public void GetPlayerUiInfo(out FPlayerUiInfo OutPlayerUiInfo)
 	{
 		OutPlayerUiInfo = new();
@@ -138,6 +106,54 @@ public sealed partial class GamePlayer : Component
 					OutPlayerUiInfo.BuildObjects.Add($"{BuildObjectUnit.ObjectId} £{BuildObjectUnit.GoldToBuild}");
 				}
 			}
+		}
+	}
+}
+
+public sealed class GamePlayerGUi : Component
+{
+	[Property] public GameObject UpgradeGUi { get; private set; }
+
+	private bool ShowUpgrades = false;
+	private List<GameObject> ShownUpgrades = new();
+	public void OnUpgradeClicked(GamePlayer UpgradePlayer)
+	{
+		Log.Info(ShowUpgrades);
+
+		ShowUpgrades = !ShowUpgrades;
+		if (!ShowUpgrades)
+		{
+			foreach (var ShownUpgrade in ShownUpgrades)
+			{
+				ShownUpgrade.Destroy();
+			}
+			ShownUpgrades.Clear();
+			return;
+		}
+		
+		if (UpgradePlayer == null)
+		{
+			Log.Warning("upgrade pressed by no-one (spooky)");
+			return;
+		}
+
+		float XOffset = 500f;
+		foreach (var Upgrade in UpgradePlayer.Upgrades)
+		{
+			var UpgradeObject = GameManager.Instance.GetObject(Upgrade.ObjectId);
+
+			CloneConfig CloneConfig = new()
+			{
+				Parent = UpgradeGUi,
+				StartEnabled = true,
+			};
+			
+			var ShownUpgrade = UpgradeObject.Clone(CloneConfig);
+			ShownUpgrade.LocalScale = Vector3.One;
+			ShownUpgrade.LocalPosition += new Vector3(0f, XOffset, 0f);
+			ShownUpgrades.Add(ShownUpgrade);
+
+			XOffset += 100f;
 		}
 	}
 }

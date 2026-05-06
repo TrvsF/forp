@@ -45,7 +45,7 @@
       "Flags": 0,
       "Name": "Sun",
       "Position": "0,0,0",
-      "Rotation": "-0.0729315,0.4822396,0.1305433,0.8631827",
+      "Rotation": "-0.0729314983,0.482239604,0.130543306,0.863182724",
       "Scale": "1,1,1",
       "Tags": "light_directional,light",
       "Enabled": true,
@@ -69,8 +69,13 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
+          "ShadowBias": 0.0005,
+          "ShadowCascadeCount": 4,
+          "ShadowCascadeSplitRatio": 0.91,
+          "ShadowHardness": 0,
           "Shadows": true,
-          "SkyColor": "0.0675,0.08451,0.09302,1"
+          "SkyColor": "0.0675,0.08451,0.09302,1",
+          "Visualizer": {}
         }
       ],
       "Children": []
@@ -97,7 +102,7 @@
       "Flags": 0,
       "Name": "Camera",
       "Position": "0,0,1000",
-      "Rotation": "0,0.7071061,0,0.7071072",
+      "Rotation": "0,0.707106113,0,0.707107186",
       "Scale": "1,1,1",
       "Tags": "maincamera",
       "Enabled": true,
@@ -157,7 +162,19 @@
       "AgentStepSize": 18,
       "AgentMaxSlope": 40,
       "ExcludedBodies": "",
-      "IncludedBodies": ""
+      "IncludedBodies": "",
+      "DeferGeneration": false,
+      "CustomBounds": false
+    },
+    "GameObjectSystems": {
+      "Sandbox.Clutter.ClutterGridSystem": {
+        "Storage": {
+          "$blob": "e1f49eef-9261-4bdd-9d0b-6a7264e5f35d"
+        }
+      },
+      "Sandbox.MovieMaker.MovieRecorderSystem": {
+        "DisableClientRecording": false
+      }
     }
   },
   "ResourceVersion": 3,
