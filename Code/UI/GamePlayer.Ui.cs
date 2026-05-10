@@ -3,6 +3,7 @@ using Forp.Object.Unit;
 using Sandbox;
 using Sandbox.Diagnostics;
 using System;
+using static Sandbox.Material;
 
 namespace Forp.Game;
 
@@ -108,18 +109,33 @@ public sealed partial class GamePlayer : Component
 			}
 		}
 	}
+
+	private void InitGUi()
+	{
+		var TopTextRenderer = GUi.TopText.GetComponent<TextRenderer>();
+		Assert.NotNull(TopTextRenderer);
+		TopTextRenderer.Text = SteamName;
+
+		var BottomTextRenderer = GUi.BottomText.GetComponent<TextRenderer>();
+		Assert.NotNull(BottomTextRenderer);
+		BottomTextRenderer.Text = $"I Love You\n${Gold}";
+
+		var UpgradeModel = GUi.UpgradeGUi.GetComponent<SkinnedModelRenderer>();
+		Assert.NotNull(UpgradeModel);
+		UpgradeModel.Tint = Colour;
+	}
 }
 
 public sealed class GamePlayerGUi : Component
 {
 	[Property] public GameObject UpgradeGUi { get; private set; }
+	[Property] public GameObject TopText { get; private set; }
+	[Property] public GameObject BottomText { get; private set; }
 
 	private bool ShowUpgrades = false;
 	private List<GameObject> ShownUpgrades = new();
 	public void OnUpgradeClicked(GamePlayer UpgradePlayer)
 	{
-		Log.Info(ShowUpgrades);
-
 		ShowUpgrades = !ShowUpgrades;
 		if (!ShowUpgrades)
 		{
@@ -137,7 +153,7 @@ public sealed class GamePlayerGUi : Component
 			return;
 		}
 
-		float XOffset = 500f;
+		float XOffset = 50f;
 		foreach (var Upgrade in UpgradePlayer.Upgrades)
 		{
 			var UpgradeObject = GameManager.Instance.GetObject(Upgrade.ObjectId);

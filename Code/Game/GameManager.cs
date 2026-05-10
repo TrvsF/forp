@@ -1,14 +1,15 @@
 using Forp.Object;
+using Forp.Object.Building;
 using Forp.Object.Unit;
 using Forp.Util;
 using Sandbox;
 using Sandbox.Diagnostics;
 using Sandbox.Network;
-using Forp.Object.Building;
 using Sandbox.Razor;
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using static Sandbox.Material;
 
 namespace Forp.Game;
 
@@ -976,14 +977,14 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 			throw new Exception($"Could not spawn player as no PlayerStatePrefab assigned to network manager for {ConnectionChannel.DisplayName}");
 		}
 
+		OutGamePlayer.Colour = PlayerColours.Pop();
+		OutGamePlayer.Gold = 100;
+
 		if (!OutGamePlayer.Initilize_ServerOnly(ConnectionChannel, SpawnHex))
 		{
 			OutGamePlayer.GameObject.DestroyImmediate();
 			return false;
 		}
-
-		OutGamePlayer.Colour = PlayerColours.Pop();
-		OutGamePlayer.Gold = 100;
 
 		return true;
 	}

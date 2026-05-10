@@ -4,6 +4,7 @@ using Forp.Object.Unit;
 using Sandbox.Diagnostics;
 using System;
 using System.Linq.Expressions;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using static Sandbox.Services.Stats;
@@ -132,9 +133,6 @@ public sealed partial class GamePlayer : Component
 		{
 			return; // !
 		}
-
-		Mouse.Visibility = MouseVisibility.Visible;
-		Assert.True(CreateCamera());
 	}
 
 	private bool CreateCamera()
@@ -149,11 +147,18 @@ public sealed partial class GamePlayer : Component
 		Camera = CameraObject.GetComponentInChildren<CameraComponent>();
 		if (Camera == null)
 		{
+			Log.Error("failed to create camera for local player!");
 			return false;
 		}
-		GUi = Camera.GetComponentInChildren<GamePlayerGUi>();
 
-		return GUi != null;
+		GUi = Camera.GetComponentInChildren<GamePlayerGUi>();
+		if (GUi == null)
+		{
+			Log.Error("failed to create gui for local player!");
+			return false;
+		}
+
+		return true;
 	}
 
 	protected override void OnUpdate()
@@ -182,6 +187,8 @@ public sealed partial class GamePlayer : Component
 				return;
 			}
 		}
+
+		InitGUi();
 	}
 
 	public bool Initilize_ServerOnly(Connection ConnectionIn, Hex SpawnHex)
@@ -193,6 +200,17 @@ public sealed partial class GamePlayer : Component
 		ConnectionId = ConnectionIn.Id;
 		SteamId = Connection.SteamId;
 		SteamName = Connection.DisplayName;
+
+		GameManager.Instance.Server_CreateHexUnitObject("unit-settler", SpawnHex, Connection.Id);
+		var ValidBrothers = SpawnHex.AllBrothers.Where(Hex => Hex != null && Hex.ObjectData == null && Hex.CanWalkOn()).OrderBy(Hex => Random.Shared.Next());
+		if (!ValidBrothers.Any())
+		{
+			Log.Warning($"urrr, couldn't spawn a brother unit... this isn't good...");
+			return false;
+		}
+
+		var Brother = ValidBrothers.First();
+		GameManager.Instance.Server_CreateHexUnitObject("unit-combat", Brother, Connection.Id);
 
 		using (Rpc.FilterInclude(Connection))
 		{
@@ -208,17 +226,10 @@ public sealed partial class GamePlayer : Component
 		Connection = Connection.Local; // TODO : this is only set on server & local client per player... 
 		Local = this;
 
+		Mouse.Visibility = MouseVisibility.Visible;
+		Assert.True(CreateCamera());
 
-		GameManager.Instance.Server_CreateHexUnitObject("unit-settler", SpawnHex, Connection.Id);
-		var ValidBrothers = SpawnHex.AllBrothers.Where(Hex => Hex != null && Hex.ObjectData == null && Hex.CanWalkOn()).OrderBy(Hex => Random.Shared.Next());
-		if (!ValidBrothers.Any())
-		{
-			Log.Warning($"urrr, couldn't spawn a brother unit... this isn't good...");
-			return;
-		}
-
-		var Brother = ValidBrothers.First();
-		GameManager.Instance.Server_CreateHexUnitObject("unit-combat", Brother, Connection.Id);
+		InitGUi();
 	}
 
 	const float MovementExp = 2f;

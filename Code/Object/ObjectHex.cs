@@ -609,6 +609,27 @@ public sealed class Hex : Obj
 		}
 	}
 
+	public static bool AreHexesUnowned(Hex Hex, int Depth, Guid AllowedOwner)
+	{
+		if (Hex == null || Depth <= 0) return true;
+
+		if (Hex.OwningConnectionGuid != Guid.Empty && Hex.OwningConnectionGuid != AllowedOwner)
+		{
+			return false;
+		}
+
+		foreach (var Brother in Hex.AllBrothers)
+		{
+			if (Brother == null) continue;
+			if (!AreHexesUnowned(Brother.GetComponent<Hex>(), Depth - 1, AllowedOwner))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	public bool HasOwner()
 	{
 		return OwningConnectionGuid != Guid.Empty;
