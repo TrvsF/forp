@@ -6,6 +6,7 @@ using Sandbox;
 using Sandbox.Diagnostics;
 using Sandbox.Network;
 using Sandbox.Razor;
+using Sandbox.UI;
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -572,6 +573,10 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 
 		if (DefenderUnitHex.UnitData.Health <= 0)
 		{
+			if (DefenderUnitHex.UnitData.IsAi)
+			{
+				DefenderUnitHex.UnitData.HomeHex.RemoveOwner_ServerOnly();
+			}
 			DefenderUnitHex.UnitData = null;
 		}
 	}
@@ -728,6 +733,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 			ViewRange = TypedObject.ViewRange,
 			Hex = Hex,
 			IsAi = IsAi,
+			HomeHex = Hex,
 		};
 
 		Hex.UnitData = ObjectData;
@@ -967,8 +973,9 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		var PlayerObject = PlayerPrefab.Clone(PlayerSpawnConfig);
 		PlayerObject.Name = $"PLAYER:{ConnectionChannel.DisplayName}";
 		PlayerObject.Network.SetOrphanedMode(NetworkOrphaned.Destroy);
-		PlayerObject.NetworkSpawn(ConnectionChannel);
-		PlayerObject.NetworkSpawn();
+
+		const bool IsEnabled = true;
+		PlayerObject.NetworkSpawn(IsEnabled, ConnectionChannel);
 
 		OutGamePlayer = PlayerObject.GetComponent<GamePlayer>();
 
@@ -986,6 +993,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 			return false;
 		}
 
+		PlayerObject.Enabled = true;
 		return true;
 	}
 

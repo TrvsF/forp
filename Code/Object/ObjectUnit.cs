@@ -41,6 +41,7 @@ public record FUnit : IObj
 
 	public FUpgrade Upgrade { get; set; }
 	public bool IsAi { get; set; }
+	public Hex HomeHex { get; set; } // TODO : AI ONLY DATA
 }
 
 public class ObjectUnit : Obj
@@ -165,7 +166,7 @@ public class ObjectUnit : Obj
 		get => _showBuildings;
 		set
 		{
-			if (GamePlayer.Local != OwnerPlayer && GamePlayer.Local != null)
+			if (GamePlayer.Local != null && OwnerPlayer != null && GamePlayer.Local.ConnectionId != OwnerPlayer.ConnectionId)
 			{
 				return;
 			}
@@ -188,7 +189,6 @@ public class ObjectUnit : Obj
 		{
 			return;
 		}
-
 		List<GameObject> ValidBuildings = new();
 		foreach (var Building in Buildings)
 		{

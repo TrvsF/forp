@@ -9,7 +9,7 @@
     "Scale": "1,1,1",
     "Tags": "",
     "Enabled": true,
-    "NetworkMode": 2,
+    "NetworkMode": 0,
     "NetworkFlags": 0,
     "NetworkOrphaned": 0,
     "NetworkTransmit": true,
@@ -160,7 +160,7 @@
         ],
         "Children": [
           {
-            "__guid": "11cffbf9-5d94-4f2c-945a-ce43fefa8a1c",
+            "__guid": "c03b34e9-6643-477e-8f40-7931feef0be6",
             "__version": 2,
             "Flags": 0,
             "Name": "Clothing - standard_skirt",
@@ -177,7 +177,7 @@
             "Components": [
               {
                 "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "ebba503d-4510-4119-8756-13e230eb71d0",
+                "__guid": "5b5b1fb4-7252-44e7-a2eb-6154224758d6",
                 "__enabled": true,
                 "Flags": 0,
                 "AnimationGraph": null,
@@ -229,7 +229,7 @@
             "Children": []
           },
           {
-            "__guid": "4c852889-bd53-4747-af0c-5dfbd5075818",
+            "__guid": "74cc92b1-3347-489a-b38d-bb60f9f9f88b",
             "__version": 2,
             "Flags": 0,
             "Name": "Clothing - santahat",
@@ -246,7 +246,7 @@
             "Components": [
               {
                 "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "dfa68459-683f-486b-b48f-b627d15be786",
+                "__guid": "da81c61e-de7c-46a7-aa64-744f1367dada",
                 "__enabled": true,
                 "Flags": 0,
                 "AnimationGraph": null,
@@ -298,7 +298,7 @@
             "Children": []
           },
           {
-            "__guid": "158aa142-666d-46f4-887e-dc1d35051470",
+            "__guid": "d3e1e650-805f-4b35-859f-c50c659a9035",
             "__version": 2,
             "Flags": 0,
             "Name": "Clothing - vdayglassess",
@@ -315,7 +315,7 @@
             "Components": [
               {
                 "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "e592f9ca-9bdc-498a-886d-1a9086f5b6db",
+                "__guid": "ec6d33d6-d3c2-4e22-b378-9e60a2e9a281",
                 "__enabled": true,
                 "Flags": 0,
                 "AnimationGraph": null,

@@ -41,6 +41,11 @@ public sealed partial class GamePlayer : Component
 	[Sync(SyncFlags.FromHost), Property] public Color Colour { get; set; }
 	[Sync(SyncFlags.FromHost), Property] public int Gold { get; set; }
 
+	public override string ToString()
+	{
+		return $"GamePlayer : {SteamName} : {IsConnected}?{(IsConnected ? Connection : string.Empty)}";
+	}
+
 	public Connection Connection { get; private set; }
 	public bool IsConnected => Connection != null && Connection.IsActive;
 
@@ -92,7 +97,7 @@ public sealed partial class GamePlayer : Component
 
 	private void SelectUnit()
 	{
-		if (SelectedUnit.OwnerPlayer != Local)
+		if (SelectedUnit.OwnerPlayer?.ConnectionId != Local.ConnectionId)
 		{
 			return;
 		}
@@ -133,6 +138,16 @@ public sealed partial class GamePlayer : Component
 		{
 			return; // !
 		}
+
+		Log.Info("OnStart");
+
+		Connection = Connection.Local; // TODO : this is only set on server & local client per player... 
+		Local = this;
+
+		Mouse.Visibility = MouseVisibility.Visible;
+		Assert.True(CreateCamera());
+
+		InitGUi();
 	}
 
 	private bool CreateCamera()
@@ -196,6 +211,8 @@ public sealed partial class GamePlayer : Component
 		Assert.True(Networking.IsHost);
 		Assert.NotNull(ConnectionIn);
 
+		Log.Info("Initilize_ServerOnly");
+
 		Connection = ConnectionIn;
 		ConnectionId = ConnectionIn.Id;
 		SteamId = Connection.SteamId;
@@ -212,24 +229,7 @@ public sealed partial class GamePlayer : Component
 		var Brother = ValidBrothers.First();
 		GameManager.Instance.Server_CreateHexUnitObject("unit-combat", Brother, Connection.Id);
 
-		using (Rpc.FilterInclude(Connection))
-		{
-			Initilize_Client(SpawnHex);
-		}
-
 		return true;
-	}
-
-	[Rpc.Broadcast]
-	public void Initilize_Client(Hex SpawnHex)
-	{
-		Connection = Connection.Local; // TODO : this is only set on server & local client per player... 
-		Local = this;
-
-		Mouse.Visibility = MouseVisibility.Visible;
-		Assert.True(CreateCamera());
-
-		InitGUi();
 	}
 
 	const float MovementExp = 2f;
