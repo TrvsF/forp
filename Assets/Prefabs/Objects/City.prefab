@@ -5,7 +5,7 @@
     "Flags": 0,
     "Name": "city",
     "Position": "0,0,0",
-    "Rotation": "0,0,0.7071067,0.7071068",
+    "Rotation": "0,0,0.707106709,0.707106829",
     "Scale": "1,1,1",
     "Tags": "",
     "Enabled": true,
@@ -101,6 +101,7 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "ProductionToBuild": 0,
+        "Tooltip": "Hub of Ceation & Love",
         "Units": [
           {
             "_type": "gameobject",
@@ -130,7 +131,9 @@
         "AgentStepSize": 18,
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
-        "IncludedBodies": ""
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
       }
     },
     "__variables": []

@@ -49,6 +49,7 @@
               "_type": "gameobject",
               "prefab": "prefabs/objects/hex.prefab"
             },
+            "Mode": "Game",
             "ObjectPrefabs": [
               {
                 "_type": "gameobject",
@@ -81,10 +82,6 @@
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
             "OnComponentUpdate": null,
-            "PlayerCameraPrefab": {
-              "_type": "gameobject",
-              "prefab": "prefabs/playercamera.prefab"
-            },
             "PlayerPrefab": {
               "_type": "gameobject",
               "prefab": "prefabs/player.prefab"
@@ -110,6 +107,7 @@
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
         "IncludedBodies": "",
+        "DeferGeneration": false,
         "CustomBounds": false
       }
     },

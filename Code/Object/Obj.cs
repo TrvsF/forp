@@ -39,6 +39,7 @@ public record FObj : IObj
 public class Obj : Component
 {
 	[Property] public string DisplayName { get; set; }
+	[Property] public string Tooltip { get; set; }
 	[Property] public string ObjectId { get; set; }
 
 	[RequireComponent] public SkinnedModelRenderer ModelRenderer { get; set; }

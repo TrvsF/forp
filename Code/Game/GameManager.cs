@@ -973,9 +973,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		var PlayerObject = PlayerPrefab.Clone(PlayerSpawnConfig);
 		PlayerObject.Name = $"PLAYER:{ConnectionChannel.DisplayName}";
 		PlayerObject.Network.SetOrphanedMode(NetworkOrphaned.Destroy);
-
-		const bool IsEnabled = true;
-		PlayerObject.NetworkSpawn(IsEnabled, ConnectionChannel);
+		PlayerObject.NetworkSpawn(ConnectionChannel);
 
 		OutGamePlayer = PlayerObject.GetComponent<GamePlayer>();
 
@@ -993,7 +991,6 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 			return false;
 		}
 
-		PlayerObject.Enabled = true;
 		return true;
 	}
 

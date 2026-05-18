@@ -130,24 +130,23 @@ public sealed partial class GamePlayer : Component
 		}
 	}
 
-	protected override void OnStart()
+	protected override void OnAwake()
 	{
-		base.OnStart();
+		base.OnAwake();
 
 		if (IsProxy)
 		{
 			return; // !
 		}
 
-		Log.Info("OnStart");
-
 		Connection = Connection.Local; // TODO : this is only set on server & local client per player... 
+
 		Local = this;
 
 		Mouse.Visibility = MouseVisibility.Visible;
 		Assert.True(CreateCamera());
 
-		InitGUi();
+		RefreshGUi();
 	}
 
 	private bool CreateCamera()
@@ -163,14 +162,22 @@ public sealed partial class GamePlayer : Component
 		if (Camera == null)
 		{
 			Log.Error("failed to create camera for local player!");
-			return false;
+			return Camera != null;
 		}
 
-		GUi = Camera.GetComponentInChildren<GamePlayerGUi>();
+		GUi = CameraObject.GetComponentInChildren<GamePlayerGUi>();
 		if (GUi == null)
 		{
 			Log.Error("failed to create gui for local player!");
-			return false;
+			foreach (var CO in CameraObject.Children)
+			{
+				Log.Info(CO.Name);
+				if (CO.GetComponent<GamePlayerGUi>() != null)
+				{
+					GUi = CO.GetComponent<GamePlayerGUi>();
+				}
+			}
+			return GUi != null;
 		}
 
 		return true;
@@ -199,11 +206,11 @@ public sealed partial class GamePlayer : Component
 			if (HoverTrace.GameObject.GetComponent<Obj>() is { } HitObject)
 			{
 				HoveredObject = HitObject;
-				return;
+				break;
 			}
 		}
 
-		InitGUi();
+		RefreshGUi();
 	}
 
 	public bool Initilize_ServerOnly(Connection ConnectionIn, Hex SpawnHex)

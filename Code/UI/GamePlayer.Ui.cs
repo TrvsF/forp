@@ -1,4 +1,5 @@
 using Forp.Object;
+using Forp.Object.Building;
 using Forp.Object.Unit;
 using Sandbox;
 using Sandbox.Diagnostics;
@@ -110,19 +111,60 @@ public sealed partial class GamePlayer : Component
 		}
 	}
 
-	private void InitGUi()
+	private void RefreshGUi()
 	{
 		var TopTextRenderer = GUi.TopText.GetComponent<TextRenderer>();
 		Assert.NotNull(TopTextRenderer);
-		TopTextRenderer.Text = SteamName;
-
-		var BottomTextRenderer = GUi.BottomText.GetComponent<TextRenderer>();
-		Assert.NotNull(BottomTextRenderer);
-		BottomTextRenderer.Text = $"I Love You\n${Gold}";
+		TopTextRenderer.Text = "";
 
 		var UpgradeModel = GUi.UpgradeGUi.GetComponent<SkinnedModelRenderer>();
 		Assert.NotNull(UpgradeModel);
 		UpgradeModel.Tint = Colour;
+
+		var AvatarDresser = GUi.Avatar.GetComponent<Dresser>();
+		Assert.NotNull(AvatarDresser);
+		var AvatarModel = GUi.Avatar.GetComponent<SkinnedModelRenderer>();
+		Assert.NotNull(AvatarModel);
+
+		if (HoveredObject is ObjectUnit HoveredUnit)
+		{
+			AvatarModel.Tint = HoveredUnit.ModelRenderer.Tint;
+			AvatarDresser.Clothing = HoveredUnit.GetComponent<Dresser>().Clothing;
+			AvatarDresser.Source = Dresser.ClothingSource.Manual;
+			AvatarDresser.Apply();
+		}
+		else
+		{
+			AvatarModel.Tint = Color.White;
+			AvatarDresser.Source = Dresser.ClothingSource.LocalUser;
+			AvatarDresser.Apply();
+		}
+
+		SetBottomText();
+	}
+
+	private void SetBottomText()
+	{
+		var BottomTextString = string.Empty;
+
+		if (HoveredObject is ObjectUnit ObjectUnit)
+		{
+			var UnitPrefix = ObjectUnit.IsAi ? "Native" : $"{ObjectUnit.OwnerPlayer.SteamName}'s";
+			BottomTextString = $"{UnitPrefix} {ObjectUnit.DisplayName} {ObjectUnit.Health}hp\n{ObjectUnit.Tooltip}";
+
+			if (ObjectUnit.OwnerPlayer?.ConnectionId == Local.ConnectionId)
+			{
+				BottomTextString += $"{ObjectUnit.Attack} Attack";
+			}
+		}
+		else if (HoveredObject is ObjectBuilding ObjectBuilding)
+		{
+			BottomTextString = $"{ObjectBuilding.DisplayName} {ObjectBuilding.Health}hp\n{ObjectBuilding.Tooltip}";
+		}
+
+		var BottomTextRenderer = GUi.BottomText.GetComponent<TextRenderer>();
+		Assert.NotNull(BottomTextRenderer);
+		BottomTextRenderer.Text = $"{BottomTextString}";
 	}
 }
 
@@ -131,6 +173,7 @@ public sealed class GamePlayerGUi : Component
 	[Property] public GameObject UpgradeGUi { get; private set; }
 	[Property] public GameObject TopText { get; private set; }
 	[Property] public GameObject BottomText { get; private set; }
+	[Property] public GameObject Avatar { get; private set; }
 
 	private bool ShowUpgrades = false;
 	private List<GameObject> ShownUpgrades = new();
