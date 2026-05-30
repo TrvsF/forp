@@ -113,6 +113,11 @@ public sealed partial class GamePlayer : Component
 
 	private void RefreshGUi()
 	{
+		if (GUi == null)
+		{
+			return; // :(
+		}
+
 		var TopTextRenderer = GUi.TopText.GetComponent<TextRenderer>();
 		Assert.NotNull(TopTextRenderer);
 		TopTextRenderer.Text = "";

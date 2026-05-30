@@ -11,15 +11,25 @@
         }
     </static-bar>
 
+    @if (UiInfo.AnythingSelected())
+    {
+        <build-unit-container>
+            @foreach (var (BuildString, Index) in UiInfo.BuildObjects.Select((v, i) => (v, i)))
+            {
+                <build-unit>
+                    <button onclick="@(() => OnUnitBuildClick(Index))">@BuildString</button>
+                </build-unit>
+            }
+        </build-unit-container>
+    }
    
-
     <next-turn-button onclick="@OnNextTurnClick" style="background-color: @GetNextColour();">
         @(GetNextTurnString())
     </next-turn-button>
 </root>
 
 @code
-            {
+{
     protected override int BuildHash()
     {
         return HashCode.Combine(Time.Now);

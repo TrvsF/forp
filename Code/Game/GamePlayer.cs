@@ -165,16 +165,16 @@ public sealed partial class GamePlayer : Component
 			return Camera != null;
 		}
 
-		GUi = CameraObject.GetComponentInChildren<GamePlayerGUi>();
+		GUi = CameraObject.GetComponentInChildren<GamePlayerGUi>(true);
 		if (GUi == null)
 		{
 			Log.Error("failed to create gui for local player!");
-			foreach (var CO in CameraObject.Children)
+			foreach (var ObjectChild in CameraObject.Children)
 			{
-				Log.Info(CO.Name);
-				if (CO.GetComponent<GamePlayerGUi>() != null)
+				Log.Info(ObjectChild.Name);
+				if (ObjectChild.GetComponent<GamePlayerGUi>() != null)
 				{
-					GUi = CO.GetComponent<GamePlayerGUi>();
+					GUi = ObjectChild.GetComponent<GamePlayerGUi>();
 				}
 			}
 			return GUi != null;
@@ -307,7 +307,7 @@ public sealed partial class GamePlayer : Component
 					DraggedObject = ClickTrace.GameObject;
 				}
 
-				if (ClickTrace.GameObject == GUi.UpgradeGUi)
+				if (GUi != null && ClickTrace.GameObject == GUi.UpgradeGUi)
 				{
 					GUi.OnUpgradeClicked(Local);
 				}
