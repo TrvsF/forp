@@ -134,13 +134,14 @@ public sealed partial class GamePlayer : Component
 	{
 		base.OnAwake();
 
-		if (IsProxy)
+		if (!Network.IsOwner)
 		{
 			return; // !
 		}
 
-		Connection = Connection.Local; // TODO : this is only set on server & local client per player... 
+		Log.Info("AWAKE");
 
+		Connection = Connection.Local; // TODO : this is only set on server & local client per player... 
 		Local = this;
 
 		Mouse.Visibility = MouseVisibility.Visible;

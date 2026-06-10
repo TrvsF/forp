@@ -8,7 +8,7 @@
     "Rotation": "2.42066422E-10,0.258819044,-6.48614981E-11,0.965925813",
     "Scale": "1,1,1",
     "Tags": "",
-    "Enabled": true,
+    "Enabled": false,
     "NetworkMode": 0,
     "NetworkFlags": 0,
     "NetworkOrphaned": 0,
@@ -231,7 +231,7 @@
             {
               "Id": {
                 "Type": "GameObject",
-                "IdValue": "6937e642-557e-4625-ab13-07047d7d2680"
+                "IdValue": "8227fc2d-1400-479a-abff-83e79e5cf231"
               },
               "Parent": {
                 "Type": "GameObject",
@@ -241,7 +241,7 @@
               "ContainerProperty": "Children",
               "IsContainerArray": true,
               "Data": {
-                "__guid": "6937e642-557e-4625-ab13-07047d7d2680",
+                "__guid": "8227fc2d-1400-479a-abff-83e79e5cf231",
                 "__version": 2,
                 "Flags": 0,
                 "Name": "Clothing - standard_skirt",
@@ -262,18 +262,18 @@
             {
               "Id": {
                 "Type": "Component",
-                "IdValue": "6135e6ff-920a-430d-a22f-63b9220959d9"
+                "IdValue": "6011ec40-b90f-4e49-a5ba-79e775d41cd9"
               },
               "Parent": {
                 "Type": "GameObject",
-                "IdValue": "6937e642-557e-4625-ab13-07047d7d2680"
+                "IdValue": "8227fc2d-1400-479a-abff-83e79e5cf231"
               },
               "PreviousElement": null,
               "ContainerProperty": "Components",
               "IsContainerArray": true,
               "Data": {
                 "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "6135e6ff-920a-430d-a22f-63b9220959d9",
+                "__guid": "6011ec40-b90f-4e49-a5ba-79e775d41cd9",
                 "__enabled": true,
                 "Flags": 0,
                 "AnimationGraph": null,
@@ -325,7 +325,7 @@
             {
               "Id": {
                 "Type": "GameObject",
-                "IdValue": "886a8e1d-213e-4b9b-811b-5eec4d98e2e3"
+                "IdValue": "99b7f4c5-9fa2-4469-845d-65b438328ffd"
               },
               "Parent": {
                 "Type": "GameObject",
@@ -333,12 +333,12 @@
               },
               "PreviousElement": {
                 "Type": "GameObject",
-                "IdValue": "6937e642-557e-4625-ab13-07047d7d2680"
+                "IdValue": "8227fc2d-1400-479a-abff-83e79e5cf231"
               },
               "ContainerProperty": "Children",
               "IsContainerArray": true,
               "Data": {
-                "__guid": "886a8e1d-213e-4b9b-811b-5eec4d98e2e3",
+                "__guid": "99b7f4c5-9fa2-4469-845d-65b438328ffd",
                 "__version": 2,
                 "Flags": 0,
                 "Name": "Clothing - santahat",
@@ -359,18 +359,18 @@
             {
               "Id": {
                 "Type": "Component",
-                "IdValue": "f238fb9c-e72f-402e-8970-d25bbc610025"
+                "IdValue": "3ef7cc73-cab9-4e79-a5b6-9a27f7189166"
               },
               "Parent": {
                 "Type": "GameObject",
-                "IdValue": "886a8e1d-213e-4b9b-811b-5eec4d98e2e3"
+                "IdValue": "99b7f4c5-9fa2-4469-845d-65b438328ffd"
               },
               "PreviousElement": null,
               "ContainerProperty": "Components",
               "IsContainerArray": true,
               "Data": {
                 "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "f238fb9c-e72f-402e-8970-d25bbc610025",
+                "__guid": "3ef7cc73-cab9-4e79-a5b6-9a27f7189166",
                 "__enabled": true,
                 "Flags": 0,
                 "AnimationGraph": null,
@@ -422,7 +422,7 @@
             {
               "Id": {
                 "Type": "GameObject",
-                "IdValue": "bfea0241-0948-4d8f-9c68-1460db476229"
+                "IdValue": "3cd4a830-432e-4457-bfea-1e34993565fa"
               },
               "Parent": {
                 "Type": "GameObject",
@@ -430,12 +430,12 @@
               },
               "PreviousElement": {
                 "Type": "GameObject",
-                "IdValue": "886a8e1d-213e-4b9b-811b-5eec4d98e2e3"
+                "IdValue": "99b7f4c5-9fa2-4469-845d-65b438328ffd"
               },
               "ContainerProperty": "Children",
               "IsContainerArray": true,
               "Data": {
-                "__guid": "bfea0241-0948-4d8f-9c68-1460db476229",
+                "__guid": "3cd4a830-432e-4457-bfea-1e34993565fa",
                 "__version": 2,
                 "Flags": 0,
                 "Name": "Clothing - vdayglassess",
@@ -456,18 +456,18 @@
             {
               "Id": {
                 "Type": "Component",
-                "IdValue": "e41dc956-5679-4921-89f1-8257c9b67feb"
+                "IdValue": "3468e105-79c6-43db-82bc-64411d10f47c"
               },
               "Parent": {
                 "Type": "GameObject",
-                "IdValue": "bfea0241-0948-4d8f-9c68-1460db476229"
+                "IdValue": "3cd4a830-432e-4457-bfea-1e34993565fa"
               },
               "PreviousElement": null,
               "ContainerProperty": "Components",
               "IsContainerArray": true,
               "Data": {
                 "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "e41dc956-5679-4921-89f1-8257c9b67feb",
+                "__guid": "3468e105-79c6-43db-82bc-64411d10f47c",
                 "__enabled": true,
                 "Flags": 0,
                 "AnimationGraph": null,
