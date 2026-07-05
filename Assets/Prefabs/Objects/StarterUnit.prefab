@@ -5,7 +5,7 @@
     "Flags": 0,
     "Name": "starterunit",
     "Position": "0,0,0",
-    "Rotation": "0,0,1,-0.00000004371139",
+    "Rotation": "0,0,1,-4.37113883E-08",
     "Scale": "1,1,1",
     "Tags": "",
     "Enabled": true,
@@ -40,13 +40,7 @@
         "OnComponentUpdate": null,
         "ProductionToBuild": 99,
         "SelectedMaterial": "materials/liquid/retro_lava_01.vmat",
-        "Upgrade": {
-          "ObjectId": null,
-          "Name": null,
-          "BuildingIds": null,
-          "AttackModifyer": 0,
-          "HealthModifyer": 0
-        },
+        "Tooltip": null,
         "ViewRange": 3
       },
       {
@@ -135,12 +129,16 @@
         "IkRightHand": null,
         "LookAt": null,
         "LookAtEnabled": false,
+        "LookAtEyes": null,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
+        "Sitting": "None",
+        "SittingOffsetHeight": 0,
+        "SpecialMove": "None",
         "Target": {
           "_type": "component",
           "component_id": "61105fb5-abcd-45dc-bf9d-9ea2c1def99c",
@@ -174,13 +172,14 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
+        "RemoveUnownedItems": true,
         "Source": "Manual",
         "WorkshopItems": []
       }
     ],
     "Children": [
       {
-        "__guid": "6269bb60-a558-4242-b89c-0c5ba068284e",
+        "__guid": "d1f6d298-ea1b-461a-bc04-07149e22ffb0",
         "__version": 2,
         "Flags": 0,
         "Name": "Clothing - chefs_hat",
@@ -197,7 +196,7 @@
         "Components": [
           {
             "__type": "Sandbox.SkinnedModelRenderer",
-            "__guid": "e805002b-bd97-431e-bd9c-562e638cdccb",
+            "__guid": "07b360d5-5c6b-4cba-899c-a8d461e53e3e",
             "__enabled": true,
             "Flags": 0,
             "AnimationGraph": null,
@@ -264,7 +263,9 @@
         "AgentStepSize": 18,
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
-        "IncludedBodies": ""
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
       }
     },
     "__variables": []

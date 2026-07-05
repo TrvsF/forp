@@ -1,14 +1,6 @@
 ﻿using Forp.Object;
-using Forp.Object.Unit;
-using Forp.Util;
-using Sandbox;
 using Sandbox.Diagnostics;
-using Sandbox.Network;
-using Forp.Object.Building;
-using Sandbox.Razor;
 using System;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 
 namespace Forp.Game;
 
@@ -30,11 +22,20 @@ public partial class GameManager
 {
 	private List<MenuObject> MenuHexes = new();
 
-	int TicksSinceLastSpawn = 0;
-	protected override void OnFixedUpdate()
+	protected void MenuLoad()
 	{
-		base.OnFixedUpdate();
+		if (Mode != EGameManagerMode.Menu)
+		{
+			return;
+		}
 
+		SpawnRandomObject();
+	}
+
+	private int TicksSinceLastSpawn = 0;
+
+	private void MenuTick()
+	{
 		if (Mode != EGameManagerMode.Menu)
 		{
 			return;
@@ -60,6 +61,25 @@ public partial class GameManager
 				MenuHexes.RemoveAt(MenuHexIndex);
 			}
 		}
+
+		Assert.NotNull(Scene.Camera);
+		UpdateMouseLook();
+	}
+
+	private const float MaxYaw = 15f;
+	private const float MaxPitch = 10f;
+	private const float LookSpeed = 6f;
+	private readonly Rotation BaseCameraRotation = Rotation.FromYaw(90);
+
+	void UpdateMouseLook()
+	{
+		Vector2 Offset = (Mouse.Position / Screen.Size - 0.5f) * 2f;
+
+		float Yaw = -Offset.x * MaxYaw;
+		float Pitch = Offset.y * MaxPitch;
+		Rotation TargetRotation = BaseCameraRotation * Rotation.From(Pitch, Yaw, 0f);
+
+		Scene.Camera.WorldRotation = Rotation.Slerp(Scene.Camera.WorldRotation, TargetRotation, MathX.Clamp(Time.Delta * LookSpeed, 0f, 1f));
 	}
 
 	List<string> RandomBuilding = new()
@@ -95,7 +115,7 @@ public partial class GameManager
 		switch (Random.Shared.Int(0, 2))
 		{
 			case 0:
-				Server_CreateHexUnitObject(Random.Shared.FromList(RandomUnits), HexComponent, Connection.Local.Id);
+				Server_CreateHexUnitObject(Random.Shared.FromList(RandomUnits), HexComponent, Connection.Local.Id, true);
 				HexComponent.UnitObject.SetCameraMode(ECameraMode.Normal);
 				break;
 			case 1:
@@ -123,10 +143,5 @@ public partial class GameManager
 				HexComponent.WorldRotation = RandomRotation.RotateAroundAxis(Vector3.Forward, 30);
 				break;
 		}
-	}
-
-	protected void SpawnMenu()
-	{
-		SpawnRandomObject();
 	}
 }

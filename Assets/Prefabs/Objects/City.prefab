@@ -91,6 +91,16 @@
         "__enabled": true,
         "Flags": 0,
         "Attack": 0,
+        "BuildableUnits": [
+          {
+            "_type": "gameobject",
+            "prefab": "prefabs/objects/combatunit.prefab"
+          },
+          {
+            "_type": "gameobject",
+            "prefab": "prefabs/objects/starterunit.prefab"
+          }
+        ],
         "DisplayName": "City",
         "Health": 1,
         "ObjectId": "building-city",
@@ -102,16 +112,6 @@
         "OnComponentUpdate": null,
         "ProductionToBuild": 0,
         "Tooltip": "Hub of Ceation & Love",
-        "Units": [
-          {
-            "_type": "gameobject",
-            "prefab": "prefabs/objects/starterunit.prefab"
-          },
-          {
-            "_type": "gameobject",
-            "prefab": "prefabs/objects/combatunit.prefab"
-          }
-        ],
         "ViewRange": 4
       }
     ],

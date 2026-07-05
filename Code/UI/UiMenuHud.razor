@@ -9,11 +9,19 @@
     <menu-container>
         @if (SubMenu == ESubMenu.Main)
         {
-            <menu-button @onclick=@(() => SubMenu = ESubMenu.Lobby) style="font-size: 48px;">
+            <menu-button class="play" @onclick=@(() => SubMenu = ESubMenu.Lobby)>
                 Play
             </menu-button>
 
-            <menu-button @onclick=@(() => Game.Disconnect()) style="font-size: 18px;">
+            <menu-button class="load" @onclick=@(() => SubMenu = ESubMenu.Load)>
+                Load
+            </menu-button>
+
+            <menu-button class="settings" @onclick=@(() => SubMenu = ESubMenu.Settings)>
+                Settings
+            </menu-button>
+
+            <menu-button class="quit" @onclick=@(() => Game.Disconnect())>
                 Quit
             </menu-button>
         }
@@ -23,16 +31,52 @@
             <menu-row>
                 @foreach (LobbyPrivacy NetworkMode in Enum.GetValues(typeof(LobbyPrivacy)))
                 {
-                    <menu-button class="@(LobbyPrivacy == NetworkMode ? "selected" : "")" @onclick="@(() => LobbyPrivacy = NetworkMode)">
+                    <menu-button class="@(LobbyPrivacy == NetworkMode ? "modesselected" : "modes")" @onclick="@(() => LobbyPrivacy = NetworkMode)">
                         @NetworkMode
                     </menu-button>
                 }
             </menu-row>
-            <menu-button @onclick="@(() => OnStartClick())" style="font-size: 48px;">
+            <menu-button class="play" @onclick="@(() => SubMenu = ESubMenu.Main)">
+                Back
+            </menu-button>
+            <menu-button class="go" @onclick="@(() => SubMenu = ESubMenu.Main)">
                 Start
             </menu-button>
-            <menu-button @onclick="@(() => SubMenu = ESubMenu.Main)" style="font-size: 18px;">
+        }
+
+        @if (SubMenu == ESubMenu.Load)
+        {
+            <menu-row>
+                @foreach (LobbyPrivacy NetworkMode in Enum.GetValues(typeof(LobbyPrivacy)))
+                {
+                    <menu-button class="@(LobbyPrivacy == NetworkMode ? "modesselected" : "modes")" @onclick="@(() => LobbyPrivacy = NetworkMode)">
+                        a save to load
+                    </menu-button>
+                }
+            </menu-row>
+            <menu-button class="play" @onclick="@(() => OnStartClick())">
+                Start
+            </menu-button>
+            <menu-button class="quit" @onclick="@(() => SubMenu = ESubMenu.Main)">
                 Back
+            </menu-button>
+        }
+
+        @if (SubMenu == ESubMenu.Settings)
+        {
+            <menu-row>
+                @foreach (LobbyPrivacy NetworkMode in Enum.GetValues(typeof(LobbyPrivacy)))
+                {
+                    <menu-button class="@(LobbyPrivacy == NetworkMode ? "modesselected" : "modes")" @onclick="@(() => LobbyPrivacy = NetworkMode)">
+                        a setting
+                    </menu-button>
+                }
+            </menu-row>
+            <menu-button class="play" @onclick="@(() => SubMenu = ESubMenu.Main)">
+                Back
+            </menu-button>
+            <menu-button class="go" @onclick="@(() => SubMenu = ESubMenu.Main)">
+                Start
             </menu-button>
         }
     </menu-container>
@@ -44,6 +88,8 @@
     {
         Main,
         Lobby,
+        Load,
+        Settings,
     }
 
     protected void OnStartClick()

@@ -6,8 +6,8 @@
       "__version": 2,
       "Flags": 0,
       "Name": "Camera",
-      "Position": "-38.21906,-1677.985,56.84739",
-      "Rotation": "0,0,0.7071067,0.7071068",
+      "Position": "-38.219059,-1677.98499,56.8473892",
+      "Rotation": "0,0,0.707106709,0.707106829",
       "Scale": "1,1,1",
       "Tags": "maincamera",
       "Enabled": true,
@@ -84,9 +84,9 @@
       "__version": 2,
       "Flags": 0,
       "Name": "Play",
-      "Position": "-2230.556,0,0",
-      "Rotation": "0.00000001672762,-0.3826834,0.9238796,-0.00000004038406",
-      "Scale": "1.649999,1,1",
+      "Position": "-2230.55591,0,0",
+      "Rotation": "1.67276202E-08,-0.382683396,0.923879623,-4.03840588E-08",
+      "Scale": "1.64999902,1,1",
       "Tags": "",
       "Enabled": true,
       "NetworkMode": 2,
@@ -148,7 +148,7 @@
       "__version": 2,
       "Flags": 0,
       "Name": "Cube",
-      "Position": "0,427.908,0",
+      "Position": "0,427.90799,0",
       "Rotation": "0,0,0,1",
       "Scale": "100,1,100",
       "Tags": "",
@@ -194,8 +194,8 @@
       "__version": 2,
       "Flags": 0,
       "Name": "Sun",
-      "Position": "0,-763.8108,313.2329",
-      "Rotation": "-0.5538774,-0.6634029,0.4942297,-0.09409407",
+      "Position": "0,-763.810791,313.23291",
+      "Rotation": "-0.553877413,-0.663402915,0.494229704,-0.0940940678",
       "Scale": "1,1,1",
       "Tags": "light_directional,light",
       "Enabled": true,
@@ -210,6 +210,7 @@
           "__guid": "4be82083-2ee2-4b93-b06f-77f9f63500a3",
           "__enabled": true,
           "Flags": 0,
+          "Contribution": "Diffuse, Specular, Transmissive",
           "FogMode": "Enabled",
           "FogStrength": 1,
           "LightColor": "0.91373,0.98039,1,1",
@@ -219,8 +220,13 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
+          "ShadowBias": 0.0005,
+          "ShadowCascadeCount": 4,
+          "ShadowCascadeSplitRatio": 0.91,
+          "ShadowHardness": 0,
           "Shadows": true,
-          "SkyColor": "0,0,0,0"
+          "SkyColor": "0,0,0,0",
+          "Visualizer": {}
         }
       ],
       "Children": []
@@ -255,8 +261,8 @@
       "__version": 2,
       "Flags": 0,
       "Name": "Textes",
-      "Position": "0,0,341.3914",
-      "Rotation": "0,0,0.7071067,0.7071068",
+      "Position": "0,0,16.8635559",
+      "Rotation": "0,0,0.707106709,0.707106829",
       "Scale": "1,1,1",
       "Tags": "",
       "Enabled": true,
@@ -272,6 +278,7 @@
           "__enabled": true,
           "Flags": 0,
           "__version": 2,
+          "Billboard": "None",
           "BlendMode": "Normal",
           "FogStrength": 1,
           "HorizontalAlignment": "Center",
@@ -295,6 +302,7 @@
             "FontSize": 65.61539,
             "FontWeight": 437,
             "FontItalic": false,
+            "FontVariantNumeric": "Normal",
             "LineHeight": 1,
             "LetterSpacing": 4.329997,
             "WordSpacing": -9.279927,
@@ -333,8 +341,8 @@
       "__version": 2,
       "Flags": 0,
       "Name": "Spot Light",
-      "Position": "0,-1725.359,-238.2784",
-      "Rotation": "0.1830127,-0.1830127,0.6830126,0.6830127",
+      "Position": "0,-1725.35901,-238.278397",
+      "Rotation": "0.183012694,-0.183012694,0.683012605,0.683012724",
       "Scale": "1,1,1",
       "Tags": "light_spot,light",
       "Enabled": false,
@@ -352,6 +360,7 @@
           "Attenuation": 6.1490684,
           "ConeInner": 56.459625,
           "ConeOuter": 37.45342,
+          "Contribution": "Diffuse, Specular, Transmissive",
           "Cookie": null,
           "FogMode": "Disabled",
           "FogStrength": 1,
@@ -363,6 +372,8 @@
           "OnComponentStart": null,
           "OnComponentUpdate": null,
           "Radius": 5000,
+          "ShadowBias": 0.0005,
+          "ShadowHardness": 0,
           "Shadows": false
         }
       ],
@@ -384,7 +395,21 @@
       "AgentStepSize": 18,
       "AgentMaxSlope": 40,
       "ExcludedBodies": "",
-      "IncludedBodies": ""
+      "IncludedBodies": "",
+      "DeferGeneration": false,
+      "CustomBounds": false
+    },
+    "GameObjectSystems": {
+      "Sandbox.Clutter.ClutterGridSystem": {
+        "Storage": {
+          "$blob": "7eeba0a5-db3f-4472-90fd-a8c5a65232cd"
+        }
+      },
+      "Sandbox.SelectionSetsSystem": {
+        "Data": {
+          "SelectionSets": []
+        }
+      }
     }
   },
   "ResourceVersion": 3,

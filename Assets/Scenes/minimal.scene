@@ -60,6 +60,7 @@
           "__guid": "d3659344-a90d-48fa-927a-095f70fe041f",
           "__enabled": true,
           "Flags": 0,
+          "Contribution": "Diffuse, Specular, Transmissive",
           "FogMode": "Disabled",
           "FogStrength": 1,
           "LightColor": "0.49767,0.44825,0.35647,1",
@@ -87,7 +88,16 @@
       "__PrefabInstancePatch": {
         "AddedObjects": [],
         "RemovedObjects": [],
-        "PropertyOverrides": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "dbbfe14f-ff65-4bb4-b301-c63ca99d9358"
+            },
+            "Property": "NumAis",
+            "Value": 1
+          }
+        ],
         "MovedObjects": []
       },
       "__PrefabIdToInstanceId": {
@@ -167,9 +177,6 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.MovieMaker.MovieRecorderSystem": {
-        "DisableClientRecording": false
-      },
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
           "$blob": "e1f49eef-9261-4bdd-9d0b-6a7264e5f35d"

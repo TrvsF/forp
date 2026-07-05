@@ -101,7 +101,7 @@ public sealed partial class GamePlayer : Component
 		// if we've got a valid hex what can we build
 		if (SelectedHex.IsValid() && SelectedHex.BuildingObject.IsValid())
 		{
-			foreach (var BuildUnit in SelectedHex.BuildingObject.Units)
+			foreach (var BuildUnit in SelectedHex.BuildingObject.BuildableUnits)
 			{
 				if (BuildUnit.GetComponent<ObjectUnit>() is { } BuildObjectUnit)
 				{

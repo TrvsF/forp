@@ -5,7 +5,7 @@
     "Flags": 0,
     "Name": "combatunit",
     "Position": "0,0,0",
-    "Rotation": "0,0,1,-0.00000004371139",
+    "Rotation": "0,0,1,-4.37113883E-08",
     "Scale": "1,1,1",
     "Tags": "",
     "Enabled": true,
@@ -40,13 +40,7 @@
         "OnComponentUpdate": null,
         "ProductionToBuild": 50,
         "SelectedMaterial": "materials/liquid/retro_lava_01.vmat",
-        "Upgrade": {
-          "ObjectId": null,
-          "Name": null,
-          "BuildingIds": null,
-          "AttackModifyer": 0,
-          "HealthModifyer": 0
-        },
+        "Tooltip": null,
         "ViewRange": 3
       },
       {
@@ -135,12 +129,16 @@
         "IkRightHand": null,
         "LookAt": null,
         "LookAtEnabled": false,
+        "LookAtEyes": null,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
+        "Sitting": "None",
+        "SittingOffsetHeight": 0,
+        "SpecialMove": "None",
         "Target": {
           "_type": "component",
           "component_id": "fe3b91c9-c6cf-4a4b-8ac1-1f5ca0ce5ac2",
@@ -174,13 +172,14 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
+        "RemoveUnownedItems": true,
         "Source": "Manual",
         "WorkshopItems": []
       }
     ],
     "Children": [
       {
-        "__guid": "d29207a5-3400-4e34-9747-bdaeff929911",
+        "__guid": "521e2ad6-a617-4cdc-826a-06419494ba7a",
         "__version": 2,
         "Flags": 0,
         "Name": "Clothing - tactical_vest",
@@ -197,7 +196,7 @@
         "Components": [
           {
             "__type": "Sandbox.SkinnedModelRenderer",
-            "__guid": "3c4dc823-ec9f-4800-bd42-f15c11e4e631",
+            "__guid": "ca83795d-97b3-4b13-a596-b2bd81521f0a",
             "__enabled": true,
             "Flags": 0,
             "AnimationGraph": null,
@@ -264,7 +263,9 @@
         "AgentStepSize": 18,
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
-        "IncludedBodies": ""
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
       }
     },
     "__variables": []

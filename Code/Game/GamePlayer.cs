@@ -43,7 +43,7 @@ public sealed partial class GamePlayer : Component
 
 	public override string ToString()
 	{
-		return $"GamePlayer : {SteamName} : {IsConnected}?{(IsConnected ? Connection : string.Empty)}";
+		return $"GamePlayer : {SteamName} : c={IsConnected}?{(IsConnected ? Connection : string.Empty)} ai={IsAi}";
 	}
 
 	public Connection Connection { get; private set; }
@@ -139,11 +139,16 @@ public sealed partial class GamePlayer : Component
 			return; // !
 		}
 
-		Log.Info("AWAKE");
+		Log.Info($"player awoke ai={IsAi}");
 
 		Connection = Connection.Local; // TODO : this is only set on server & local client per player... 
-		Local = this;
+										// why dont connections replicate ? [may/26]
+		if (IsAi)
+		{
+			return; // !
+		}
 
+		Local = this;
 		Mouse.Visibility = MouseVisibility.Visible;
 		Assert.True(CreateCamera());
 
@@ -186,7 +191,7 @@ public sealed partial class GamePlayer : Component
 
 	protected override void OnUpdate()
 	{
-		if (IsProxy)
+		if (IsProxy || IsAi)
 		{
 			return;
 		}
@@ -214,19 +219,31 @@ public sealed partial class GamePlayer : Component
 		RefreshGUi();
 	}
 
-	public bool Initilize_ServerOnly(Connection ConnectionIn, Hex SpawnHex)
+	public bool Initilize_ServerOnly(Connection ConnectionIn, Hex SpawnHex, bool IsAiIn)
 	{
 		Assert.True(Networking.IsHost);
 		Assert.NotNull(ConnectionIn);
 
-		Log.Info("Initilize_ServerOnly");
+		if (IsAiIn)
+		{
+			IsAi = IsAiIn;
 
-		Connection = ConnectionIn;
-		ConnectionId = ConnectionIn.Id;
-		SteamId = Connection.SteamId;
-		SteamName = Connection.DisplayName;
+			Connection = ConnectionIn;
+			ConnectionId = Guid.NewGuid();
+			SteamId = 0;
+			SteamName = $"{Time.Now}";
+		}
+		else
+		{
+			Connection = ConnectionIn;
+			ConnectionId = ConnectionIn.Id;
+			SteamId = ConnectionIn.SteamId;
+			SteamName = ConnectionIn.DisplayName;
+		}
 
-		GameManager.Instance.Server_CreateHexUnitObject("unit-settler", SpawnHex, Connection.Id);
+		Log.Info($"{this} is initing");
+
+		GameManager.Instance.Server_CreateHexUnitObject("unit-settler", SpawnHex, Connection.Id, IsAi);
 		var ValidBrothers = SpawnHex.AllBrothers.Where(Hex => Hex != null && Hex.ObjectData == null && Hex.CanWalkOn()).OrderBy(Hex => Random.Shared.Next());
 		if (!ValidBrothers.Any())
 		{
@@ -235,7 +252,7 @@ public sealed partial class GamePlayer : Component
 		}
 
 		var Brother = ValidBrothers.First();
-		GameManager.Instance.Server_CreateHexUnitObject("unit-combat", Brother, Connection.Id);
+		GameManager.Instance.Server_CreateHexUnitObject("unit-combat", Brother, Connection.Id, IsAi);
 
 		return true;
 	}
@@ -373,7 +390,7 @@ public sealed partial class GamePlayer : Component
 			{
 				var UnitHex = GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit);
 				Hex.HighlightHexesRecusrive(UnitHex, false, SelectedUnit.ActionPoints + 1);
-				GameManager.Instance.Server_MoveUnitToHex(UnitHex, FoundHex, Local.Connection.Id);
+				GameManager.Instance.Server_MoveUnitToHex(UnitHex, FoundHex, Connection.Id);
 			}
 			else
 			{

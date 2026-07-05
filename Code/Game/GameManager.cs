@@ -25,10 +25,11 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 	public static readonly Guid AiGuid = new("d85b1407-351d-4694-9392-03acc5870eb1");
 
 	[Property] public EGameManagerMode Mode { get; set; }
-	[Property] public GameObject HexPrefab { get; set; }
+ 	[Property] public GameObject HexPrefab { get; set; }
 	[Property] public GameObject PlayerPrefab { get; set; }
 	[Property] public GameObject GameTextPrefab { get; set; }
 	[Property] public GameObject DamageTextPrefab { get; set; }
+	[Property] public int NumAis { get; set; }
 	[Property] private HashSet<GameObject> ObjectPrefabs { get; set; } // TODO : turn into dict at startup
 
 	public GameObject GetTextPrefab<T>() where T : GameText
@@ -106,7 +107,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 
 	public void GetWaitingConnections(out int Waiting, out int Total)
 	{
-		Waiting = WaitingConnections.Count;
+		Waiting = WaitingConnections.Count + NumAis;
 		Total = GamePlayers.Count;
 	}
 
@@ -126,7 +127,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 
 		WaitingConnections.Add(ConnectionId);
 
-		if (GamePlayers.Count == WaitingConnections.Count)
+		if (GamePlayers.Count == WaitingConnections.Count + NumAis)
 		{
 			DoNextTurn_ServerOnly();
 		}
@@ -279,7 +280,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 
 							if (HexBrother.UnitData == null)
 							{
-								Server_CreateHexUnitObject(QueuedObject.ObjectId, HexBrother, Hex.GetOwnerId());
+								Server_CreateHexUnitObject(QueuedObject.ObjectId, HexBrother, Hex.GetOwnerId(), false);
 								break;
 							}
 						}
@@ -314,7 +315,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 
 		Log.Info($"Connection activating with name = {ConnectionChannel.DisplayName}:{ConnectionChannel.Ping} | is host = {ConnectionChannel.IsHost}");
 
-		StartClient_SeverOnly(ConnectionChannel.Id);
+		StartGameClient_SeverOnly(ConnectionChannel.Id, false);
 	}
 
 	void INetworkListener.OnDisconnected(Connection ConnectionChannel)
@@ -356,7 +357,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 
 		if (Mode == EGameManagerMode.Menu)
 		{
-			SpawnMenu();
+			MenuLoad();
 			return;
 		}
 
@@ -366,6 +367,27 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		if (!Networking.IsActive)
 		{
 			CreateLobby();
+		}
+
+		InitAi();
+	}
+
+	protected override void OnUpdate()
+	{
+		base.OnUpdate();
+
+		if (Mode == EGameManagerMode.Menu)
+		{
+			MenuTick();
+			return;
+		}
+	}
+
+	private void InitAi()
+	{
+		for (int _ = 0; _ < NumAis; ++_)
+		{
+			StartGameClient_SeverOnly(Connection.Host.Id, true);
 		}
 	}
 
@@ -435,7 +457,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 
 	private List<Hex> ValidSpawnHexes { get => BoardHexes.Where(Hex => Hex.Type == EHexType.Grass && Hex.UnitData == null).ToList(); }
 
-	private void StartClient_SeverOnly(Guid ConnectionGuid)
+	private void StartGameClient_SeverOnly(Guid ConnectionGuid, bool IsAi)
 	{
 		Assert.True(Networking.IsHost);
 
@@ -446,7 +468,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 			throw new Exception($"cannot find a valid spawn hex for {ConnectionGuid}. This is very bad.");
 		}
 
-		bool CreatedPlayerState = CreatePlayerObject_ServerOnly(ConnectionGuid, SpawnHex, out var GamePlayer);
+		bool CreatedPlayerState = CreatePlayerObject_ServerOnly(ConnectionGuid, SpawnHex, IsAi, out var GamePlayer);
 
 		if (!CreatedPlayerState || GamePlayer == null)
 		{
@@ -700,7 +722,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 	}
 
 	[Rpc.Host]
-	public void Server_CreateHexUnitObject(string ObjectId, Hex Hex, Guid ConnectionId, bool IsAi = false)
+	public void Server_CreateHexUnitObject(string ObjectId, Hex Hex, Guid ConnectionId, bool IsAi)
 	{
 		Assert.IsValid(Hex);
 		Assert.NotNull(ConnectionId);
@@ -808,6 +830,8 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		{
 			ObjectId = TypedObject.ObjectId,
 			Name = TypedObject.DisplayName,
+			Attack = TypedObject.Attack,
+			Health = TypedObject.Health,
 			Transform = Hex.GetObjectSpawnLocation(),
 			OwnerGuid = ConnectionId,
 			Hex = Hex,
@@ -952,7 +976,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		return Color.White;
 	}
 
-	private bool CreatePlayerObject_ServerOnly(Guid ConnectionGuid, Hex SpawnHex, out GamePlayer OutGamePlayer)
+	private bool CreatePlayerObject_ServerOnly(Guid ConnectionGuid, Hex SpawnHex, bool IsAi, out GamePlayer OutGamePlayer)
 	{
 		Assert.True(Networking.IsHost);
 		Assert.True(PlayerPrefab.IsValid(), "Could not spawn player as no PlayerPrefab assigned to network manager");
@@ -985,7 +1009,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		OutGamePlayer.Colour = PlayerColours.Pop();
 		OutGamePlayer.Gold = 100;
 
-		if (!OutGamePlayer.Initilize_ServerOnly(ConnectionChannel, SpawnHex))
+		if (!OutGamePlayer.Initilize_ServerOnly(ConnectionChannel, SpawnHex, IsAi))
 		{
 			OutGamePlayer.GameObject.DestroyImmediate();
 			return false;
