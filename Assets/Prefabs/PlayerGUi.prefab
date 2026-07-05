@@ -168,7 +168,7 @@
         ],
         "Children": [
           {
-            "__guid": "6a6eb059-3a20-4b1d-a3e9-540128d39b03",
+            "__guid": "7438fc5d-bdf8-42e3-9a40-06a311a9ad70",
             "__version": 2,
             "Flags": 0,
             "Name": "Clothing - standard_skirt",
@@ -177,7 +177,7 @@
             "Scale": "1,1,1",
             "Tags": "clothing",
             "Enabled": true,
-            "NetworkMode": 0,
+            "NetworkMode": 2,
             "NetworkFlags": 0,
             "NetworkOrphaned": 0,
             "NetworkTransmit": true,
@@ -185,7 +185,7 @@
             "Components": [
               {
                 "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "26ed72a8-482d-4f3a-a0f8-d37aa8c512d3",
+                "__guid": "0252d560-5dad-44b2-9727-2761da3a8e98",
                 "__enabled": true,
                 "Flags": 0,
                 "AnimationGraph": null,
@@ -237,7 +237,7 @@
             "Children": []
           },
           {
-            "__guid": "ee0e1383-98ca-4fd4-88dd-26470c88864e",
+            "__guid": "0de16b50-88e5-4b7f-8461-31f1fcffa2d8",
             "__version": 2,
             "Flags": 0,
             "Name": "Clothing - santahat",
@@ -246,7 +246,7 @@
             "Scale": "1,1,1",
             "Tags": "clothing",
             "Enabled": true,
-            "NetworkMode": 0,
+            "NetworkMode": 2,
             "NetworkFlags": 0,
             "NetworkOrphaned": 0,
             "NetworkTransmit": true,
@@ -254,7 +254,7 @@
             "Components": [
               {
                 "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "15ff5d77-ab75-44b0-9b3d-793f19bee8b1",
+                "__guid": "62c9e94c-72c6-4423-8de5-2ef65665a2f0",
                 "__enabled": true,
                 "Flags": 0,
                 "AnimationGraph": null,
@@ -306,7 +306,7 @@
             "Children": []
           },
           {
-            "__guid": "47f7f898-fb79-4899-b0d3-b84bb6485e48",
+            "__guid": "268ae22a-bdcd-4748-b7b2-e5580d0d1b1e",
             "__version": 2,
             "Flags": 0,
             "Name": "Clothing - vdayglassess",
@@ -315,7 +315,7 @@
             "Scale": "1,1,1",
             "Tags": "clothing",
             "Enabled": true,
-            "NetworkMode": 0,
+            "NetworkMode": 2,
             "NetworkFlags": 0,
             "NetworkOrphaned": 0,
             "NetworkTransmit": true,
@@ -323,7 +323,7 @@
             "Components": [
               {
                 "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "fec467c5-b901-4168-8392-de26cad2d558",
+                "__guid": "d2d461f8-d6a6-4fc2-8f51-b6fa69ee1b64",
                 "__enabled": true,
                 "Flags": 0,
                 "AnimationGraph": null,
@@ -538,7 +538,7 @@
             },
             "Scale": 0.25,
             "TextScope": {
-              "Text": "Mark Nutt",
+              "Text": "",
               "TextColor": "1,1,1,1",
               "FontName": "Poppins",
               "FontSize": 30,

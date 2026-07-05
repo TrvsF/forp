@@ -994,6 +994,8 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 			Transform = SpawnTransform,
 		};
 
+		PlayerPrefabComponent.IsAi = IsAi;
+
 		var PlayerObject = PlayerPrefab.Clone(PlayerSpawnConfig);
 		PlayerObject.Name = $"PLAYER:{ConnectionChannel.DisplayName}";
 		PlayerObject.Network.SetOrphanedMode(NetworkOrphaned.Destroy);

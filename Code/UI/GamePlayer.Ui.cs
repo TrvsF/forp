@@ -166,6 +166,14 @@ public sealed partial class GamePlayer : Component
 		{
 			BottomTextString = $"{ObjectBuilding.DisplayName} {ObjectBuilding.Health}hp\n{ObjectBuilding.Tooltip}";
 		}
+		else
+		{
+			GameManager.Instance.GetPlayerBoardStats(out var BoardStats);
+			if (BoardStats.ContainsKey(this))
+			{
+				BottomTextString = $"\u00A3{Gold}\n{BoardStats[this].Production}⬡\n{BoardStats[this].TerritoryPercentage}%";
+			}
+		}
 
 		var BottomTextRenderer = GUi.BottomText.GetComponent<TextRenderer>();
 		Assert.NotNull(BottomTextRenderer);

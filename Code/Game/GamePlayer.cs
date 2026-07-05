@@ -148,6 +148,7 @@ public sealed partial class GamePlayer : Component
 			return; // !
 		}
 
+		Log.Warning("why");
 		Local = this;
 		Mouse.Visibility = MouseVisibility.Visible;
 		Assert.True(CreateCamera());
@@ -243,7 +244,7 @@ public sealed partial class GamePlayer : Component
 
 		Log.Info($"{this} is initing");
 
-		GameManager.Instance.Server_CreateHexUnitObject("unit-settler", SpawnHex, Connection.Id, IsAi);
+		GameManager.Instance.Server_CreateHexUnitObject("unit-settler", SpawnHex, ConnectionId, IsAi);
 		var ValidBrothers = SpawnHex.AllBrothers.Where(Hex => Hex != null && Hex.ObjectData == null && Hex.CanWalkOn()).OrderBy(Hex => Random.Shared.Next());
 		if (!ValidBrothers.Any())
 		{
@@ -252,7 +253,7 @@ public sealed partial class GamePlayer : Component
 		}
 
 		var Brother = ValidBrothers.First();
-		GameManager.Instance.Server_CreateHexUnitObject("unit-combat", Brother, Connection.Id, IsAi);
+		GameManager.Instance.Server_CreateHexUnitObject("unit-combat", Brother, ConnectionId, IsAi);
 
 		return true;
 	}

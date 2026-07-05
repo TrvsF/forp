@@ -8,5 +8,5 @@ namespace Forp.Game;
 
 public sealed partial class GamePlayer : Component
 {
-	private bool IsAi = false;
+	[Property] public bool IsAi { get; set; } = false;
 }

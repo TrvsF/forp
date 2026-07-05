@@ -133,7 +133,12 @@ public class ObjectUnit : Obj
 		get => _showBuildings;
 		set
 		{
-			if (GamePlayer.Local != null && OwnerPlayer != null && GamePlayer.Local.ConnectionId != OwnerPlayer.ConnectionId)
+			if (OwnerPlayer == null || GamePlayer.Local == null)
+			{
+				return;
+			}
+
+			if (GamePlayer.Local.ConnectionId != OwnerPlayer.ConnectionId)
 			{
 				return;
 			}
