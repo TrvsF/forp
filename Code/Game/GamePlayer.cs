@@ -104,10 +104,7 @@ public sealed partial class GamePlayer : Component
 
 		if (GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit) is { } UnitHex)
 		{
-			if (SelectedUnit.SelectedMaterial.IsValid())
-			{
-				SelectedUnit.ModelRenderer.MaterialOverride = SelectedUnit.SelectedMaterial;
-			}
+			SelectedUnit.HighlightOutline.Enabled = true;
 			var MoveRange = UnitHex.UnitData.ActionPoints - UnitHex.UnitData.ActionPointsSpent + 1;
 			Hex.HighlightHexesRecusrive(UnitHex, true, MoveRange);
 		}
@@ -117,10 +114,7 @@ public sealed partial class GamePlayer : Component
 	{
 		if (GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit) is { } UnitHex)
 		{
-			if (SelectedUnit.SelectedMaterial.IsValid())
-			{
-				SelectedUnit.ModelRenderer.ClearMaterialOverrides();
-			}
+			SelectedUnit.HighlightOutline.Enabled = false;
 			Hex.HighlightHexesRecusrive(UnitHex, false, SelectedUnit.ActionPoints + 1);
 		}
 

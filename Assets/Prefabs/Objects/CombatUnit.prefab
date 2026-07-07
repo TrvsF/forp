@@ -39,7 +39,6 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "ProductionToBuild": 50,
-        "SelectedMaterial": "materials/liquid/retro_lava_01.vmat",
         "Tooltip": null,
         "ViewRange": 3
       },
@@ -175,11 +174,31 @@
         "RemoveUnownedItems": true,
         "Source": "Manual",
         "WorkshopItems": []
+      },
+      {
+        "__type": "Sandbox.HighlightOutline",
+        "__guid": "74b43a6b-08df-4bad-8c3a-db281361326b",
+        "__enabled": true,
+        "Flags": 0,
+        "Color": "1,1,1,1",
+        "InsideColor": "0,0,0,0",
+        "InsideObscuredColor": "0,0,0,0",
+        "Material": null,
+        "ObscuredColor": "0,0,0,0.4",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OverrideTargets": false,
+        "Targets": null,
+        "Width": 0.25
       }
     ],
     "Children": [
       {
-        "__guid": "521e2ad6-a617-4cdc-826a-06419494ba7a",
+        "__guid": "e97c74c6-e953-4772-aa11-cbbdaa5580c4",
         "__version": 2,
         "Flags": 0,
         "Name": "Clothing - tactical_vest",
@@ -196,7 +215,7 @@
         "Components": [
           {
             "__type": "Sandbox.SkinnedModelRenderer",
-            "__guid": "ca83795d-97b3-4b13-a596-b2bd81521f0a",
+            "__guid": "1b1bedc3-731e-4b6d-945f-3bfe6a2035d4",
             "__enabled": true,
             "Flags": 0,
             "AnimationGraph": null,
@@ -275,8 +294,6 @@
   "MenuPath": null,
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
-  "__references": [
-    "baik.retrolava#106891"
-  ],
+  "__references": [],
   "__version": 2
 }

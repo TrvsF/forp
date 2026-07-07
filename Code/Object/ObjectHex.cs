@@ -45,7 +45,7 @@ public record FQueueObject
 
 public sealed class Hex : Obj
 {
-	[Property] Material HighlightMaterial { get; set; }
+	[RequireComponent] public HighlightOutline HighlightOutline { get; set; }
 	[Property] GameObject FogPrefab { get; set; }
 	GameObject FogObject = null;
 
@@ -287,6 +287,8 @@ public sealed class Hex : Obj
 		}
 
 		ModelRenderer.Model = TypeModels[Type];
+		HighlightOutline.Enabled = false;
+		HighlightOutline.Color = Color.Blue;
 	}
 
 	protected override void OnDestroy()
@@ -420,12 +422,13 @@ public sealed class Hex : Obj
 			return;
 		}
 
-		ModelRenderer.MaterialOverride = HighlightMaterial;
+		HighlightOutline.Enabled = true;
 	}
 
 	private void OnDeHighlight()
 	{
 		ModelRenderer.MaterialOverride = null;
+		HighlightOutline.Enabled = false;
 	}
 
 	private void OnReveal()

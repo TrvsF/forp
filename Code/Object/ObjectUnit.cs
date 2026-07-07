@@ -46,8 +46,9 @@ public record FUnit : IObj
 
 public class ObjectUnit : Obj
 {
+	[RequireComponent] public HighlightOutline HighlightOutline { get; set; }
+
 	[Property] public List<GameObject> Buildings { get; set; }
-	[Property] public Material SelectedMaterial { get; set; }
 	[Property] public int ViewRange { get; set; }
 	[Property] public int ActionPoints { get; set; }
 	[Property] public int ProductionToBuild { get; set; }
@@ -82,6 +83,8 @@ public class ObjectUnit : Obj
 	protected override void OnStart()
 	{
 		base.OnStart();
+
+		HighlightOutline.Enabled = false;
 
 		if (OwnerPlayer != null)
 		{

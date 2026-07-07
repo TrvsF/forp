@@ -20,7 +20,9 @@
         "__guid": "388b6f8d-b0b2-4369-bac2-2d75e3721480",
         "__enabled": true,
         "Flags": 0,
-        "DisplayName": "Tower Text",
+        "Attack": 0,
+        "DisplayName": "Tower",
+        "Health": 0,
         "HexTypesToBuild": [
           "Grass",
           "Stone"
@@ -35,7 +37,8 @@
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
-        "OnComponentUpdate": null
+        "OnComponentUpdate": null,
+        "Tooltip": null
       },
       {
         "__type": "Sandbox.SkinnedModelRenderer",
@@ -124,7 +127,9 @@
         "AgentStepSize": 18,
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
-        "IncludedBodies": ""
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
       }
     },
     "__variables": []

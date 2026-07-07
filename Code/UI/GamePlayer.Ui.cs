@@ -118,10 +118,6 @@ public sealed partial class GamePlayer : Component
 			return; // :(
 		}
 
-		var TopTextRenderer = GUi.TopText.GetComponent<TextRenderer>();
-		Assert.NotNull(TopTextRenderer);
-		TopTextRenderer.Text = "";
-
 		var UpgradeModel = GUi.UpgradeGUi.GetComponent<SkinnedModelRenderer>();
 		Assert.NotNull(UpgradeModel);
 		UpgradeModel.Tint = Colour;
@@ -138,6 +134,13 @@ public sealed partial class GamePlayer : Component
 			AvatarDresser.Source = Dresser.ClothingSource.Manual;
 			AvatarDresser.Apply();
 		}
+		else if (SelectedUnit is ObjectUnit CastSelectedUnit)
+		{
+			AvatarModel.Tint = CastSelectedUnit.ModelRenderer.Tint;
+			AvatarDresser.Clothing = CastSelectedUnit.GetComponent<Dresser>().Clothing;
+			AvatarDresser.Source = Dresser.ClothingSource.Manual;
+			AvatarDresser.Apply();
+		}
 		else
 		{
 			AvatarModel.Tint = Color.White;
@@ -145,12 +148,13 @@ public sealed partial class GamePlayer : Component
 			AvatarDresser.Apply();
 		}
 
-		SetBottomText();
+		SetGuiStrings();
 	}
 
-	private void SetBottomText()
+	private void SetGuiStrings()
 	{
-		var BottomTextString = string.Empty;
+		var BottomTextString = $"\u2800";
+		var TopTextString = $"\u2800";
 
 		if (HoveredObject is ObjectUnit ObjectUnit)
 		{
@@ -166,6 +170,10 @@ public sealed partial class GamePlayer : Component
 		{
 			BottomTextString = $"{ObjectBuilding.DisplayName} {ObjectBuilding.Health}hp\n{ObjectBuilding.Tooltip}";
 		}
+		else if (HoveredObject is TextBuilding TextBuilding)
+		{
+			TopTextString = $"build {HoveredObject.DisplayName}";
+		}
 		else
 		{
 			GameManager.Instance.GetPlayerBoardStats(out var BoardStats);
@@ -174,6 +182,10 @@ public sealed partial class GamePlayer : Component
 				BottomTextString = $"\u00A3{Gold}\n{BoardStats[this].Production}⬡\n{BoardStats[this].TerritoryPercentage}%";
 			}
 		}
+
+		var TopTextRenderer = GUi.TopText.GetComponent<TextRenderer>();
+		Assert.NotNull(TopTextRenderer);
+		TopTextRenderer.Text = $"{TopTextString}";
 
 		var BottomTextRenderer = GUi.BottomText.GetComponent<TextRenderer>();
 		Assert.NotNull(BottomTextRenderer);

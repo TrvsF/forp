@@ -6,7 +6,7 @@
     "Name": "citytext",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
-    "Scale": "0.1,0.1,0.1",
+    "Scale": "0.100000001,0.100000001,0.100000001",
     "Tags": "",
     "Enabled": true,
     "NetworkMode": 0,
@@ -20,7 +20,9 @@
         "__guid": "388b6f8d-b0b2-4369-bac2-2d75e3721480",
         "__enabled": true,
         "Flags": 0,
-        "DisplayName": "City Text",
+        "Attack": 0,
+        "DisplayName": "City",
+        "Health": 0,
         "HexTypesToBuild": [
           "Grass",
           "Sand",
@@ -36,7 +38,8 @@
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
-        "OnComponentUpdate": null
+        "OnComponentUpdate": null,
+        "Tooltip": null
       },
       {
         "__type": "Sandbox.SkinnedModelRenderer",
@@ -125,7 +128,9 @@
         "AgentStepSize": 18,
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
-        "IncludedBodies": ""
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
       }
     },
     "__variables": []
