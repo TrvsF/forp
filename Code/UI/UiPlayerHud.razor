@@ -22,7 +22,12 @@
             }
         </build-unit-container>
     }
-   
+
+    @if (GamePlayer.Local.IsDead())
+    {
+        <dead>YOU! ARE DEAD</dead>
+    }
+
     <next-turn-button onclick="@OnNextTurnClick" style="background-color: @GetNextColour();">
         @(GetNextTurnString())
     </next-turn-button>
@@ -35,18 +40,18 @@
         return HashCode.Combine(Time.Now);
     }
 
-    private Forp.Game.FPlayerUiInfo UiInfo;
+    private FPlayerUiInfo UiInfo;
 
     protected override void OnUpdate()
     {
         base.OnUpdate();
 
-        if (!Forp.Game.GamePlayer.Local.IsValid())
+        if (!GamePlayer.Local.IsValid())
         {
             return;
         }
 
-        Forp.Game.GamePlayer.Local.GetPlayerUiInfo(out UiInfo);
+        GamePlayer.Local.GetPlayerUiInfo(out UiInfo);
     }
 
     private string GetNextColour()

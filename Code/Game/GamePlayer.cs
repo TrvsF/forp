@@ -124,6 +124,30 @@ public sealed partial class GamePlayer : Component
 		}
 	}
 
+	protected override void OnStart()
+	{
+		base.OnStart();
+
+		if (!Network.IsOwner)
+		{
+			return;
+		}
+
+		foreach (var Hex in GameManager.Instance.BoardHexes)
+		{
+			if (Hex.UnitData == null)
+			{
+				continue;
+			}
+
+			if (Hex.UnitData.OwnerGuid == ConnectionId)
+			{
+				SelectedUnit = Hex.UnitObject;
+				break;
+			}
+		}
+	}
+
 	protected override void OnAwake()
 	{
 		base.OnAwake();
@@ -142,7 +166,6 @@ public sealed partial class GamePlayer : Component
 			return; // !
 		}
 
-		Log.Warning("why");
 		Local = this;
 		Mouse.Visibility = MouseVisibility.Visible;
 		Assert.True(CreateCamera());

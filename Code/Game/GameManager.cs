@@ -361,6 +361,8 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 			return;
 		}
 
+		PlayerColours = new(PlayerColours.Shuffle());
+
 		_ = GenerateBoardAsync();
 		Log.Info($"created board with {BoardHexes.Count} hexes");
 
@@ -951,7 +953,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 	}
 
 	public readonly Color AiColour = (Color)Color.Parse("#1D00FF");
-	private readonly Stack<Color> PlayerColours = new(
+	private Stack<Color> PlayerColours = new(
 	[
 		(Color)Color.Parse("#DD00FF"),
 		(Color)Color.Parse("#44FF00"),

@@ -88,3 +88,30 @@ next-turn-button {
         cursor: crosshair;
         background-color: black;
     }
+
+dead {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: red;
+    font-size: 96px;
+    text-align: center;
+    pointer-events: none;
+    animation-name: splash;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: linear;
+    text-shadow: -3px -3px 0 black, 3px -3px 0 black, -3px 3px 0 black, 3px 3px 0 black, -3px 0 0 black, 3px 0 0 black, 0 -3px 0 black, 0 3px 0 black;
+}
+
+@keyframes splash {
+    from {
+        transform: translate(-50%, -50%) scale(1) rotate(1deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) scale(1.1) rotate(-1deg);
+    }
+}

@@ -81,6 +81,19 @@ public struct FPlayerUiInfo
 
 public sealed partial class GamePlayer : Component
 {
+	public bool IsDead()
+	{
+		foreach (var Hex in GameManager.Instance.BoardHexes)
+		{
+			if (Hex.UnitData?.OwnerGuid == ConnectionId || Hex.BuildingData?.OwnerGuid == ConnectionId)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	public void GetPlayerUiInfo(out FPlayerUiInfo OutPlayerUiInfo)
 	{
 		OutPlayerUiInfo = new();
