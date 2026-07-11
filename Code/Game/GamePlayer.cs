@@ -140,7 +140,8 @@ public sealed partial class GamePlayer : Component
 				continue;
 			}
 
-			if (Hex.UnitData.OwnerGuid == ConnectionId)
+			if (Hex.UnitData.OwnerGuid == ConnectionId 
+				&& Hex.UnitData.ObjectId == "unit-settler")
 			{
 				SelectedUnit = Hex.UnitObject;
 				break;

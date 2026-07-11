@@ -565,6 +565,69 @@ public sealed class Hex : Obj
 		}
 	}
 
+	public bool HasOwner()
+	{
+		return OwningConnectionGuid != Guid.Empty;
+	}
+
+	public bool IsLocallyOwned()
+	{
+		return GetOwnerId() == GamePlayer.Local.ConnectionId;
+	}
+
+	public bool CanWalkOn()
+	{
+		return Type != EHexType.Water;
+	}
+
+	public Guid GetOwnerId()
+	{
+		return OwningConnectionGuid;
+	}
+
+	public List<Hex> GetSurroundingHexesInRange(int Range, bool IncludeSelf = false)
+	{
+		List<Hex> SurroundingHexes = [];
+
+		if (IncludeSelf)
+		{
+			SurroundingHexes.Add(this);
+		}
+
+		HashSet<Hex> Visited = [this];
+		List<Hex> CurrentRing = [this];
+
+		for (int RangeIndex = 0; RangeIndex < Range; ++RangeIndex)
+		{
+			List<Hex> NextRing = [];
+
+			foreach (var Hex in CurrentRing)
+			{
+				foreach (var Brother in Hex.AllBrothers)
+				{
+					if (Brother == null)
+					{
+						continue;
+					}
+
+					var BrotherHex = Brother.GetComponent<Hex>();
+
+					if (BrotherHex == null || !Visited.Add(BrotherHex))
+					{
+						continue;
+					}
+
+					SurroundingHexes.Add(BrotherHex);
+					NextRing.Add(BrotherHex);
+				}
+			}
+
+			CurrentRing = NextRing;
+		}
+
+		return SurroundingHexes;
+	}
+
 	public static void SetOwnerHexesRecursive_ServerOnly(Hex Hex, Guid OwningConnectionGuid, int Depth)
 	{
 		Assert.True(Networking.IsHost);
@@ -631,25 +694,5 @@ public sealed class Hex : Obj
 		}
 
 		return true;
-	}
-
-	public bool HasOwner()
-	{
-		return OwningConnectionGuid != Guid.Empty;
-	}
-
-	public bool IsLocallyOwned()
-	{
-		return GetOwnerId() == GamePlayer.Local.ConnectionId;
-	}
-
-	public bool CanWalkOn()
-	{
-		return Type != EHexType.Water;
-	}
-
-	public Guid GetOwnerId()
-	{
-		return OwningConnectionGuid;
 	}
 }

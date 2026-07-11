@@ -418,7 +418,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 	private async Task GenerateBoardAsync()
 	{
 		// TODO : loading screen
-		await CreateBoard(5, 10);
+		await CreateBoard(44, 33);
 	}
 
 	private async Task CreateBoard(int Width, int Height)
@@ -459,11 +459,50 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 
 	private List<Hex> ValidSpawnHexes { get => BoardHexes.Where(Hex => Hex.Type == EHexType.Grass && Hex.UnitData == null).ToList(); }
 
+	private Hex AssignStartingHex(Guid ConnectionGuid)
+	{
+		var GrassHexes = ValidSpawnHexes.Shuffle();
+		if (GrassHexes.Count() == 0)
+		{
+			Log.Error("CANNOT FIND STARTING HEX, AWFUL, SHIT");
+		}
+
+		foreach (var GrassHex in GrassHexes)
+		{
+			// THE ISSUE HERE is there's no nice way to say 'get me all the linked hexes in a x radius'
+			// in this case we'd use it to perform a check on their guid, to make sure we're not near another player
+			// TODO : MAKE IT
+			var IsSpawnable = true;
+
+			foreach (var Brother in GrassHex.GetSurroundingHexesInRange(3))
+			{
+				if (Brother.UnitData != null)
+				{
+					IsSpawnable = false;
+					break;
+				}
+
+				if (Brother.BuildingData != null)
+				{
+					IsSpawnable = false;
+					break;
+				}
+			}
+
+			if (IsSpawnable)
+			{
+				return GrassHex;
+			}
+		}
+
+		return GrassHexes.First();
+	}
+
 	private void StartGameClient_SeverOnly(Guid ConnectionGuid, bool IsAi)
 	{
 		Assert.True(Networking.IsHost);
 
-		var SpawnHex = Random.Shared.FromList(ValidSpawnHexes);
+		var SpawnHex = AssignStartingHex(ConnectionGuid);
 		if (!SpawnHex.IsValid())
 		{
 			Networking.Disconnect();
