@@ -99,10 +99,14 @@
           {
             "_type": "gameobject",
             "prefab": "prefabs/objects/starterunit.prefab"
+          },
+          {
+            "_type": "gameobject",
+            "prefab": "prefabs/objects/scoutunit.prefab"
           }
         ],
         "DisplayName": "City",
-        "Health": 1,
+        "Health": 25,
         "ObjectId": "building-city",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,

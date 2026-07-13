@@ -3,7 +3,7 @@
     "__guid": "a0ea17bc-813a-41cf-afc4-796c3582076f",
     "__version": 2,
     "Flags": 0,
-    "Name": "combatunit",
+    "Name": "scoutunit",
     "Position": "0,0,0",
     "Rotation": "0,0,1,-4.37113883E-08",
     "Scale": "1,1,1",
@@ -20,18 +20,18 @@
         "__guid": "43de9620-38cc-40c5-a1fb-3703290a1677",
         "__enabled": true,
         "Flags": 0,
-        "ActionPoints": 3,
-        "Attack": 3,
+        "ActionPoints": 2,
+        "Attack": 1,
         "Buildings": [
           {
             "_type": "gameobject",
-            "prefab": "prefabs/objects/towertext.prefab"
+            "prefab": "prefabs/objects/citytext.prefab"
           }
         ],
-        "DisplayName": "Figher",
-        "GoldToBuild": 35,
-        "Health": 10,
-        "ObjectId": "unit-combat",
+        "DisplayName": "Scout",
+        "GoldToBuild": 20,
+        "Health": 5,
+        "ObjectId": "unit-scout",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -40,36 +40,11 @@
         "OnComponentUpdate": null,
         "ProductionToBuild": 50,
         "Tooltip": null,
-        "ViewRange": 3
-      },
-      {
-        "__type": "Sandbox.ModelCollider",
-        "__guid": "32d2fbb6-38e9-4adb-8454-94c6d55a8606",
-        "__enabled": true,
-        "Flags": 0,
-        "ColliderFlags": 0,
-        "Elasticity": null,
-        "Friction": null,
-        "IsTrigger": false,
-        "Model": "models/citizen/citizen.vmdl",
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null,
-        "OnObjectTriggerEnter": null,
-        "OnObjectTriggerExit": null,
-        "OnTriggerEnter": null,
-        "OnTriggerExit": null,
-        "RollingResistance": null,
-        "Static": false,
-        "Surface": null,
-        "SurfaceVelocity": "0,0,0"
+        "ViewRange": 4
       },
       {
         "__type": "Sandbox.SkinnedModelRenderer",
-        "__guid": "fe3b91c9-c6cf-4a4b-8ac1-1f5ca0ce5ac2",
+        "__guid": "61105fb5-abcd-45dc-bf9d-9ea2c1def99c",
         "__enabled": true,
         "Flags": 0,
         "AnimationGraph": null,
@@ -98,9 +73,9 @@
         },
         "PlaybackRate": 1,
         "RenderOptions": {
-          "GameLayer": true,
+          "GameLayer": false,
           "OverlayLayer": false,
-          "BloomLayer": false,
+          "BloomLayer": true,
           "AfterUILayer": false
         },
         "RenderType": "On",
@@ -113,8 +88,33 @@
         "UseAnimGraph": true
       },
       {
+        "__type": "Sandbox.ModelCollider",
+        "__guid": "32d2fbb6-38e9-4adb-8454-94c6d55a8606",
+        "__enabled": true,
+        "Flags": 0,
+        "ColliderFlags": 0,
+        "Elasticity": null,
+        "Friction": null,
+        "IsTrigger": false,
+        "Model": "models/citizen/citizen.vmdl",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OnObjectTriggerEnter": null,
+        "OnObjectTriggerExit": null,
+        "OnTriggerEnter": null,
+        "OnTriggerExit": null,
+        "RollingResistance": null,
+        "Static": false,
+        "Surface": null,
+        "SurfaceVelocity": "0,0,0"
+      },
+      {
         "__type": "Sandbox.Citizen.CitizenAnimationHelper",
-        "__guid": "b4874479-4169-468e-b642-496d37d25f2d",
+        "__guid": "d3f30958-e012-4edc-b08f-d8b4820e8b4a",
         "__enabled": true,
         "Flags": 0,
         "BodyWeight": 1,
@@ -140,31 +140,31 @@
         "SpecialMove": "None",
         "Target": {
           "_type": "component",
-          "component_id": "fe3b91c9-c6cf-4a4b-8ac1-1f5ca0ce5ac2",
+          "component_id": "61105fb5-abcd-45dc-bf9d-9ea2c1def99c",
           "go": "a0ea17bc-813a-41cf-afc4-796c3582076f",
           "component_type": "SkinnedModelRenderer"
         }
       },
       {
         "__type": "Sandbox.Dresser",
-        "__guid": "b8ce98a2-7931-4644-b958-86acc9d5c1a5",
+        "__guid": "9968a401-43d9-4022-9e25-205a4b125b4d",
         "__enabled": true,
         "Flags": 0,
         "ApplyHeightScale": true,
         "BodyTarget": {
           "_type": "component",
-          "component_id": "fe3b91c9-c6cf-4a4b-8ac1-1f5ca0ce5ac2",
+          "component_id": "61105fb5-abcd-45dc-bf9d-9ea2c1def99c",
           "go": "a0ea17bc-813a-41cf-afc4-796c3582076f",
           "component_type": "SkinnedModelRenderer"
         },
         "Clothing": [
           {
-            "Clothing": "models/citizen_clothes/vest/tactical_vest/models/tactical_vest.clothing"
+            "Clothing": "models/googly glasses/googly eye glasses.clothing"
           }
         ],
-        "ManualAge": 0,
-        "ManualHeight": 0.18787879,
-        "ManualTint": 0,
+        "ManualAge": 0.78203475,
+        "ManualHeight": 0.9566592,
+        "ManualTint": 0.6545454,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -177,14 +177,14 @@
       },
       {
         "__type": "Sandbox.HighlightOutline",
-        "__guid": "74b43a6b-08df-4bad-8c3a-db281361326b",
+        "__guid": "44121416-6dbf-469e-bfe5-709b7b8204a1",
         "__enabled": true,
         "Flags": 0,
         "Color": "1,1,1,1",
         "InsideColor": "0,0,0,0",
         "InsideObscuredColor": "0,0,0,0",
         "Material": null,
-        "ObscuredColor": "0,0,0,0.4",
+        "ObscuredColor": "1,1,1,1",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -198,10 +198,10 @@
     ],
     "Children": [
       {
-        "__guid": "c217ad29-04ec-4ed6-a151-84deb70ce023",
+        "__guid": "004686e2-d058-4c6e-9c7e-6d35bf6e35f6",
         "__version": 2,
         "Flags": 0,
-        "Name": "Clothing - tactical_vest",
+        "Name": "Clothing - chefs_hat",
         "Position": "0,0,0",
         "Rotation": "0,0,0,1",
         "Scale": "1,1,1",
@@ -215,14 +215,14 @@
         "Components": [
           {
             "__type": "Sandbox.SkinnedModelRenderer",
-            "__guid": "83ae0c00-aebd-4b64-a392-eafaca6ab0c3",
+            "__guid": "95216055-417b-4660-a461-ed051fe0bcb1",
             "__enabled": true,
             "Flags": 0,
             "AnimationGraph": null,
             "BodyGroups": 18446744073709551615,
             "BoneMergeTarget": {
               "_type": "component",
-              "component_id": "fe3b91c9-c6cf-4a4b-8ac1-1f5ca0ce5ac2",
+              "component_id": "61105fb5-abcd-45dc-bf9d-9ea2c1def99c",
               "go": "a0ea17bc-813a-41cf-afc4-796c3582076f",
               "component_type": "SkinnedModelRenderer"
             },
@@ -232,7 +232,7 @@
             "MaterialGroup": null,
             "MaterialOverride": null,
             "Materials": null,
-            "Model": "models/citizen_clothes/vest/tactical_vest/models/tactical_vest.vmdl",
+            "Model": "models/citizen_clothes/hat/chefs_hat/models/chefs_hat.vmdl",
             "Morphs": {},
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
@@ -294,6 +294,8 @@
   "MenuPath": null,
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
-  "__references": [],
+  "__references": [
+    "drakefruit.googlyeyeglasses#291614"
+  ],
   "__version": 2
 }

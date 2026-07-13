@@ -1,5 +1,6 @@
 using Forp.Game;
 using Sandbox;
+using Sandbox.Citizen;
 using Sandbox.Diagnostics;
 using Sandbox.Resources;
 using System;
@@ -47,6 +48,7 @@ public record FUnit : IObj
 public class ObjectUnit : Obj
 {
 	[RequireComponent] public HighlightOutline HighlightOutline { get; set; }
+	[RequireComponent] public CitizenAnimationHelper Animation { get; set; }
 
 	[Property] public List<GameObject> Buildings { get; set; }
 	[Property] public int ViewRange { get; set; }
@@ -54,31 +56,8 @@ public class ObjectUnit : Obj
 	[Property] public int ProductionToBuild { get; set; }
 	[Property] public int GoldToBuild { get; set; }
 
-	private FUpgrade Upgrade { get; set; } = null;
 
 	public bool IsAi { get => GetComponent<AiUnit>() != null; }
-
-	public void ApplyUpgrade(FUpgrade InUpgrade)
-	{
-		Assert.NotNull(InUpgrade);
-
-		if (Upgrade != null)
-		{
-			return;
-		}
-
-		Upgrade = InUpgrade;
-
-		Attack += Upgrade.AttackModifyer;
-		Health += Upgrade.HealthModifyer;
-
-		foreach (var BuildingId in Upgrade.BuildingIds)
-		{
-			Buildings.Add(BuildingId);
-		}
-
-		SetCameraMode(GamePlayer.Local.CameraMode);
-	}
 
 	protected override void OnStart()
 	{
@@ -116,6 +95,38 @@ public class ObjectUnit : Obj
 
 		base.OnDestroy();
 	}
+
+	protected override void OnUpdate()
+	{
+		base.OnUpdate();
+
+		Animation.LookAtEnabled = true;
+		Animation.LookAt = GamePlayer.Local.Camera.GameObject;
+	}
+
+	private FUpgrade Upgrade { get; set; } = null;
+	public void ApplyUpgrade(FUpgrade InUpgrade)
+	{
+		Assert.NotNull(InUpgrade);
+
+		if (Upgrade != null)
+		{
+			return;
+		}
+
+		Upgrade = InUpgrade;
+
+		Attack += Upgrade.AttackModifyer;
+		Health += Upgrade.HealthModifyer;
+
+		foreach (var BuildingId in Upgrade.BuildingIds)
+		{
+			Buildings.Add(BuildingId);
+		}
+
+		SetCameraMode(GamePlayer.Local.CameraMode);
+	}
+
 
 	protected override void OnDamageTaken_Internal()
 	{

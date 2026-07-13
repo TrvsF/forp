@@ -33,6 +33,7 @@
         "__enabled": true,
         "Flags": 0,
         "__version": 2,
+        "Billboard": "None",
         "BlendMode": "Normal",
         "FogStrength": 1,
         "HorizontalAlignment": "Center",
@@ -43,10 +44,10 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "RenderOptions": {
-          "GameLayer": true,
-          "OverlayLayer": false,
+          "GameLayer": false,
+          "OverlayLayer": true,
           "BloomLayer": false,
-          "AfterUILayer": true
+          "AfterUILayer": false
         },
         "Scale": 1,
         "TextScope": {
@@ -56,6 +57,7 @@
           "FontSize": 32,
           "FontWeight": 400,
           "FontItalic": false,
+          "FontVariantNumeric": "Normal",
           "LineHeight": 1,
           "LetterSpacing": 0,
           "WordSpacing": 0,
@@ -103,7 +105,9 @@
         "AgentStepSize": 18,
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
-        "IncludedBodies": ""
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
       }
     },
     "__variables": []

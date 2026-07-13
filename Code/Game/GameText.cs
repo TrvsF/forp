@@ -23,6 +23,14 @@ public class GameText : Component
 		TextRenderer.Scale = 0.5f;
 	}
 
+	protected override void OnUpdate()
+	{
+		base.OnUpdate();
+
+		Vector3 Direction = WorldPosition - GamePlayer.Local.Camera.WorldPosition;
+		TextRenderer.WorldRotation = Rotation.LookAt(Direction);
+	}
+
 	public static T CreateTextObject<T>(Transform Transform, string Text = "") where T : GameText
 	{
 		var TextPrefab = GameManager.Instance.GetTextPrefab<T>();

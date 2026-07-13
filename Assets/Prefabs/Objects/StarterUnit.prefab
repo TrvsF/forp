@@ -38,8 +38,7 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "ProductionToBuild": 99,
-        "SelectedMaterial": "materials/liquid/retro_lava_01.vmat",
+        "ProductionToBuild": 250,
         "Tooltip": null,
         "ViewRange": 3
       },
@@ -74,9 +73,9 @@
         },
         "PlaybackRate": 1,
         "RenderOptions": {
-          "GameLayer": true,
+          "GameLayer": false,
           "OverlayLayer": false,
-          "BloomLayer": false,
+          "BloomLayer": true,
           "AfterUILayer": false
         },
         "RenderType": "On",
@@ -175,11 +174,31 @@
         "RemoveUnownedItems": true,
         "Source": "Manual",
         "WorkshopItems": []
+      },
+      {
+        "__type": "Sandbox.HighlightOutline",
+        "__guid": "44121416-6dbf-469e-bfe5-709b7b8204a1",
+        "__enabled": true,
+        "Flags": 0,
+        "Color": "1,1,1,1",
+        "InsideColor": "0,0,0,0",
+        "InsideObscuredColor": "0,0,0,0",
+        "Material": null,
+        "ObscuredColor": "1,1,1,1",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OverrideTargets": false,
+        "Targets": null,
+        "Width": 0.25
       }
     ],
     "Children": [
       {
-        "__guid": "d1f6d298-ea1b-461a-bc04-07149e22ffb0",
+        "__guid": "6b7da624-3863-46f0-abac-d93857d2f72f",
         "__version": 2,
         "Flags": 0,
         "Name": "Clothing - chefs_hat",
@@ -196,7 +215,7 @@
         "Components": [
           {
             "__type": "Sandbox.SkinnedModelRenderer",
-            "__guid": "07b360d5-5c6b-4cba-899c-a8d461e53e3e",
+            "__guid": "e8961e04-bae0-42f1-8da4-1b834ab6b782",
             "__enabled": true,
             "Flags": 0,
             "AnimationGraph": null,
@@ -275,8 +294,6 @@
   "MenuPath": null,
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
-  "__references": [
-    "baik.retrolava#106891"
-  ],
+  "__references": [],
   "__version": 2
 }

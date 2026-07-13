@@ -50,6 +50,7 @@
               "prefab": "prefabs/objects/hex.prefab"
             },
             "Mode": "Game",
+            "NumAis": 0,
             "ObjectPrefabs": [
               {
                 "_type": "gameobject",
@@ -74,6 +75,14 @@
               {
                 "_type": "gameobject",
                 "prefab": "prefabs/objects/upgradebuilder.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/objects/specialistunit.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/objects/scoutunit.prefab"
               }
             ],
             "OnComponentDestroy": null,

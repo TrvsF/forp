@@ -140,14 +140,14 @@ public sealed partial class GamePlayer : Component
 		var AvatarModel = GUi.Avatar.GetComponent<SkinnedModelRenderer>();
 		Assert.NotNull(AvatarModel);
 
-		if (HoveredObject is ObjectUnit HoveredUnit)
+		if (HoveredObject is ObjectUnit HoveredUnit && HoveredObject.IsValid())
 		{
 			AvatarModel.Tint = HoveredUnit.ModelRenderer.Tint;
 			AvatarDresser.Clothing = HoveredUnit.GetComponent<Dresser>().Clothing;
 			AvatarDresser.Source = Dresser.ClothingSource.Manual;
 			AvatarDresser.Apply();
 		}
-		else if (SelectedUnit is ObjectUnit CastSelectedUnit)
+		else if (SelectedUnit is ObjectUnit CastSelectedUnit && SelectedUnit.IsValid())
 		{
 			AvatarModel.Tint = CastSelectedUnit.ModelRenderer.Tint;
 			AvatarDresser.Clothing = CastSelectedUnit.GetComponent<Dresser>().Clothing;

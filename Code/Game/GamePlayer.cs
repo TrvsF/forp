@@ -282,26 +282,40 @@ public sealed partial class GamePlayer : Component
 	{
 		Camera.WorldPosition += Camera.WorldRotation.Forward * Input.MouseWheel.y * 50;
 
+		Vector3 FlatForward = Camera.WorldRotation.Forward.WithZ(0).Normal;
+		Vector3 FlatRight = Camera.WorldRotation.Right.WithZ(0).Normal;
+
 		if (Input.Down("forward"))
 		{
-			Camera.WorldPosition += Vector3.Forward * MovementExp;
+			Camera.WorldPosition += FlatForward * MovementExp;
 		}
 		if (Input.Down("backward"))
 		{
-			Camera.WorldPosition += Vector3.Backward * MovementExp;
+			Camera.WorldPosition -= FlatForward * MovementExp;
 		}
 		if (Input.Down("left"))
 		{
-			Camera.WorldPosition += Vector3.Left * MovementExp;
+			Camera.WorldPosition -= FlatRight * MovementExp;
 		}
 		if (Input.Down("right"))
 		{
-			Camera.WorldPosition += Vector3.Right * MovementExp;
+			Camera.WorldPosition += FlatRight * MovementExp;
 		}
 
 		if (Input.Down("mouse2"))
 		{
-			Camera.WorldPosition += new Vector3(Mouse.Delta.y, Mouse.Delta.x, 0);
+			Camera.WorldPosition += FlatForward * Mouse.Delta.y + FlatRight * -Mouse.Delta.x;
+		}
+
+		if (Input.Down("mouse3"))
+		{
+			float Distance = Camera.WorldPosition.z / -Camera.WorldRotation.Forward.z;
+			Vector3 Pivot = Camera.WorldPosition + Camera.WorldRotation.Forward * Distance;
+
+			var Rotation = global::Rotation.FromAxis(Vector3.Up, -Mouse.Delta.x * 0.2f);
+
+			Camera.WorldPosition = Pivot + Rotation * (Camera.WorldPosition - Pivot);
+			Camera.WorldRotation = Rotation * Camera.WorldRotation;
 		}
 
 		if (Input.Down("mouse1") && DraggedObject != null)

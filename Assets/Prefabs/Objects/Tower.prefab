@@ -5,7 +5,7 @@
     "Flags": 0,
     "Name": "tower",
     "Position": "0,0,0",
-    "Rotation": "0,0,1,0.0000001947072",
+    "Rotation": "0,0,1,1.94707198E-07",
     "Scale": "1,1,1",
     "Tags": "",
     "Enabled": true,
@@ -91,8 +91,18 @@
         "__enabled": true,
         "Flags": 0,
         "Attack": 0,
-        "DisplayName": "Tower",
-        "Health": 5,
+        "BuildableUnits": [
+          {
+            "_type": "gameobject",
+            "prefab": "prefabs/objects/specialistunit.prefab"
+          },
+          {
+            "_type": "gameobject",
+            "prefab": "prefabs/objects/scoutunit.prefab"
+          }
+        ],
+        "DisplayName": "Watch Tower",
+        "Health": 10,
         "ObjectId": "building-tower",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -101,12 +111,7 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "ProductionToBuild": 2,
-        "Units": [
-          {
-            "_type": "gameobject",
-            "prefab": "prefabs/objects/combatunit.prefab"
-          }
-        ],
+        "Tooltip": null,
         "ViewRange": 3
       }
     ],
@@ -126,7 +131,9 @@
         "AgentStepSize": 18,
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
-        "IncludedBodies": ""
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
       }
     },
     "__variables": []

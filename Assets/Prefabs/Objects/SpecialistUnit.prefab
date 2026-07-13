@@ -3,7 +3,7 @@
     "__guid": "a0ea17bc-813a-41cf-afc4-796c3582076f",
     "__version": 2,
     "Flags": 0,
-    "Name": "combatunit",
+    "Name": "specialistunit",
     "Position": "0,0,0",
     "Rotation": "0,0,1,-4.37113883E-08",
     "Scale": "1,1,1",
@@ -21,24 +21,24 @@
         "__enabled": true,
         "Flags": 0,
         "ActionPoints": 3,
-        "Attack": 3,
+        "Attack": 5,
         "Buildings": [
           {
             "_type": "gameobject",
             "prefab": "prefabs/objects/towertext.prefab"
           }
         ],
-        "DisplayName": "Figher",
-        "GoldToBuild": 35,
+        "DisplayName": "Specialist",
+        "GoldToBuild": 50,
         "Health": 10,
-        "ObjectId": "unit-combat",
+        "ObjectId": "unit-specialist",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "ProductionToBuild": 50,
+        "ProductionToBuild": 60,
         "Tooltip": null,
         "ViewRange": 3
       },
@@ -159,7 +159,7 @@
         },
         "Clothing": [
           {
-            "Clothing": "models/citizen_clothes/vest/tactical_vest/models/tactical_vest.clothing"
+            "Clothing": "clothing/suit_jacket/suit_jacket_red.clothing"
           }
         ],
         "ManualAge": 0,
@@ -198,7 +198,7 @@
     ],
     "Children": [
       {
-        "__guid": "c217ad29-04ec-4ed6-a151-84deb70ce023",
+        "__guid": "720aaf62-79b9-4a5e-8bfa-73f9b3cb691b",
         "__version": 2,
         "Flags": 0,
         "Name": "Clothing - tactical_vest",
@@ -215,7 +215,7 @@
         "Components": [
           {
             "__type": "Sandbox.SkinnedModelRenderer",
-            "__guid": "83ae0c00-aebd-4b64-a392-eafaca6ab0c3",
+            "__guid": "e2ec3d93-4271-4505-96d8-cecea6db11c7",
             "__enabled": true,
             "Flags": 0,
             "AnimationGraph": null,
@@ -294,6 +294,8 @@
   "MenuPath": null,
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
-  "__references": [],
+  "__references": [
+    "facepunch.suitjacketred#285622"
+  ],
   "__version": 2
 }
