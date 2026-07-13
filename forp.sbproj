@@ -9,7 +9,7 @@
   "PackageReferences": [],
   "EditorReferences": null,
   "Mounts": null,
-  "IsStandaloneOnly": true,
+  "IsStandaloneOnly": false,
   "Metadata": {
     "MaxPlayers": 5,
     "MinPlayers": 1,
@@ -23,7 +23,7 @@
     "PerMapRanking": false,
     "LeaderboardType": "None",
     "CsProjName": "",
-    "StartupScene": "scenes/minimal.scene",
+    "StartupScene": "scenes/mainmenu.scene",
     "ControlModes": {
       "Keyboard": true,
       "VR": false,

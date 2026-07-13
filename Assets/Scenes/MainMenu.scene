@@ -210,6 +210,7 @@
           "__guid": "4be82083-2ee2-4b93-b06f-77f9f63500a3",
           "__enabled": true,
           "Flags": 0,
+          "ContactShadows": true,
           "Contribution": "Diffuse, Specular, Transmissive",
           "FogMode": "Enabled",
           "FogStrength": 1,

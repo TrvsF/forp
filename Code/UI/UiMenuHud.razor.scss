@@ -26,7 +26,21 @@ menu-container {
     height: 100%;
 }
 
-menu-row {
+menu-rows {
+    position: absolute;
+    top: 20%;
+    left: 34%;
+    font-size: 24px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+}
+
+lobby-rows {
+    position: absolute;
+    top: 20%;
+    left: 64%;
     font-size: 24px;
     display: flex;
     flex-direction: row;
@@ -60,6 +74,24 @@ menu-button {
         font-size: 48px;
     }
 
+    menu-button.go {
+        position: absolute;
+        top: 12%;
+        left: 50%;
+        transform: translateX(-50%);
+        height: auto;
+        font-size: 72px;
+    }
+
+    menu-button.back {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translateX(-50%);
+        height: auto;
+        font-size: 32px;
+    }
+
     menu-button.settings {
         position: absolute;
         top: 12%;
@@ -73,7 +105,7 @@ menu-button {
         position: absolute;
         bottom: 24px;
         right: 24px;
-        font-size: 24px;
+        font-size: 32px;
     }
 
     menu-button.select {
@@ -82,10 +114,9 @@ menu-button {
         right: 24px;
         font-size: 24px;
     }
-
-
-
+   
     menu-button.modes {
+        top: 30%;
         height: auto;
         font-size: 48px;
     }

@@ -28,20 +28,31 @@
 
         @if (SubMenu == ESubMenu.Lobby)
         {
-            <menu-row>
+            <menu-rows>
                 @foreach (LobbyPrivacy NetworkMode in Enum.GetValues(typeof(LobbyPrivacy)))
                 {
                     <menu-button class="@(LobbyPrivacy == NetworkMode ? "modesselected" : "modes")" @onclick="@(() => LobbyPrivacy = NetworkMode)">
                         @NetworkMode
                     </menu-button>
                 }
-            </menu-row>
-            <menu-button class="play" @onclick="@(() => SubMenu = ESubMenu.Main)">
+            </menu-rows>
+            <menu-button class="back" @onclick="@(() => SubMenu = ESubMenu.Main)">
                 Back
             </menu-button>
-            <menu-button class="go" @onclick="@(() => SubMenu = ESubMenu.Main)">
+            <menu-button class="go" @onclick="@(() => OnStartClick())">
                 Start
             </menu-button>
+            <menu-button class="refresh" @onclick="@(() => RefreshLobbies())">
+                Refresh
+            </menu-button>
+            <lobby-rows>
+            @foreach (LobbyInformation Lobby in Lobbies)
+            {
+                <menu-button class="lobby-row">
+                    @Lobby.LobbyId @Lobby.Name @Lobby.Ping ping
+                </menu-button>
+            }
+            </lobby-rows>
         }
 
         @if (SubMenu == ESubMenu.Load)
@@ -90,6 +101,13 @@
         Lobby,
         Load,
         Settings,
+    }
+
+    private List<LobbyInformation> Lobbies = new();
+
+    protected async void RefreshLobbies()
+    {
+        Lobbies = await Networking.QueryLobbies();
     }
 
     protected void OnStartClick()

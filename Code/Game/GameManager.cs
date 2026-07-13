@@ -20,7 +20,7 @@ public enum EGameManagerMode
 	Menu,
 }
 
-public partial class GameManager : SingletonComponent<GameManager>, Component.INetworkListener, ISceneStartup
+public partial class GameManager : SingletonComponent<GameManager>, Component.INetworkListener, ISceneLoadingEvents
 {
 	public static readonly Guid AiGuid = new("d85b1407-351d-4694-9392-03acc5870eb1");
 
@@ -308,7 +308,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 	{
 		Assert.True(Networking.IsHost);
 
-		if (Mode == EGameManagerMode.Menu)
+		if (Mode == EGameManagerMode.Menu || BoardHexes.Count == 0)
 		{
 			return;
 		}
@@ -348,8 +348,13 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		Networking.Disconnect();
 	}
 
-	void ISceneStartup.OnHostInitialize()
+	void ISceneLoadingEvents.AfterLoad(Scene Scene)
 	{
+		if (!Networking.IsHost)
+		{
+			return;
+		}
+
 		Assert.IsValid(HexPrefab);
 		Assert.IsValid(PlayerPrefab);
 		Assert.IsValid(GameTextPrefab);

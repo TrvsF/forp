@@ -20,7 +20,7 @@
         "__guid": "43de9620-38cc-40c5-a1fb-3703290a1677",
         "__enabled": true,
         "Flags": 0,
-        "ActionPoints": 3,
+        "ActionPoints": 2,
         "Attack": 3,
         "Buildings": [
           {
@@ -198,7 +198,7 @@
     ],
     "Children": [
       {
-        "__guid": "c217ad29-04ec-4ed6-a151-84deb70ce023",
+        "__guid": "e69af5db-080f-4222-ae2b-b58d89ea1ed4",
         "__version": 2,
         "Flags": 0,
         "Name": "Clothing - tactical_vest",
@@ -215,7 +215,7 @@
         "Components": [
           {
             "__type": "Sandbox.SkinnedModelRenderer",
-            "__guid": "83ae0c00-aebd-4b64-a392-eafaca6ab0c3",
+            "__guid": "361ad924-3b88-4685-bce6-64981699179f",
             "__enabled": true,
             "Flags": 0,
             "AnimationGraph": null,
