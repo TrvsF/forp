@@ -198,7 +198,7 @@
     ],
     "Children": [
       {
-        "__guid": "6b7da624-3863-46f0-abac-d93857d2f72f",
+        "__guid": "1f5062f2-369b-42ec-81f7-bc5bd492ba76",
         "__version": 2,
         "Flags": 0,
         "Name": "Clothing - chefs_hat",
@@ -215,7 +215,7 @@
         "Components": [
           {
             "__type": "Sandbox.SkinnedModelRenderer",
-            "__guid": "e8961e04-bae0-42f1-8da4-1b834ab6b782",
+            "__guid": "641350d0-9255-44fc-861b-f234be47486f",
             "__enabled": true,
             "Flags": 0,
             "AnimationGraph": null,
@@ -249,9 +249,9 @@
             },
             "PlaybackRate": 1,
             "RenderOptions": {
-              "GameLayer": true,
+              "GameLayer": false,
               "OverlayLayer": false,
-              "BloomLayer": false,
+              "BloomLayer": true,
               "AfterUILayer": false
             },
             "RenderType": "On",

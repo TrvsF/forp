@@ -308,7 +308,7 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 	{
 		Assert.True(Networking.IsHost);
 
-		if (Mode == EGameManagerMode.Menu || BoardHexes.Count == 0)
+		if (Mode == EGameManagerMode.Menu)
 		{
 			return;
 		}
@@ -368,15 +368,29 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 
 		PlayerColours = new(PlayerColours.Shuffle());
 
-		_ = GenerateBoardAsync();
-		Log.Info($"created board with {BoardHexes.Count} hexes");
+		switch (UiMenuHud.MapSize)
+		{
+			case UiMenuHud.EMapSize.Tiny:
+				_ = GenerateBoardAsync(10, 10);
+				break;
+			case UiMenuHud.EMapSize.Small:
+				_ = GenerateBoardAsync(20, 25);
+				break;
+			case UiMenuHud.EMapSize.Medium:
+				_ = GenerateBoardAsync(40, 30);
+				break;
+			case UiMenuHud.EMapSize.Large:
+				_ = GenerateBoardAsync(50, 50);
+				break;
+		}
+
+		NumAis = UiMenuHud.BotNumber.AsInt();
+		InitAi();
 
 		if (!Networking.IsActive)
 		{
 			CreateLobby();
 		}
-
-		InitAi();
 	}
 
 	protected override void OnUpdate()
@@ -420,10 +434,10 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		return HexComponent;
 	}
 
-	private async Task GenerateBoardAsync()
+	private async Task GenerateBoardAsync(int Width, int Height)
 	{
 		// TODO : loading screen
-		await CreateBoard(44, 33);
+		await CreateBoard(Width, Height);
 	}
 
 	private async Task CreateBoard(int Width, int Height)

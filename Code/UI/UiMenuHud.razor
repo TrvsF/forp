@@ -29,14 +29,35 @@
         @if (SubMenu == ESubMenu.Lobby)
         {
             <menu-rows>
-                @foreach (LobbyPrivacy NetworkMode in Enum.GetValues(typeof(LobbyPrivacy)))
-                {
-                    <menu-button class="@(LobbyPrivacy == NetworkMode ? "modesselected" : "modes")" @onclick="@(() => LobbyPrivacy = NetworkMode)">
-                        @NetworkMode
-                    </menu-button>
-                }
+                privacy
+                <div class="option-row">
+                    @foreach (LobbyPrivacy NetworkMode in Enum.GetValues(typeof(LobbyPrivacy)))
+                    {
+                        <menu-button class="@(LobbyPrivacy == NetworkMode ? "modesselected" : "modes")" @onclick="@(() => LobbyPrivacy = NetworkMode)">
+                            @NetworkMode
+                        </menu-button>
+                    }
+                </div>
+                bots
+                <div class="option-row">
+                    @foreach (EBotNumber BotNumberIn in Enum.GetValues(typeof(EBotNumber)))
+                    {
+                        <menu-button class="@(BotNumber == BotNumberIn ? "modesselected" : "modes")" @onclick="@(() => BotNumber = BotNumberIn)">
+                            @BotNumberIn
+                        </menu-button>
+                    }
+                </div>
+                map
+                <div class="option-row">
+                    @foreach (EMapSize MapSizeIn in Enum.GetValues(typeof(EMapSize)))
+                    {
+                        <menu-button class="@(MapSize == MapSizeIn ? "modesselected" : "modes")" @onclick="@(() => MapSize = MapSizeIn)">
+                            @MapSizeIn
+                        </menu-button>
+                    }
+                </div>
             </menu-rows>
-            <menu-button class="back" @onclick="@(() => SubMenu = ESubMenu.Main)">
+            <menu-button class="quit" @onclick="@(() => SubMenu = ESubMenu.Main)">
                 Back
             </menu-button>
             <menu-button class="go" @onclick="@(() => OnStartClick())">
@@ -46,12 +67,12 @@
                 Refresh
             </menu-button>
             <lobby-rows>
-            @foreach (LobbyInformation Lobby in Lobbies)
-            {
-                <menu-button class="lobby-row">
-                    @Lobby.LobbyId @Lobby.Name @Lobby.Ping ping
-                </menu-button>
-            }
+                @foreach (LobbyInformation Lobby in Lobbies)
+                {
+                    <menu-button class="lobby-row">
+                        @Lobby.LobbyId @Lobby.Name @Lobby.Ping ping
+                    </menu-button>
+                }
             </lobby-rows>
         }
 
@@ -65,7 +86,7 @@
                     </menu-button>
                 }
             </menu-row>
-            <menu-button class="play" @onclick="@(() => OnStartClick())">
+            <menu-button class="go" @onclick="@(() => OnStartClick())">
                 Start
             </menu-button>
             <menu-button class="quit" @onclick="@(() => SubMenu = ESubMenu.Main)">
@@ -83,11 +104,8 @@
                     </menu-button>
                 }
             </menu-row>
-            <menu-button class="play" @onclick="@(() => SubMenu = ESubMenu.Main)">
+            <menu-button class="quit" @onclick="@(() => SubMenu = ESubMenu.Main)">
                 Back
-            </menu-button>
-            <menu-button class="go" @onclick="@(() => SubMenu = ESubMenu.Main)">
-                Start
             </menu-button>
         }
     </menu-container>
@@ -95,12 +113,29 @@
 
 @code
 {
-    enum ESubMenu
+    public enum ESubMenu
     {
         Main,
         Lobby,
         Load,
         Settings,
+    }
+
+    public enum EBotNumber
+    {
+        None = 0,
+        One = 1,
+        Two = 2,
+        Four = 4,
+        Eight = 8,
+    }
+
+    public enum EMapSize
+    {
+        Tiny,
+        Small,
+        Medium,
+        Large
     }
 
     private List<LobbyInformation> Lobbies = new();
@@ -121,8 +156,10 @@
         return HashCode.Combine(Time.Now);
     }
 
-    private LobbyPrivacy LobbyPrivacy = LobbyPrivacy.Public;
-    private ESubMenu SubMenu = ESubMenu.Main;
+    public static LobbyPrivacy LobbyPrivacy = LobbyPrivacy.FriendsOnly;
+    public static ESubMenu SubMenu = ESubMenu.Main;
+    public static EBotNumber BotNumber = EBotNumber.Four;
+    public static EMapSize MapSize = EMapSize.Medium;
 
     protected override void OnEnabled()
     {

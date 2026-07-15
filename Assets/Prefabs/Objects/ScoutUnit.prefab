@@ -22,12 +22,7 @@
         "Flags": 0,
         "ActionPoints": 2,
         "Attack": 1,
-        "Buildings": [
-          {
-            "_type": "gameobject",
-            "prefab": "prefabs/objects/citytext.prefab"
-          }
-        ],
+        "Buildings": [],
         "DisplayName": "Scout",
         "GoldToBuild": 20,
         "Health": 5,
@@ -198,10 +193,10 @@
     ],
     "Children": [
       {
-        "__guid": "004686e2-d058-4c6e-9c7e-6d35bf6e35f6",
+        "__guid": "cca48dcd-a1e6-4a26-b4d1-45fff7831142",
         "__version": 2,
         "Flags": 0,
-        "Name": "Clothing - chefs_hat",
+        "Name": "Clothing - googly eye glasses",
         "Position": "0,0,0",
         "Rotation": "0,0,0,1",
         "Scale": "1,1,1",
@@ -215,7 +210,7 @@
         "Components": [
           {
             "__type": "Sandbox.SkinnedModelRenderer",
-            "__guid": "95216055-417b-4660-a461-ed051fe0bcb1",
+            "__guid": "dc281f7a-04a9-432f-aa46-62a577084878",
             "__enabled": true,
             "Flags": 0,
             "AnimationGraph": null,
@@ -232,7 +227,7 @@
             "MaterialGroup": null,
             "MaterialOverride": null,
             "Materials": null,
-            "Model": "models/citizen_clothes/hat/chefs_hat/models/chefs_hat.vmdl",
+            "Model": "models/googly glasses/googly glasses terry.vmdl",
             "Morphs": {},
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
@@ -249,9 +244,9 @@
             },
             "PlaybackRate": 1,
             "RenderOptions": {
-              "GameLayer": true,
+              "GameLayer": false,
               "OverlayLayer": false,
-              "BloomLayer": false,
+              "BloomLayer": true,
               "AfterUILayer": false
             },
             "RenderType": "On",

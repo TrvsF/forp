@@ -28,18 +28,23 @@ menu-container {
 
 menu-rows {
     position: absolute;
-    top: 20%;
+    top: 5%;
     left: 34%;
-    font-size: 24px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column; /* outer: line 1 above line 2 */
+    gap: 20px;
+}
+
+.option-row {
+    display: flex;
+    flex-direction: row; /* inner: buttons left to right */
     gap: 20px;
     justify-content: center;
 }
 
 lobby-rows {
     position: absolute;
-    top: 20%;
+    top: 0%;
     left: 64%;
     font-size: 24px;
     display: flex;
@@ -63,6 +68,7 @@ menu-button {
         transform: translateX(-50%);
         height: auto;
         font-size: 48px;
+        color: green;
     }
 
     menu-button.load {
@@ -72,24 +78,17 @@ menu-button {
         transform: translateX(-50%);
         height: auto;
         font-size: 48px;
+        color: blue;
     }
 
     menu-button.go {
         position: absolute;
-        top: 12%;
+        top: 62%;
         left: 50%;
         transform: translateX(-50%);
         height: auto;
         font-size: 72px;
-    }
-
-    menu-button.back {
-        position: absolute;
-        top: 30%;
-        left: 50%;
-        transform: translateX(-50%);
-        height: auto;
-        font-size: 32px;
+        color: green;
     }
 
     menu-button.settings {
@@ -99,13 +98,15 @@ menu-button {
         transform: translateX(-50%);
         height: auto;
         font-size: 48px;
+        color: orange;
     }
 
     menu-button.quit {
         position: absolute;
-        bottom: 24px;
-        right: 24px;
+        top: 90%;
+        left: 33%;
         font-size: 32px;
+        color: red;
     }
 
     menu-button.select {
