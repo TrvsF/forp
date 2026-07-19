@@ -170,6 +170,7 @@ public sealed partial class GamePlayer : Component
 		Local = this;
 		Mouse.Visibility = MouseVisibility.Visible;
 		Assert.True(CreateCamera());
+		UpgradeBaseRotation = GUi.Upgrade.WorldRotation;
 
 		RefreshGUi();
 	}
@@ -194,14 +195,6 @@ public sealed partial class GamePlayer : Component
 		if (GUi == null)
 		{
 			Log.Error("failed to create gui for local player!");
-			foreach (var ObjectChild in CameraObject.Children)
-			{
-				Log.Info(ObjectChild.Name);
-				if (ObjectChild.GetComponent<GamePlayerGUi>() != null)
-				{
-					GUi = ObjectChild.GetComponent<GamePlayerGUi>();
-				}
-			}
 			return GUi != null;
 		}
 
@@ -230,6 +223,13 @@ public sealed partial class GamePlayer : Component
 
 			if (HoverTrace.GameObject.GetComponent<Obj>() is { } HitObject)
 			{
+				// special case to make upgrades work
+				// TODO : this should be a list!
+				if (HitObject is Upgrade && DraggedObject != null)
+				{
+					continue;
+				}
+
 				HoveredObject = HitObject;
 				break;
 			}
@@ -318,17 +318,33 @@ public sealed partial class GamePlayer : Component
 			Camera.WorldRotation = Rotation * Camera.WorldRotation;
 		}
 
-		if (Input.Down("mouse1") && DraggedObject != null)
+		if (DraggedObject != null)
 		{
-			DraggedObject.WorldPosition -= new Vector3(Mouse.Delta.y * 0.19f, Mouse.Delta.x * 0.11f, 0);
-		}
-		if (!Input.Down("mouse1") && DraggedObject != null)
-		{
-			DraggedObject = null;
+			if (!Input.Down("mouse1"))
+			{
+				if (HoveredObject is ObjectUnit UpgradeUnit)
+				{
+					UpgradeUnit.ApplyUpgrade(DraggedObject.GetComponent<Upgrade>().GetUpgradeData());
+				}
+
+				GUi.OnUpgradeClicked(this); // 1
+				GUi.OnUpgradeClicked(this); // 2
+				DraggedObject = null; // this code is poo
+				return;
+			}
+
+			var Yaw = Scene.Camera.ScreenPixelToRay(Mouse.Position);
+			var Hit = DragPlane.Trace(Yaw, true);
+			if (Hit.HasValue)
+			{
+				DraggedObject.WorldPosition = Hit.Value + GrabOffset;
+			}
 		}
 	}
 
-	private GameObject DraggedObject = null;
+	private GameObject DraggedObject;
+	private Plane DragPlane;
+	private Vector3 GrabOffset;
 
 	private void DoAction()
 	{
@@ -347,20 +363,30 @@ public sealed partial class GamePlayer : Component
 					continue;
 				}
 
-				if (ClickTrace.GameObject.GetComponent<Obj>() is { } HitObject)
-				{
-					HitObject.OnClick();
-					ClickedObjects.Add(HitObject);
-				}
-
 				if (ClickTrace.GameObject.GetComponent<Upgrade>() is { })
 				{
 					DraggedObject = ClickTrace.GameObject;
-				}
 
-				if (GUi != null && ClickTrace.GameObject == GUi.UpgradeGUi)
+					DraggedObject.WorldRotation = new();
+
+					DragPlane = new Plane(DraggedObject.WorldPosition, -Scene.Camera.WorldRotation.Forward);
+
+					var Ray = Scene.Camera.ScreenPixelToRay(Mouse.Position);
+					var Hit = DragPlane.Trace(Ray, true);
+					
+					if (Hit.HasValue)
+					{
+						GrabOffset = DraggedObject.WorldPosition - Hit.Value;
+					}
+				}
+				else if (GUi != null && ClickTrace.GameObject == GUi.Upgrade)
 				{
 					GUi.OnUpgradeClicked(Local);
+				}
+				else if (ClickTrace.GameObject.GetComponent<Obj>() is { } HitObject)
+				{
+					HitObject.OnClick();
+					ClickedObjects.Add(HitObject);
 				}
 			}
 

@@ -416,7 +416,8 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 	{
 		var SpawnOffset = Object.Hex.BrotherOffsets[BrotherIndex];
 
-		var ZOffset = Random.Shared.Next(-5, 6);
+		// TODO : moutains & shit
+		var ZOffset = 0; //Random.Shared.Next(-5, 6);
 		Transform SpawnTransform = new()
 		{
 			Position = ParentPosition + new Vector3(SpawnOffset.x, SpawnOffset.y, ZOffset)

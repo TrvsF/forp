@@ -100,8 +100,11 @@ public class ObjectUnit : Obj
 	{
 		base.OnUpdate();
 
-		Animation.LookAtEnabled = true;
-		Animation.LookAt = GamePlayer.Local.Camera.GameObject;
+		if (GameManager.Instance.Mode != EGameManagerMode.Menu)
+		{	
+			Animation.LookAtEnabled = true;
+			Animation.LookAt = GamePlayer.Local.Camera.GameObject;
+		}
 	}
 
 	private FUpgrade Upgrade { get; set; } = null;

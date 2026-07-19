@@ -3,6 +3,7 @@ using Forp.Object.Building;
 using Forp.Object.Unit;
 using Sandbox;
 using Sandbox.Diagnostics;
+using Sandbox.Services;
 using System;
 using static Sandbox.Material;
 
@@ -124,6 +125,8 @@ public sealed partial class GamePlayer : Component
 		}
 	}
 
+	private Rotation UpgradeBaseRotation;
+
 	private void RefreshGUi()
 	{
 		if (GUi == null)
@@ -131,7 +134,11 @@ public sealed partial class GamePlayer : Component
 			return; // :(
 		}
 
-		var UpgradeModel = GUi.UpgradeGUi.GetComponent<SkinnedModelRenderer>();
+		var UpgradeAngels = UpgradeBaseRotation.Angles();
+		UpgradeAngels.yaw += MathF.Sin(Time.Now * 2) * 10;
+		GUi.Upgrade.WorldRotation = UpgradeAngels.ToRotation();
+
+		var UpgradeModel = GUi.Upgrade.GetComponent<SkinnedModelRenderer>();
 		Assert.NotNull(UpgradeModel);
 		UpgradeModel.Tint = Colour;
 
@@ -208,7 +215,7 @@ public sealed partial class GamePlayer : Component
 
 public sealed class GamePlayerGUi : Component
 {
-	[Property] public GameObject UpgradeGUi { get; private set; }
+	[Property] public GameObject Upgrade { get; private set; }
 	[Property] public GameObject TopText { get; private set; }
 	[Property] public GameObject BottomText { get; private set; }
 	[Property] public GameObject Avatar { get; private set; }
@@ -241,7 +248,7 @@ public sealed class GamePlayerGUi : Component
 
 			CloneConfig CloneConfig = new()
 			{
-				Parent = UpgradeGUi,
+				Parent = this.Upgrade,
 				StartEnabled = true,
 			};
 			
