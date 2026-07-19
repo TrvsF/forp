@@ -107,7 +107,7 @@ public class ObjectUnit : Obj
 		}
 	}
 
-	private FUpgrade Upgrade { get; set; } = null;
+	public FUpgrade Upgrade { get; private set; } = null;
 	public void ApplyUpgrade(FUpgrade InUpgrade)
 	{
 		Assert.NotNull(InUpgrade);

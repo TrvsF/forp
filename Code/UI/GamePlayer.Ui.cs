@@ -134,13 +134,15 @@ public sealed partial class GamePlayer : Component
 			return; // :(
 		}
 
-		var UpgradeAngels = UpgradeBaseRotation.Angles();
-		UpgradeAngels.yaw += MathF.Sin(Time.Now * 2) * 10;
-		GUi.Upgrade.WorldRotation = UpgradeAngels.ToRotation();
+		// var UpgradeAngels = UpgradeBaseRotation.Angles();
+		// UpgradeAngels.yaw += MathF.Sin(Time.Now * 2) * 10;
+		// GUi.Upgrade.WorldRotation = UpgradeAngels.ToRotation();
 
 		var UpgradeModel = GUi.Upgrade.GetComponent<SkinnedModelRenderer>();
 		Assert.NotNull(UpgradeModel);
 		UpgradeModel.Tint = Colour;
+		var Outline = UpgradeModel.GetOrAddComponent<HighlightOutline>();
+		Outline.Color = Colour;
 
 		var AvatarDresser = GUi.Avatar.GetComponent<Dresser>();
 		Assert.NotNull(AvatarDresser);
@@ -179,7 +181,7 @@ public sealed partial class GamePlayer : Component
 		if (HoveredObject is ObjectUnit ObjectUnit)
 		{
 			var UnitPrefix = ObjectUnit.IsAi ? "Native" : $"{ObjectUnit.OwnerPlayer.SteamName}'s";
-			BottomTextString = $"{UnitPrefix} {ObjectUnit.DisplayName} {ObjectUnit.Health}hp\n{ObjectUnit.Tooltip}";
+			BottomTextString = $"{UnitPrefix} {ObjectUnit.DisplayName}\n{ObjectUnit.Health}hp\n{ObjectUnit.Tooltip}";
 
 			if (ObjectUnit.OwnerPlayer?.ConnectionId == Local.ConnectionId)
 			{
@@ -189,6 +191,10 @@ public sealed partial class GamePlayer : Component
 		else if (HoveredObject is ObjectBuilding ObjectBuilding)
 		{
 			BottomTextString = $"{ObjectBuilding.DisplayName} {ObjectBuilding.Health}hp\n{ObjectBuilding.Tooltip}";
+		}
+		else if (HoveredObject is Upgrade ObjectUpgrade)
+		{
+			BottomTextString = $"{ObjectUpgrade.GetDesciption()}";
 		}
 		else if (HoveredObject is TextBuilding TextBuilding)
 		{
@@ -241,7 +247,7 @@ public sealed class GamePlayerGUi : Component
 			return;
 		}
 
-		float XOffset = 50f;
+		float XOffset = 7.77f;
 		foreach (var Upgrade in UpgradePlayer.Upgrades)
 		{
 			var UpgradeObject = GameManager.Instance.GetObject(Upgrade.ObjectId);
@@ -254,10 +260,10 @@ public sealed class GamePlayerGUi : Component
 			
 			var ShownUpgrade = UpgradeObject.Clone(CloneConfig);
 			ShownUpgrade.LocalScale = Vector3.One;
-			ShownUpgrade.LocalPosition += new Vector3(0f, XOffset, 0f);
+			ShownUpgrade.WorldPosition += Vector3.Right * XOffset;
 			ShownUpgrades.Add(ShownUpgrade);
 
-			XOffset += 100f;
+			XOffset += 5f;
 		}
 	}
 }

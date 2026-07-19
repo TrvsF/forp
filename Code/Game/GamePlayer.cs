@@ -324,7 +324,17 @@ public sealed partial class GamePlayer : Component
 			{
 				if (HoveredObject is ObjectUnit UpgradeUnit)
 				{
-					UpgradeUnit.ApplyUpgrade(DraggedObject.GetComponent<Upgrade>().GetUpgradeData());
+					var Upgrade = DraggedObject.GetComponent<Upgrade>();
+					GameManager.Instance.Server_UpgradeObject(Upgrade.GetUpgradeData(), UpgradeUnit.OwnerHex, ConnectionId);
+					for (int Index = Upgrades.Count - 1; Index >= 0; --Index)
+					{
+						if (Upgrades[Index].ObjectId == Upgrade.ObjectId)
+						{
+							Upgrades.RemoveAt(Index);
+							break;
+						}
+					}
+					DraggedObject.Destroy();
 				}
 
 				GUi.OnUpgradeClicked(this); // 1

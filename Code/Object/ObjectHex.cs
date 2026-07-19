@@ -190,7 +190,7 @@ public sealed class Hex : Obj
 				return;
 			}
 
-			if (UnitData.Upgrade != null)
+			if (UnitObject.Upgrade != null)
 			{
 				UnitObject.ApplyUpgrade(UnitData.Upgrade);
 			}

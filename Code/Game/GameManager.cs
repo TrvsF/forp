@@ -779,6 +779,8 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 		Hex.UnitData = Hex.UnitData with
 		{
 			Upgrade = UpgradeData,
+			Health = Hex.UnitData.Health + UpgradeData.HealthModifyer,
+			Attack = Hex.UnitData.Attack + UpgradeData.AttackModifyer,
 		};
 	}
 

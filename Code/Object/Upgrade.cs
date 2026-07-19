@@ -21,6 +21,11 @@ public class Upgrade : Obj
 	[Property] public int AttackModifyer { get; set; }
 	[Property] public int HealthModifyer { get; set; }
 
+	public string GetDesciption()
+	{
+		return $"{Buildings.Count}b\n{AttackModifyer}a\n{HealthModifyer}hp";
+	}
+
 	public List<string> GetBuildingIds()
 	{
 		return Buildings.Select(Building => Building.GetComponent<TextBuilding>().ObjectId).ToList();
