@@ -6,7 +6,7 @@
     "Name": "upgradebuilder",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
-    "Scale": "0.066,0.066,0.066",
+    "Scale": "0.0659999996,0.0659999996,0.0659999996",
     "Tags": "",
     "Enabled": true,
     "NetworkMode": 2,
@@ -20,6 +20,7 @@
         "__guid": "f289a166-8e1e-4bee-9561-b6ff9ce0230f",
         "__enabled": true,
         "Flags": 0,
+        "Attack": 0,
         "AttackModifyer": 5,
         "Buildings": [
           {
@@ -32,6 +33,7 @@
           }
         ],
         "DisplayName": "Temp Builder",
+        "Health": 0,
         "HealthModifyer": 50,
         "ObjectId": "upgrade-builder",
         "OnComponentDestroy": null,
@@ -39,7 +41,8 @@
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
-        "OnComponentUpdate": null
+        "OnComponentUpdate": null,
+        "Tooltip": "Provides unit with hp, attack, & a tower"
       },
       {
         "__type": "Sandbox.SkinnedModelRenderer",
@@ -128,7 +131,9 @@
         "AgentStepSize": 18,
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
-        "IncludedBodies": ""
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
       }
     },
     "__variables": []

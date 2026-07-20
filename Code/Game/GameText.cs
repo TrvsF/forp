@@ -16,11 +16,14 @@ public class GameText : Component
 		TextRenderer.Text = Text;
 	}
 
+	public void SetScale(float Scale)
+	{
+		TextRenderer.Scale = Scale;
+	}
+
 	protected override void OnStart()
 	{
 		base.OnStart();
-
-		TextRenderer.Scale = 0.5f;
 	}
 
 	protected override void OnUpdate()

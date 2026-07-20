@@ -193,7 +193,7 @@
     ],
     "Children": [
       {
-        "__guid": "cca48dcd-a1e6-4a26-b4d1-45fff7831142",
+        "__guid": "962d3a3a-df98-4e08-8132-6b3ff9deb361",
         "__version": 2,
         "Flags": 0,
         "Name": "Clothing - googly eye glasses",
@@ -210,7 +210,7 @@
         "Components": [
           {
             "__type": "Sandbox.SkinnedModelRenderer",
-            "__guid": "dc281f7a-04a9-432f-aa46-62a577084878",
+            "__guid": "cba86440-d592-4999-a091-61d31f173ea5",
             "__enabled": true,
             "Flags": 0,
             "AnimationGraph": null,
@@ -244,7 +244,7 @@
             },
             "PlaybackRate": 1,
             "RenderOptions": {
-              "GameLayer": false,
+              "GameLayer": true,
               "OverlayLayer": false,
               "BloomLayer": true,
               "AfterUILayer": false

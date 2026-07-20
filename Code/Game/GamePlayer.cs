@@ -65,8 +65,9 @@ public sealed partial class GamePlayer : Component
 		}
 	}
 
-	private Obj HoveredObject { get; set; }
-	private Hex SelectedHex { get; set; } = null;
+	public GameObject DraggedObject { get; private set; }
+	public Obj HoveredObject { get; private set; }
+	public Hex SelectedHex { get; private set; }
 
 	private ObjectUnit _SelectedUnit = null;
 	public ObjectUnit SelectedUnit
@@ -352,7 +353,6 @@ public sealed partial class GamePlayer : Component
 		}
 	}
 
-	private GameObject DraggedObject;
 	private Plane DragPlane;
 	private Vector3 GrabOffset;
 
