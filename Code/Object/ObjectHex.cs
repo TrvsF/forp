@@ -6,6 +6,7 @@ using Sandbox.UI;
 using Forp.Game;
 using Forp.Object.Building;
 using System.Transactions;
+using System.Runtime.CompilerServices;
 
 namespace Forp.Object;
 
@@ -307,16 +308,16 @@ public sealed class Hex : Obj
 		switch (Type)
 		{
 			case EHexType.Grass:
-				Production = Random.Shared.Int(5, 9);
+				Production = Random.Shared.Int(3, 4);
 				break;
 			case EHexType.Sand:
-				Production = Random.Shared.Int(2, 3);
+				Production = Random.Shared.Int(1, 6);
 				break;
 			case EHexType.Stone:
-				Production = Random.Shared.Int(6, 10);
+				Production = Random.Shared.Int(3, 6);
 				break;
 			case EHexType.Water:
-				Production = Random.Shared.Int(3, 5);
+				Production = Random.Shared.Int(1, 5);
 				break;
 		}
 
@@ -410,7 +411,16 @@ public sealed class Hex : Obj
 			TextTransform.Position += Vector3.Up * 25;
 
 			var ProductionText = GameText.CreateTextObject<GameText>(TextTransform, $"{Production}⬡");
-			ProductionText.GetComponent<TextRenderer>().Color = Color.Lerp(Color.FromBytes(255, 120, 120), Color.White, Production / 10f);
+
+			if (Production <= 2)
+			{
+				ProductionText.GetComponent<TextRenderer>().Color = Color.Red;
+			}
+			else if (Production > 6)
+			{
+				ProductionText.GetComponent<TextRenderer>().Color = Color.Green;
+			}
+
 			ProductionTexts.Add(ProductionText);
 		}
 	}

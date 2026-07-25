@@ -466,8 +466,6 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 				Vector3 From = Hex.WorldPosition + new Vector3(BrotherOffset.x, BrotherOffset.y, 100f);
 				Vector3 To = Hex.WorldPosition + new Vector3(BrotherOffset.x, BrotherOffset.y, -100f);
 
-				// Scene.DebugOverlay.Line(From, To, Color.Red, 555555);
-
 				var Trace = Scene.Trace.Ray(From, To).Run();
 				if (Trace.GameObject?.GetComponent<Hex>() is { } HitHex)
 				{

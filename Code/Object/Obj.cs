@@ -61,6 +61,30 @@ public class Obj : Component
 		base.OnDestroy();
 	}
 
+	protected GameText WorldTooltip = null;
+	protected bool ShouldShowTooltip = false;
+
+	protected override void OnUpdate()
+	{
+		if (ShouldShowTooltip)
+		{
+			if (WorldTooltip == null)
+			{
+				WorldTooltip = GameText.CreateTextObject<GameText>(new(), $"{Tooltip}");
+			}
+
+			WorldTooltip.WorldPosition = WorldPosition;
+			WorldTooltip.WorldPosition += Vector3.Up * 5f;
+		}
+		else if (!ShouldShowTooltip && WorldTooltip != null)
+		{
+			WorldTooltip.DestroyGameObject();
+			WorldTooltip = null;
+		}
+
+		base.OnUpdate();
+	}
+
 	private bool _showHealth = false;
 	public bool ShowHealth
 	{

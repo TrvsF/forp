@@ -35,7 +35,7 @@
         "__version": 2,
         "Billboard": "None",
         "BlendMode": "Normal",
-        "FogStrength": 1,
+        "FogStrength": 0,
         "HorizontalAlignment": "Center",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,

@@ -19,6 +19,12 @@ public class TextBuilding : Obj
 	public bool FromUnit { get; set; }
 	public int TotalProduction { get; set; }
 
+	protected override void OnUpdate()
+	{
+		ShouldShowTooltip = GamePlayer.Local != null && GamePlayer.Local.HoveredObject == this;
+		base.OnUpdate();
+	}
+
 	public virtual bool CanBeBuilt(Hex Hex)
 	{
 		var BuildingObject = ObjectToBuild.GetComponent<ObjectBuilding>();

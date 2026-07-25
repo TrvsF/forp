@@ -171,7 +171,6 @@ public sealed partial class GamePlayer : Component
 		Local = this;
 		Mouse.Visibility = MouseVisibility.Visible;
 		Assert.True(CreateCamera());
-		UpgradeBaseRotation = GUi.Upgrade.WorldRotation;
 
 		RefreshGUi();
 	}

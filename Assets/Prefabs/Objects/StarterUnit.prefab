@@ -39,7 +39,7 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "ProductionToBuild": 250,
-        "Tooltip": null,
+        "Tooltip": "",
         "ViewRange": 3
       },
       {
@@ -198,7 +198,7 @@
     ],
     "Children": [
       {
-        "__guid": "1f5062f2-369b-42ec-81f7-bc5bd492ba76",
+        "__guid": "5236290f-5ac2-429f-bab6-462517094f69",
         "__version": 2,
         "Flags": 0,
         "Name": "Clothing - chefs_hat",
@@ -215,7 +215,7 @@
         "Components": [
           {
             "__type": "Sandbox.SkinnedModelRenderer",
-            "__guid": "641350d0-9255-44fc-861b-f234be47486f",
+            "__guid": "1ffb97b5-0778-41b8-9750-2b5cf31f8e5c",
             "__enabled": true,
             "Flags": 0,
             "AnimationGraph": null,
@@ -249,9 +249,9 @@
             },
             "PlaybackRate": 1,
             "RenderOptions": {
-              "GameLayer": false,
+              "GameLayer": true,
               "OverlayLayer": false,
-              "BloomLayer": true,
+              "BloomLayer": false,
               "AfterUILayer": false
             },
             "RenderType": "On",

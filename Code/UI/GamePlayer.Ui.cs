@@ -125,18 +125,12 @@ public sealed partial class GamePlayer : Component
 		}
 	}
 
-	private Rotation UpgradeBaseRotation;
-
 	private void RefreshGUi()
 	{
 		if (GUi == null)
 		{
 			return; // :(
 		}
-
-		// var UpgradeAngels = UpgradeBaseRotation.Angles();
-		// UpgradeAngels.yaw += MathF.Sin(Time.Now * 2) * 10;
-		// GUi.Upgrade.WorldRotation = UpgradeAngels.ToRotation();
 
 		var UpgradeModel = GUi.Upgrade.GetComponent<SkinnedModelRenderer>();
 		Assert.NotNull(UpgradeModel);
@@ -176,29 +170,24 @@ public sealed partial class GamePlayer : Component
 	private void SetGuiStrings()
 	{
 		var BottomTextString = $"\u2800";
-		var TopTextString = $"\u2800";
 
 		if (HoveredObject is ObjectUnit ObjectUnit)
 		{
 			var UnitPrefix = ObjectUnit.IsAi ? "Native" : $"{ObjectUnit.OwnerPlayer.SteamName}'s";
-			BottomTextString = $"{UnitPrefix} {ObjectUnit.DisplayName}\n{ObjectUnit.Health}hp\n{ObjectUnit.Tooltip}";
+			BottomTextString = $"{UnitPrefix} {ObjectUnit.DisplayName}\n{ObjectUnit.Health}hp";
 
 			if (ObjectUnit.OwnerPlayer?.ConnectionId == Local.ConnectionId)
 			{
-				BottomTextString += $"{ObjectUnit.Attack} Attack";
+				BottomTextString += $"\n{ObjectUnit.Attack} Attack";
 			}
 		}
 		else if (HoveredObject is ObjectBuilding ObjectBuilding)
 		{
-			BottomTextString = $"{ObjectBuilding.DisplayName} {ObjectBuilding.Health}hp\n{ObjectBuilding.Tooltip}";
+			BottomTextString = $"{ObjectBuilding.DisplayName} {ObjectBuilding.Health}hp";
 		}
 		else if (HoveredObject is Upgrade ObjectUpgrade)
 		{
 			BottomTextString = $"{ObjectUpgrade.GetDesciption()}";
-		}
-		else if (HoveredObject is TextBuilding TextBuilding)
-		{
-			TopTextString = $"build {HoveredObject.DisplayName}";
 		}
 		else
 		{
@@ -209,10 +198,6 @@ public sealed partial class GamePlayer : Component
 			}
 		}
 
-		var TopTextRenderer = GUi.TopText.GetComponent<TextRenderer>();
-		Assert.NotNull(TopTextRenderer);
-		TopTextRenderer.Text = $"{TopTextString}";
-
 		var BottomTextRenderer = GUi.BottomText.GetComponent<TextRenderer>();
 		Assert.NotNull(BottomTextRenderer);
 		BottomTextRenderer.Text = $"{BottomTextString}";
@@ -222,7 +207,6 @@ public sealed partial class GamePlayer : Component
 public sealed class GamePlayerGUi : Component
 {
 	[Property] public GameObject Upgrade { get; private set; }
-	[Property] public GameObject TopText { get; private set; }
 	[Property] public GameObject BottomText { get; private set; }
 	[Property] public GameObject Avatar { get; private set; }
 

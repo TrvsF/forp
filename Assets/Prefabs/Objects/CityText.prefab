@@ -39,7 +39,7 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "Tooltip": null
+        "Tooltip": "Build a City"
       },
       {
         "__type": "Sandbox.SkinnedModelRenderer",
