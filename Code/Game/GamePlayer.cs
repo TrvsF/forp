@@ -456,9 +456,11 @@ public sealed partial class GamePlayer : Component
 
 			if (SelectedUnit.IsValid() && SelectedUnit.GetComponent<AiUnit>() == null)
 			{
-				var UnitHex = GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit);
-				Hex.HighlightHexesRecusrive(UnitHex, false, SelectedUnit.ActionPoints + 1);
-				GameManager.Instance.Server_MoveUnitToHex(UnitHex, FoundHex, Connection.Id);
+				if (GameManager.Instance.HACK_GetHexFromUnit(SelectedUnit) is var UnitHex && UnitHex.IsValid())
+				{ 
+					Hex.HighlightHexesRecusrive(UnitHex, false, SelectedUnit.ActionPoints + 1);
+					GameManager.Instance.Server_MoveUnitToHex(UnitHex, FoundHex, Connection.Id);
+				}
 			}
 			else
 			{

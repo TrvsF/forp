@@ -21,7 +21,7 @@ public class TextBuilding : Obj
 
 	protected override void OnUpdate()
 	{
-		ShouldShowTooltip = GamePlayer.Local != null && GamePlayer.Local.HoveredObject == this;
+		ShowTooltip = GamePlayer.Local != null && GamePlayer.Local.HoveredObject == this;
 		base.OnUpdate();
 	}
 

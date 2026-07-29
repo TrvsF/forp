@@ -25,10 +25,10 @@ public class Upgrade : Obj
 
 	protected override void OnUpdate()
 	{
-		ShouldShowTooltip = GamePlayer.Local != null && GamePlayer.Local.DraggedObject == GameObject;
+		ShowTooltip = GamePlayer.Local != null && GamePlayer.Local.DraggedObject == GameObject;
 		base.OnUpdate();
 
-		if (ShouldShowTooltip)
+		if (ShowTooltip)
 		{
 			WorldTooltip.SetScale(0.05f);
 		}
