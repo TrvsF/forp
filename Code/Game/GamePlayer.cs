@@ -141,8 +141,7 @@ public sealed partial class GamePlayer : Component
 				continue;
 			}
 
-			if (Hex.UnitData.OwnerGuid == ConnectionId 
-				&& Hex.UnitData.ObjectId == "unit-settler")
+			if (Hex.UnitData.OwnerGuid == ConnectionId && Hex.UnitData.ObjectId == "unit-settler")
 			{
 				SelectedUnit = Hex.UnitObject;
 				break;
@@ -250,7 +249,9 @@ public sealed partial class GamePlayer : Component
 			Connection = ConnectionIn;
 			ConnectionId = Guid.NewGuid();
 			SteamId = 0;
-			SteamName = $"{Time.Now}";
+			SteamName = $"{Random.Shared.Next()}";
+
+			GameManager.Instance.Server_CreateHexBuildingObject("building-city", SpawnHex, false, ConnectionId);
 		}
 		else
 		{
@@ -258,11 +259,12 @@ public sealed partial class GamePlayer : Component
 			ConnectionId = ConnectionIn.Id;
 			SteamId = ConnectionIn.SteamId;
 			SteamName = ConnectionIn.DisplayName;
+
+			GameManager.Instance.Server_CreateHexUnitObject("unit-settler", SpawnHex, ConnectionId, false);
 		}
 
 		Log.Info($"{this} is initing");
 
-		GameManager.Instance.Server_CreateHexUnitObject("unit-settler", SpawnHex, ConnectionId, IsAi);
 		var ValidBrothers = SpawnHex.AllBrothers.Where(Hex => Hex != null && Hex.ObjectData == null && Hex.CanWalkOn()).OrderBy(Hex => Random.Shared.Next());
 		if (!ValidBrothers.Any())
 		{
@@ -271,7 +273,7 @@ public sealed partial class GamePlayer : Component
 		}
 
 		var Brother = ValidBrothers.First();
-		GameManager.Instance.Server_CreateHexUnitObject("unit-combat", Brother, ConnectionId, IsAi);
+		GameManager.Instance.Server_CreateHexUnitObject("unit-combat", Brother, ConnectionId, false);
 
 		return true;
 	}

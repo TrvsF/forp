@@ -251,13 +251,12 @@ public sealed class Hex : Obj
 
 	private void OnBaseColourChanged(Color OldColour, Color NewColour)
 	{
-		ModelRenderer.Tint = BaseColour.Darken(1f / Production);
+		ModelRenderer.Tint = BaseColour;//.Darken(1f / Production);
 	}
 
 	private void SetBaseColour_ServerOnly(Color Colour)
 	{
 		BaseColour = Colour;
-		//BaseColour = BaseColour.Darken(1f / Production);
 	}
 
 	public static readonly List<Vector3> BrotherOffsets = [new(170, 100), new(170, -100), new(0, -200), new(-170, -100), new(-170, 100), new(0, 200)];
@@ -448,6 +447,8 @@ public sealed class Hex : Obj
 			FogObject.Destroy();
 			FogObject = null;
 		}
+
+		SetBaseColour_ServerOnly(GameManager.Instance.GetTintColour(OwningConnectionGuid));
 
 		// TODO : revisit
 		OnUnitDataChanged(new(), new());

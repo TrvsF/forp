@@ -294,6 +294,11 @@ public partial class GameManager : SingletonComponent<GameManager>, Component.IN
 
 		foreach (var GamePlayer in GamePlayers)
 		{
+			if (GamePlayer.IsAi)
+			{
+				GamePlayer.HandleNextTurn_ServerOnly();
+			}
+
 			GamePlayer.Gold += 25;
 		}
 

@@ -93,7 +93,7 @@
               "BloomLayer": false,
               "AfterUILayer": false
             },
-            "RenderType": "On",
+            "RenderType": "Off",
             "Sequence": {
               "Name": null,
               "Looping": true,
@@ -164,7 +164,7 @@
         ],
         "Children": [
           {
-            "__guid": "dd57eb48-de60-440b-925a-845b99ab4f73",
+            "__guid": "ec5abae7-d4b6-4528-8f33-59fb5b1f15aa",
             "__version": 2,
             "Flags": 0,
             "Name": "Clothing - standard_skirt",
@@ -181,7 +181,7 @@
             "Components": [
               {
                 "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "dc53b110-aa5b-4134-980a-49404f2565fa",
+                "__guid": "54b49421-aa28-422e-92b5-a0a73d599be6",
                 "__enabled": true,
                 "Flags": 0,
                 "AnimationGraph": null,
@@ -233,7 +233,7 @@
             "Children": []
           },
           {
-            "__guid": "f221bbd3-107c-4b52-ac71-cef5e5bdc818",
+            "__guid": "f1f0009a-b3cf-450a-a29e-6202f894537a",
             "__version": 2,
             "Flags": 0,
             "Name": "Clothing - santahat",
@@ -250,7 +250,7 @@
             "Components": [
               {
                 "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "fe3e5227-3f10-430b-8b6f-ce72875f1774",
+                "__guid": "4edd5e33-0ae9-4b67-a0e5-f3bf4d865595",
                 "__enabled": true,
                 "Flags": 0,
                 "AnimationGraph": null,
@@ -302,7 +302,7 @@
             "Children": []
           },
           {
-            "__guid": "3fbb929d-5b84-4919-9a77-c4893a5ee4f5",
+            "__guid": "1269158b-9e3d-47eb-a777-13684993228e",
             "__version": 2,
             "Flags": 0,
             "Name": "Clothing - vdayglassess",
@@ -319,7 +319,7 @@
             "Components": [
               {
                 "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "51b6eeff-03ea-4517-a15d-cb48d2865ae2",
+                "__guid": "4c5e1f70-e285-4857-847d-b783f8b8e805",
                 "__enabled": true,
                 "Flags": 0,
                 "AnimationGraph": null,
